@@ -27,6 +27,10 @@ class GameModel:
         self.selected_button = None
         # 選單按鈕
         self.btn = MenuButton(900,50)
+        # 是否有在調查物件
+        self.investigation = False
+        # 在調查哪個物件
+        self.investigation_item = None
 
 
 
@@ -65,6 +69,7 @@ class GameModel:
     # 前往右手邊的牆
     def switch_r_wall(self):
         self.wall = (self.wall % self.cur_room.wall_size) + 1
+        # self.cur_room.bg_image[self.wall - 1]
 
 
     # 前往左手邊的牆
@@ -96,24 +101,61 @@ class GameModel:
     # TODO : 判別是哪一個物件被點到
     def select(self, mouse_x: int, mouse_y: int) -> None:
         """change the state of whether the items are selected"""
+
+        # TODO : 在調查中就不檢查房間物件是否被點擊 反之在房間中就不檢查物件調查畫面的點擊
         # if the item is clicked, select the item
-        for item in self.cur_room.wall[str(self.wall)].object:
-            # TODO : 若是可互動物件被點到 轉換場景 若是不可互動則說話或是
-            # 回傳是哪個物件被點選 進而做出不同反應
-            common = item.clicked(mouse_x, mouse_y)
-            if common == 0:
+
+        if self.investigation:
+
+
+            # TODO : 看看要不要對應不同調查物件設立不同判斷式
+            if isinstance(self.investigation_item, Tv):
+                for item in self.investigation_item.object:
+                    # TODO : 若是可互動物件被點到 轉換場景 若是不可互動則說話或是
+                    # 回傳是哪個物件被點選 進而做出不同反應
+                    common = item.clicked(mouse_x, mouse_y)
+                    if common == 0:
+                        pass
+                    # 退出調查畫面
+                    elif common == 'stop_investigation':
+                        self.investigation = False
+                        self.investigation_item = None
+                    else:
+                        pass
+            elif isinstance(self.investigation_item, NewPaper):
                 pass
-            elif common == 'right':
-                # 往右
-                self.switch_r_wall()
-            elif common == 'left':
-                self.switch_l_wall()
-            elif common == 'bedroom':
-                self.to_bedroom()
-            elif common == 'living_room':
-                self.to_living_room()
             else:
                 pass
+
+        else:
+            for item in self.cur_room.wall[str(self.wall)].object:
+                # TODO : 若是可互動物件被點到 轉換場景 若是不可互動則說話或是
+                # 回傳是哪個物件被點選 進而做出不同反應
+                common = item.clicked(mouse_x, mouse_y)
+                if common == 0:
+                    pass
+                elif common == 'right':
+                    # 往右
+                    self.switch_r_wall()
+                elif common == 'left':
+                    self.switch_l_wall()
+                elif common == 'bedroom':
+                    self.to_bedroom()
+                elif common == 'living_room':
+                    self.to_living_room()
+
+                # # 退出調查畫面
+                # elif common == 'stop_investigation':
+                #     self.investigation = False
+                #     self.investigation_item = None
+
+                # 回傳的是可調查物件的 self
+                elif common == 'investigation':
+                    self.investigation = True
+                    self.investigation_item = item
+                    pass
+                else:
+                    pass
 
         # menu btn
         self.btn.clicked(mouse_x, mouse_y)

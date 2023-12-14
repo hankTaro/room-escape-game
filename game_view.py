@@ -14,24 +14,12 @@ class GameView:
 
     # TODO : 畫出不同房間與牆面的布局 裏頭要有個判別式 以便選擇背景
     # 依照 room 中的 layout data 將物品畫出
-    def draw_living_room(self, room,wall):
-        self.win.blit(room.bg_image, (50, 50))
+    def draw_room(self, room,wall):
+        self.win.blit(room.bg_image[wall-1], (50, 50))
         for item in room.wall[str(wall)].object:
             self.win.blit(item.image, item.rect)
-        pass
-    # def draw_living_room_2(self):
-    #     pass
-    # def draw_living_room_3(self):
-    #     pass
-    # def draw_living_room_4(self):
-    #     pass
-    def draw_study_1(self):
-        pass
-    def draw_study_2(self):
-        pass
-    def draw_study_3(self):
-        pass
-    def draw_study_4(self):
-        pass
-    def draw_newspaper(self):
-        pass
+    # TODO : 畫出調查物件的畫面
+    def draw_item(self, investigation_item):
+        self.win.blit(investigation_item.focus, (50, 50))
+        for item in investigation_item.object:
+            self.win.blit(item.image, item.rect)

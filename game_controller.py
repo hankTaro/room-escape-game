@@ -58,7 +58,12 @@ class GameController:
         # render background
         self.view.draw_bg()
         # TODO : 各房間的場景切換
-        self.view.draw_living_room(self.model.cur_room,self.model.wall)
+        if not self.model.investigation:
+            self.view.draw_room(self.model.cur_room, self.model.wall)
+        else:
+            self.view.draw_item(self.model.investigation_item)
+            pass
+
 
 
 
