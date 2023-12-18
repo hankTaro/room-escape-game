@@ -25,6 +25,7 @@ class GameView:
         self.win.blit(investigation_item.focus, (GAME_X, GAME_Y))
         for item in investigation_item.object:
             self.win.blit(item.image, item.rect)
+
     # def fade_in(self):
     #     # 定義截圖區域的矩形範圍 (x, y, width, height)
     #     capture_rect = pygame.Rect(GAME_X, GAME_Y, GAME_WIDTH, GAME_HEIGHT)

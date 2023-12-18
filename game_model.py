@@ -88,7 +88,6 @@ class GameModel:
         self.wall = (self.wall % self.cur_room.wall_size) + 1
         # self.cur_room.bg_image[self.wall - 1]
 
-
     # 前往左手邊的牆
     def switch_l_wall(self):
         self.switch = True
@@ -148,7 +147,6 @@ class GameModel:
                 pass
             elif isinstance(self.investigation_item, Clock):
                 for item in reversed(self.investigation_item.object):
-                    # TODO : 若是可互動物件被點到 轉換場景 若是不可互動則說話或是
                     # 回傳是哪個物件被點選 進而做出不同反應
                     common = item.clicked(mouse_x, mouse_y)
                     if common == 0:
@@ -159,6 +157,19 @@ class GameModel:
                         self.investigation_item = None
                     elif common == 'move':
                         break
+                    else:
+                        pass
+            elif isinstance(self.investigation_item, Desk):
+                for item in reversed(self.investigation_item.object):
+                    # TODO : 若是可互動物件被點到 轉換場景 若是不可互動則說話或是
+                    # 回傳是哪個物件被點選 進而做出不同反應
+                    common = item.clicked(mouse_x, mouse_y)
+                    if common == 0:
+                        pass
+                    # 退出調查畫面
+                    elif common == 'stop_investigation':
+                        self.investigation = False
+                        self.investigation_item = None
                     else:
                         pass
             else:

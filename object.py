@@ -24,6 +24,8 @@ door_image_2  = pygame.transform.scale(pygame.image.load(f"image/Object/Door/doo
 door_image_3  = pygame.transform.scale(pygame.image.load(f"image/Object/Door/door_3.png"), (int(150), int(300)))
 door_image_4  = pygame.transform.scale(pygame.image.load(f"image/Object/Door/door_4.png"), (int(150), int(300)))
 
+desk_image = pygame.transform.scale(pygame.image.load(f"image/study/desk.png"), (GAME_WIDTH, GAME_HEIGHT))
+
 # 選單按鈕
 class MenuButton:
     def __init__(self, x, y):
@@ -187,6 +189,8 @@ class Tv:
         self.y = y
         self.rect = self.image.get_rect()
         self.rect.center = (x, y)
+        self.mask = pygame.mask.from_surface(self.image)
+
         # 下方要有儲存解謎進度的data
         # TODO : 點擊放大後的圖片
         self.focus = pygame.transform.scale(pygame.image.load(f"image/Object/Tv/tv-investigation.png"), (GAME_WIDTH, GAME_HEIGHT))
@@ -303,40 +307,48 @@ class NewPaper:
     def puzzle(self):
         pass
 
+# Desk 會用到的原件 ===========================================
+class Letter:
+    def __init__(self, x, y, num):
+        self.image = None
+        self.x = x
+        self.y = y
+        self.rect = self.image.get_rect()
+        self.rect.center = (x, y)
 
-# # 可互動物件(點了會變大 而非只有文字敘述(不論是旁白或是主角說的話))
-# class Interactive_objects:
-#     def __init__(self, x: int, y: int, text, react, image):
-#         self.image = image[0]
-#         self.rect = self.image.get_rect()
-#         self.rect.center = (x, y)
-#
-#         # TODO : 還沒想好架構要怎麼做
-#         # 點擊後會被導入至哪個畫面
-#         self.react = react
-#         # 點擊後螢幕下方字幕區會顯示的文字
-#         self.text = text
-#         # 此物品是否被解謎成功
-#
-#     # TODO : 將所有物件列出他們個別的 class method
-#     @classmethod
-#     def Newspaper(cls, x, y):
-#         text = "這是昨天的報紙..."
-#         react = newspaper_cont
-#         newspaper = cls(x, y, text, newspaper_image)
-#         return newspaper
-#
-#     @classmethod
-#     def Tv(cls, x, y):
-#         text = "這是昨天的報紙..."
-#         newspaper = cls(x, y, text, newspaper_image)
-#         return newspaper
-#
-#     @classmethod
-#     def Extinguisher(cls, x, y):
-#         text = "這是昨天的報紙..."
-#         newspaper = cls(x, y, text, newspaper_image)
-#         return newspaper
-#
-#     def clicked(self, x, y):
-#         return True if self.rect.collidepoint(x, y) else False
+    def clicked(self, x: int, y: int):
+        # TODO : 再看看要回傳甚麼 以及怎麼監測
+        if self.rect.collidepoint(x, y):
+            # 測試
+            print(self.number)
+
+            return self.number
+        else:
+            return 0
+
+# 可互動物件本身 ===========================================
+class Desk:
+    def __init__(self, x, y):
+        self.image = desk_image
+        self.x = x
+        self.y = y
+        self.rect = self.image.get_rect()
+        self.rect.topleft = (x, y)
+        self.mask = pygame.mask.from_surface(self.image)
+
+        # 下方要有儲存解謎進度的data
+        # TODO : 點擊放大後的圖片
+        self.focus = pygame.transform.scale(pygame.image.load(f"image/Object/Tv/tv-investigation.png"), (GAME_WIDTH, GAME_HEIGHT))
+        # TODO : 此圖片中可互動的物件
+        self.object = [ExitButton(500,550)]
+
+    def clicked(self, x: int, y: int):
+        # TODO : 連接到 user_request 若是可互動物件被點到 轉換場景 若是不可互動則說話或是
+        if self.rect.collidepoint(x, y) and self.mask.get_at((x -  self.rect.x, y -  self.rect.y)) != 0:
+            return 'investigation'
+
+    # TODO : 用於改變在解謎中改動到的資料
+    def puzzle(self):
+        pass
+
+
