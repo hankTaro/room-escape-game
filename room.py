@@ -3,14 +3,13 @@ import os
 
 from wall import *
 
-living_room_1_image = pygame.transform.scale(pygame.image.load(f"image/Room/living_room_1.png"), (GAME_WIDTH, GAME_HEIGHT))
-living_room_2_image = pygame.transform.scale(pygame.image.load(f"image/Room/living_room_2.png"), (GAME_WIDTH, GAME_HEIGHT))
-living_room_3_image = pygame.transform.scale(pygame.image.load(f"image/Room/living_room_3.png"), (GAME_WIDTH, GAME_HEIGHT))
-living_room_4_image = pygame.transform.scale(pygame.image.load(f"image/Room/living_room_4.png"), (GAME_WIDTH, GAME_HEIGHT))
-bedroom_1_image = pygame.transform.scale(pygame.image.load(f"image/Room/bedroom.png"), (GAME_WIDTH, GAME_HEIGHT))
-bedroom_2_image = pygame.transform.scale(pygame.image.load(f"image/Room/bedroom.png"), (GAME_WIDTH, GAME_HEIGHT))
-bedroom_3_image = pygame.transform.scale(pygame.image.load(f"image/Room/bedroom.png"), (GAME_WIDTH, GAME_HEIGHT))
-bedroom_4_image = pygame.transform.scale(pygame.image.load(f"image/Room/bedroom.png"), (GAME_WIDTH, GAME_HEIGHT))
+living_room_1_image = pygame.transform.scale(pygame.image.load(f"image/living_room/living_room_1.png"), (GAME_WIDTH, GAME_HEIGHT))
+living_room_2_image = pygame.transform.scale(pygame.image.load(f"image/living_room/living_room_2.png"), (GAME_WIDTH, GAME_HEIGHT))
+living_room_3_image = pygame.transform.scale(pygame.image.load(f"image/living_room/living_room_3.png"), (GAME_WIDTH, GAME_HEIGHT))
+bedroom_1_image = pygame.transform.scale(pygame.image.load(f"image/living_room/bedroom.png"), (GAME_WIDTH, GAME_HEIGHT))
+bedroom_2_image = pygame.transform.scale(pygame.image.load(f"image/living_room/bedroom.png"), (GAME_WIDTH, GAME_HEIGHT))
+bedroom_3_image = pygame.transform.scale(pygame.image.load(f"image/living_room/bedroom.png"), (GAME_WIDTH, GAME_HEIGHT))
+bedroom_4_image = pygame.transform.scale(pygame.image.load(f"image/living_room/bedroom.png"), (GAME_WIDTH, GAME_HEIGHT))
 study_1_image = pygame.transform.scale(pygame.image.load(f"image/study/W1.png"), (GAME_WIDTH, GAME_HEIGHT))
 study_2_image = pygame.transform.scale(pygame.image.load(f"image/study/W2.png"), (GAME_WIDTH, GAME_HEIGHT))
 study_3_image = pygame.transform.scale(pygame.image.load(f"image/study/W3.png"), (GAME_WIDTH, GAME_HEIGHT))
@@ -31,10 +30,10 @@ class LivingRoom:
         self.__object_1 = [RightButton(WIN_WIDTH - 50,WIN_HEIGHT/2),LeftButton(20,WIN_HEIGHT/2),MenuButton(900, 50),DoorToExit(210, 315)]
         # 牆面2有這些東西
         self.__object_2 = [RightButton(WIN_WIDTH - 50,WIN_HEIGHT/2),LeftButton(20,WIN_HEIGHT/2),MenuButton(900, 50),DoorToStudy(210, 315),
-                           DoorToBedRoom(710, 315),Clock(450,315)]
+                           DoorToBedRoom(710, 315),Clock(GAME_X, GAME_Y)]
         # 牆面3有這些東西
         self.__object_3 = [RightButton(WIN_WIDTH - 50,WIN_HEIGHT/2),LeftButton(20,WIN_HEIGHT/2),MenuButton(900, 50),DoorToKitchen(490, 315),
-                           Tv(250,303),Wife_Ch1(GAME_X, GAME_Y)]
+                           Tv(GAME_X, GAME_Y),Wife_Ch1(GAME_X, GAME_Y)]
 
         # 當前牆面/建立此房間的牆面
         # 不同房間的牆面數會不一樣 要注意
@@ -68,7 +67,7 @@ class Kitchen:
     def __init__(self):
         # data
         # 房間背景
-        self.bg_image = [living_room_1_image, living_room_2_image, living_room_3_image, living_room_4_image]
+        self.bg_image = [living_room_1_image, living_room_2_image, living_room_3_image]
 
         # 房間牆面數
         self.wall_size = 3
@@ -104,7 +103,7 @@ class Bedroom:
         # 牆面3有這些東西
         self.__object_3 = [RightButton(WIN_WIDTH - 50,WIN_HEIGHT/2),LeftButton(20,WIN_HEIGHT/2),MenuButton(255, 245),DoorToLivingRoom(200, 300)]
         # 牆面4有這些東西
-        self.__object_4 = [RightButton(WIN_WIDTH - 50,WIN_HEIGHT/2),LeftButton(20,WIN_HEIGHT/2),MenuButton(255, 245), Tv(420, 400)]
+        self.__object_4 = [RightButton(WIN_WIDTH - 50,WIN_HEIGHT/2),LeftButton(20,WIN_HEIGHT/2),MenuButton(255, 245), Tv(GAME_X, GAME_Y)]
 
         # 當前牆面/建立此房間的牆面
         # 不同房間的牆面數會不一樣 要注意
