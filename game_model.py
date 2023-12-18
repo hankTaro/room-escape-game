@@ -4,6 +4,7 @@ import os
 import room
 from object import *
 from room import *
+import random
 
 # from menu import UpgradeMenu, BuildMenu, MainMenu
 # from user_request import RequestSubject, TowerFactory, TowerSeller, TowerDeveloper, EnemyGenerator, Mute, Music, Continue, Pause
@@ -33,6 +34,8 @@ class GameModel:
         self.investigation_item = None
         # 是否在轉場
         self.switch = False
+        # 對話框文字
+        self.text = ""
 
 
 
@@ -101,6 +104,8 @@ class GameModel:
     def to_newspaper(self):
         pass
 
+
+
     # 在 update_model 裡()
     def get_request(self, events: dict):
         """get keyboard response or button response"""
@@ -123,6 +128,8 @@ class GameModel:
     def select(self, mouse_x: int, mouse_y: int) -> None:
         """change the state of whether the items are selected"""
 
+        # 重製對話
+        self.text = ""
         # TODO : 在調查中就不檢查房間物件是否被點擊 反之在房間中就不檢查物件調查畫面的點擊
         # if the item is clicked, select the item
 
@@ -205,6 +212,13 @@ class GameModel:
                     self.investigation = True
                     self.investigation_item = item
                     pass
+                elif common == 'speak':
+                    self.text = item.text[item.text_index]
+                    item.text_index += 1
+                    if item.text_index == item.text_size:
+                        item.text_index = 0
+
+                    print(self.text)
                 else:
                     pass
 

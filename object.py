@@ -25,6 +25,7 @@ door_image_3  = pygame.transform.scale(pygame.image.load(f"image/Object/Door/doo
 door_image_4  = pygame.transform.scale(pygame.image.load(f"image/Object/Door/door_4.png"), (int(150), int(300)))
 
 desk_image = pygame.transform.scale(pygame.image.load(f"image/study/desk.png"), (GAME_WIDTH, GAME_HEIGHT))
+wife_1_image = pygame.transform.scale(pygame.image.load(f"image/Object/Wife/wife.png"), (GAME_WIDTH, GAME_HEIGHT))
 
 # 選單按鈕
 class MenuButton:
@@ -350,5 +351,27 @@ class Desk:
     # TODO : 用於改變在解謎中改動到的資料
     def puzzle(self):
         pass
+
+
+
+# 對話物件 ===========================================
+class Wife_Ch1:
+    def __init__(self, x, y):
+        self.image = wife_1_image
+        self.x = x
+        self.y = y
+        self.rect = self.image.get_rect()
+        self.rect.topleft = (x, y)
+        self.mask = pygame.mask.from_surface(self.image)
+        # 對話內容
+        self.text = ["要是能回到過去該有多好⋯","你找到遺產了嗎?"]
+        self.text_index = 0
+        self.text_size = 2
+
+
+    def clicked(self, x: int, y: int):
+        # TODO : 連接到 user_request 若是可互動物件被點到 轉換場景 若是不可互動則說話或是
+        if self.rect.collidepoint(x, y) and self.mask.get_at((x -  self.rect.x, y -  self.rect.y)) != 0:
+            return 'speak'
 
 

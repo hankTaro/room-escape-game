@@ -30,9 +30,11 @@ class LivingRoom:
         # 牆面1有這些東西
         self.__object_1 = [RightButton(WIN_WIDTH - 50,WIN_HEIGHT/2),LeftButton(20,WIN_HEIGHT/2),MenuButton(900, 50),DoorToExit(210, 315)]
         # 牆面2有這些東西
-        self.__object_2 = [RightButton(WIN_WIDTH - 50,WIN_HEIGHT/2),LeftButton(20,WIN_HEIGHT/2),MenuButton(900, 50),DoorToStudy(210, 315),DoorToBedRoom(710, 315),Clock(450,315)]
+        self.__object_2 = [RightButton(WIN_WIDTH - 50,WIN_HEIGHT/2),LeftButton(20,WIN_HEIGHT/2),MenuButton(900, 50),DoorToStudy(210, 315),
+                           DoorToBedRoom(710, 315),Clock(450,315)]
         # 牆面3有這些東西
-        self.__object_3 = [RightButton(WIN_WIDTH - 50,WIN_HEIGHT/2),LeftButton(20,WIN_HEIGHT/2),MenuButton(900, 50),DoorToKitchen(490, 315),Tv(250,303)]
+        self.__object_3 = [RightButton(WIN_WIDTH - 50,WIN_HEIGHT/2),LeftButton(20,WIN_HEIGHT/2),MenuButton(900, 50),DoorToKitchen(490, 315),
+                           Tv(250,303),Wife_Ch1(GAME_X, GAME_Y)]
 
         # 當前牆面/建立此房間的牆面
         # 不同房間的牆面數會不一樣 要注意

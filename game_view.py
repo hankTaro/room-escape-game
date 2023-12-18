@@ -6,7 +6,7 @@ class GameView:
     def __init__(self):
         self.win = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT))
         self.font_size = 30
-        self.font = pygame.font.Font("New-Super-Mario-Font-U-1.ttf", self.font_size)
+        self.font = pygame.font.Font("文鼎中特標準宋體.TTF", self.font_size)
         self.bg = None
         self.black = pygame.transform.scale(pygame.image.load(f"image/black.png"), (GAME_WIDTH, GAME_HEIGHT))
         self.transparency = 0
@@ -25,6 +25,10 @@ class GameView:
         self.win.blit(investigation_item.focus, (GAME_X, GAME_Y))
         for item in investigation_item.object:
             self.win.blit(item.image, item.rect)
+
+    def speak(self,text):
+        word = self.font.render(text, True, (255, 255, 255))  # 渲染文字
+        self.win.blit(word, (WIN_WIDTH // 2 - word.get_width() // 2, WIN_HEIGHT // 2 - word.get_height() // 2))
 
     # def fade_in(self):
     #     # 定義截圖區域的矩形範圍 (x, y, width, height)
