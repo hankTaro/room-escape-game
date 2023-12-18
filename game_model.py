@@ -125,12 +125,8 @@ class GameModel:
                         pass
             elif isinstance(self.investigation_item, NewPaper):
                 pass
-            else:
-                pass
-
-            #yj 我先新增clock的investigation
-            if isinstance(self.investigation_item, Clock):
-                for item in self.investigation_item.object:
+            elif isinstance(self.investigation_item, Clock):
+                for item in reversed(self.investigation_item.object):
                     # TODO : 若是可互動物件被點到 轉換場景 若是不可互動則說話或是
                     # 回傳是哪個物件被點選 進而做出不同反應
                     common = item.clicked(mouse_x, mouse_y)
@@ -140,12 +136,13 @@ class GameModel:
                     elif common == 'stop_investigation':
                         self.investigation = False
                         self.investigation_item = None
+                    elif common == 'move':
+                        break
                     else:
                         pass
-            elif isinstance(self.investigation_item, NewPaper):
-                pass
             else:
                 pass
+
 
         else:
             for item in self.cur_room.wall[str(self.wall)].object:

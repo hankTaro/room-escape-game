@@ -9,8 +9,8 @@ from setting import *
 tv_image = [pygame.transform.scale(pygame.image.load(f"image/Object/Tv/tv-{i}.png"), (int(180), int(190))) for i in range(1)]
 newspaper_image = [pygame.transform.scale(pygame.image.load(f"image/Object/Newspaper/newspaper-{i}.png"), (int(466//3), int(260//3))) for i in range(1)]
 clock_image = pygame.transform.scale(pygame.image.load(f"image/Object/Clock/clock.png"), (int(100), int(350)))
-hr_image = [pygame.transform.scale(pygame.image.load(f"image/Object/Clock/hr/hr-{i}.png"), (int(1920//2), int(1080//2))) for i in range(1,13)]
-mins_image = [pygame.transform.scale(pygame.image.load(f"image/Object/Clock/mins/mins-{i}.png"), (int(201), int(211))) for i in range(0,60,5)]
+hr_image = [pygame.transform.scale(pygame.image.load(f"image/Object/Clock/hr/hr-{i}.png"), (int(1920//2), int(1080//2))) for i in range(0,12)]
+mins_image = [pygame.transform.scale(pygame.image.load(f"image/Object/Clock/mins/mins-{i}.png"), (int(1920//2), int(1080//2))) for i in range(0,60,5)]
 
 right_image = pygame.transform.scale(pygame.image.load(f"image/Icon/right.png"), (int(30), int(30)))
 left_image = pygame.transform.scale(pygame.image.load(f"image/Icon/left.png"), (int(30), int(30)))
@@ -112,14 +112,6 @@ class DoorToLivingRoom:
         else:
             return 0
         
-#yj 因為相連的兩個房間門要一樣，應該會需要很多toLivingRoom
-class FromBedRoomToLivingRoom(DoorToLivingRoom):
-    def __init__(self, x, y):
-        super().__init__(x, y)
-        self.image = door_image_3
-        self.rect = self.image.get_rect()
-        self.rect.center = (x, y)
-
 #yj living room通往外面的門
 class DoorToExit:
     def __init__(self, x, y):
@@ -150,7 +142,7 @@ class DoorToStudy:
         else:
             return 0
         
-#yj 往kichen的門
+#yj 往kitchen的門
 class DoorToKitchen:
     def __init__(self, x, y):
         self.image = door_image_4
@@ -213,6 +205,58 @@ class Tv:
     def puzzle(self):
         pass
 
+
+# Clock 會用到的原件 ===========================================
+
+# yj clock時針
+class Hr:
+    def __init__(self, x, y):
+        self.index = 0
+        self.image = hr_image[0]
+        self.x = x
+        self.y = y
+        self.rect = self.image.get_rect()
+        self.rect.center = (x, y)
+        self.mask = pygame.mask.from_surface(self.image)
+
+    def clicked(self, x: int, y: int):
+        # TODO : 連接到 user_request 若是可互動物件被點到 轉換場景 若是不可互動則說話或是
+        if self.rect.collidepoint(x, y) and self.mask.get_at((x -  self.rect.x, y -  self.rect.y)) != 0:
+            if self.index == 11:
+                self.index = 0
+            else:
+                self.index += 1
+            self.image = hr_image[self.index]
+            self.rect = self.image.get_rect()
+            self.rect.center = (self.x, self.y)
+            self.mask = pygame.mask.from_surface(self.image)
+            return 'move'
+
+
+# yj clock秒針
+class Mins:
+    def __init__(self, x, y):
+        self.index = 0
+        self.image = mins_image[0]
+        self.x = x
+        self.y = y
+        self.rect = self.image.get_rect()
+        self.rect.center = (x, y)
+        self.mask = pygame.mask.from_surface(self.image)
+
+    def clicked(self, x: int, y: int):
+        # TODO : 連接到 user_request 若是可互動物件被點到 轉換場景 若是不可互動則說話或是
+        if self.rect.collidepoint(x, y) and self.mask.get_at((x -  self.rect.x, y -  self.rect.y)) != 0:
+            if self.index == 11:
+                self.index = 0
+            else:
+                self.index += 1
+            self.image = mins_image[self.index]
+            self.rect = self.image.get_rect()
+            self.rect.center = (self.x, self.y)
+            self.mask = pygame.mask.from_surface(self.image)
+            return 'move'
+
 # 可互動物件本身 ===========================================
 #yj
 class Clock:
@@ -225,40 +269,14 @@ class Clock:
         self.focus = pygame.transform.scale(pygame.image.load(f"image/Object/Clock/clock-investigation.png"), (GAME_WIDTH, GAME_HEIGHT))
         # TODO : 此圖片中可互動的物件
         self.object = [ExitButton(500,550),
-                       Hr(490,400)]
+                       Mins(483,400),Hr(483,400)]
     
     def clicked(self, x: int, y: int):
         # TODO : 連接到 user_request 若是可互動物件被點到 轉換場景 若是不可互動則說話或是
         if self.rect.collidepoint(x, y):
             return 'investigation'
 
-#yj clock時針
-class Hr:
-    def __init__(self,x,y):
-        self.image = hr_image[0]
-        self.x = x
-        self.y = y
-        self.rect = self.image.get_rect()
-        self.rect.center = (x, y)
-    
-    def clicked(self, x: int, y: int):
-        # TODO : 連接到 user_request 若是可互動物件被點到 轉換場景 若是不可互動則說話或是
-        if self.rect.collidepoint(x, y):
-            return 'hr+1'
 
-#yj clock秒針
-class mins:
-    def __init__(self,x,y):
-        self.image = mins_image[0]
-        self.x = x
-        self.y = y
-        self.rect = self.image.get_rect()
-        self.rect.center = (x, y)
-    
-    def clicked(self, x: int, y: int):
-        # TODO : 連接到 user_request 若是可互動物件被點到 轉換場景 若是不可互動則說話或是
-        if self.rect.collidepoint(x, y):
-            return 'mins+5'    
 
 # NewPaper 會用到的原件 ===========================================
 

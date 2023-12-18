@@ -48,7 +48,7 @@ class Study:
 
         # 此房間在不同牆面有的物品/座標
         # 牆面1有這些東西
-        self.__object_1 = [RightButton(WIN_WIDTH - 50,WIN_HEIGHT/2),LeftButton(20,WIN_HEIGHT/2),MenuButton(900, 50), Tv(420, 400)]
+        self.__object_1 = [RightButton(WIN_WIDTH - 50,WIN_HEIGHT/2),LeftButton(20,WIN_HEIGHT/2),MenuButton(900, 50), Tv(420, 400),DoorToLivingRoom(200, 300)]
         # 牆面2有這些東西
         self.__object_2 = [RightButton(WIN_WIDTH - 50,WIN_HEIGHT/2),LeftButton(20,WIN_HEIGHT/2),MenuButton(900, 50), Tv(420, 400)]
         # 牆面3有這些東西
