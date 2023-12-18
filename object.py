@@ -14,7 +14,7 @@ mins_image = [pygame.transform.scale(pygame.image.load(f"image/Object/Clock/mins
 
 right_image = pygame.transform.scale(pygame.image.load(f"image/Icon/right.png"), (int(30), int(30)))
 left_image = pygame.transform.scale(pygame.image.load(f"image/Icon/left.png"), (int(30), int(30)))
-menu_image = pygame.transform.scale(pygame.image.load(f"image/Icon/left.png"), (int(30), int(30)))
+menu_image = pygame.transform.scale(pygame.image.load(f"image/Icon/menu.png"), (int(30), int(30)))
 exit_image = pygame.transform.scale(pygame.image.load(f"image/Icon/left.png"), (int(30), int(30)))
 
 door_image = pygame.transform.scale(pygame.image.load(f"image/Object/door.png"), (int(200), int(400)))

@@ -31,6 +31,8 @@ class GameModel:
         self.investigation = False
         # 在調查哪個物件
         self.investigation_item = None
+        # 是否在轉場
+        self.switch = False
 
 
 
@@ -47,34 +49,49 @@ class GameModel:
     # TODO : 轉場淡入淡出(原本的畫面>逐漸全黑>黑逐漸消失>新房間) 可以用透明度作
     # (不用)在這段期間要讓所有物件無法被互動 目前想法是做一個 empty room 轉場時讓 cur_room 指向他 才不會有物件
     def switch_scene(self, target_room):
+
+
+        surface = pygame.Surface((WIN_WIDTH, WIN_HEIGHT), pygame.SRCALPHA)
+        transparency = 120
+
+        pygame.draw.rect(surface, (0, 0, 0, transparency), (0,0))
         pass
+
+
 
 
     # TODO : 轉換房間/牆面/與切換調查物件視角 底線為牆面編號 也就是第幾號牆
     # TODO : 將各物件初始化好(需要儲存玩家動過的東西，不能從新進去出來東西就reset)
     def to_living_room(self):
+        self.switch = True
         if self.cur_room == self.room['bedroom'] or self.cur_room == self.room['study']:
             self.wall = 3
         else:
             self.wall = 4 #連接廚房的牆
+
         self.cur_room = self.room['living_room']
     def to_study(self):
+        self.switch = True
         self.wall = 1
         self.cur_room = self.room['study']
     def to_kitchen(self):
+        self.switch = True
         pass
     def to_bedroom(self):
+        self.switch = True
         self.wall = 1
         self.cur_room = self.room['bedroom']
 
     # 前往右手邊的牆
     def switch_r_wall(self):
+        self.switch = True
         self.wall = (self.wall % self.cur_room.wall_size) + 1
         # self.cur_room.bg_image[self.wall - 1]
 
 
     # 前往左手邊的牆
     def switch_l_wall(self):
+        self.switch = True
         if self.wall == 1:
             self.wall = self.cur_room.wall_size
         else:
@@ -97,7 +114,11 @@ class GameModel:
         # mouse event
         if events["mouse position"] is not None:
             x, y = events["mouse position"]
-            self.select(x, y)
+            # 如果在轉場中 無法點擊物件
+            if self.switch == True:
+                pass
+            else:
+                self.select(x, y)
 
     # TODO : 判別是哪一個物件被點到
     def select(self, mouse_x: int, mouse_y: int) -> None:

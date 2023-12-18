@@ -11,6 +11,7 @@ class GameController:
                        "keyboard key": 0,
                        "pause": False
                        }
+        self.fade_count = 255
 
 
         self.request = None  # response of user input
@@ -57,12 +58,24 @@ class GameController:
     def update_view(self):
         # render background
         self.view.draw_bg()
+
+
         # TODO : 各房間的場景切換
         if not self.model.investigation:
             self.view.draw_room(self.model.cur_room, self.model.wall)
         else:
             self.view.draw_item(self.model.investigation_item)
             pass
+
+        # 轉場檢測
+        if self.model.switch == True:
+            common = self.view.fade_out(self.fade_count)
+            if common == 'end':
+                self.model.switch = False
+                self.fade_count = 255
+            else:
+                self.fade_count -= 20
+        # 畫出物品欄
 
 
 
