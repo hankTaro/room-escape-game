@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="3e0b4790-5d83-4476-a83f-f94379d1ad2c" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/image/Object/Tv/tv-0.png" beforeDir="false" afterPath="$PROJECT_DIR$/image/Object/Tv/tv-0.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/image/Room/living_room_1.png" beforeDir="false" afterPath="$PROJECT_DIR$/image/Room/living_room_1.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/image/Room/living_room_2.png" beforeDir="false" afterPath="$PROJECT_DIR$/image/Room/living_room_2.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/image/Room/living_room_3.png" beforeDir="false" afterPath="$PROJECT_DIR$/image/Room/living_room_3.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/image/Room/living_room_4.png" beforeDir="false" afterPath="$PROJECT_DIR$/image/Room/living_room_4.png" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectId" id="2ZhB3bpssvQTGcWlI7vuUGwDQzZ" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "last_opened_file_path": "C:/Users/User/Desktop/github/對比/room-escape-game-test/room-escape-game-main",
+    "two.files.diff.last.used.file": "C:/Users/User/Desktop/github/對比/room-escape-game-test/room-escape-game-main/game_model.py",
+    "two.files.diff.last.used.folder": "C:/Users/User/Desktop/github/對比/room-escape-game-test/room-escape-game-main"
+  }
+}]]></component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="3e0b4790-5d83-4476-a83f-f94379d1ad2c" name="Changes" comment="" />
+      <created>1702864232218</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1702864232218</updated>
+      <workItem from="1702864233622" duration="335000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>

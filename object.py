@@ -5,8 +5,12 @@ from setting import *
 
 # TODO : 將所有物件的圖片匯入 並調整至合適大小
 # 同個物件 不同狀況(像是開啟/關閉)可以用相同名字，後面用tv-1 tv-2 做區分
-tv_image = [pygame.transform.scale(pygame.image.load(f"image/Object/Tv/tv-{i}.png"), (int(201), int(211))) for i in range(1)]
-newspaper_image = [pygame.transform.scale(pygame.image.load(f"image/Object/Newspaper/newspaper-{i}.png"), (int(466//3.5), int(260//3.5))) for i in range(1)]
+# tv_image = [pygame.transform.scale(pygame.image.load(f"image/Object/Tv/tv-{i}.png"), (int(201), int(211))) for i in range(1)]
+tv_image = [pygame.transform.scale(pygame.image.load(f"image/Object/Tv/tv-{i}.png"), (int(180), int(190))) for i in range(1)]
+newspaper_image = [pygame.transform.scale(pygame.image.load(f"image/Object/Newspaper/newspaper-{i}.png"), (int(466//3), int(260//3))) for i in range(1)]
+clock_image = pygame.transform.scale(pygame.image.load(f"image/Object/Clock/clock.png"), (int(100), int(350)))
+hr_image = [pygame.transform.scale(pygame.image.load(f"image/Object/Clock/hr/hr-{i}.png"), (int(1920//2), int(1080//2))) for i in range(1,13)]
+mins_image = [pygame.transform.scale(pygame.image.load(f"image/Object/Clock/mins/mins-{i}.png"), (int(201), int(211))) for i in range(0,60,5)]
 
 right_image = pygame.transform.scale(pygame.image.load(f"image/Icon/right.png"), (int(30), int(30)))
 left_image = pygame.transform.scale(pygame.image.load(f"image/Icon/left.png"), (int(30), int(30)))
@@ -14,6 +18,11 @@ menu_image = pygame.transform.scale(pygame.image.load(f"image/Icon/left.png"), (
 exit_image = pygame.transform.scale(pygame.image.load(f"image/Icon/left.png"), (int(30), int(30)))
 
 door_image = pygame.transform.scale(pygame.image.load(f"image/Object/door.png"), (int(200), int(400)))
+#yj
+door_image_1  = pygame.transform.scale(pygame.image.load(f"image/Object/Door/door_1.png"), (int(150), int(300)))
+door_image_2  = pygame.transform.scale(pygame.image.load(f"image/Object/Door/door_2.png"), (int(150), int(300)))
+door_image_3  = pygame.transform.scale(pygame.image.load(f"image/Object/Door/door_3.png"), (int(150), int(300)))
+door_image_4  = pygame.transform.scale(pygame.image.load(f"image/Object/Door/door_4.png"), (int(150), int(300)))
 
 # 選單按鈕
 class MenuButton:
@@ -73,10 +82,10 @@ class ExitButton:
         else:
             return 0
 
-
-class DoorToBedroom:
+#yj
+class DoorToBedRoom:
     def __init__(self, x, y):
-        self.image = door_image
+        self.image = door_image_3
         self.x = x
         self.y = y
         self.rect = self.image.get_rect()
@@ -102,7 +111,59 @@ class DoorToLivingRoom:
             return 'living_room'
         else:
             return 0
+        
+#yj 因為相連的兩個房間門要一樣，應該會需要很多toLivingRoom
+class FromBedRoomToLivingRoom(DoorToLivingRoom):
+    def __init__(self, x, y):
+        super().__init__(x, y)
+        self.image = door_image_3
+        self.rect = self.image.get_rect()
+        self.rect.center = (x, y)
 
+#yj living room通往外面的門
+class DoorToExit:
+    def __init__(self, x, y):
+        self.image = door_image_1
+        self.x = x
+        self.y = y
+        self.rect = self.image.get_rect()
+        self.rect.center = (x, y)
+
+    def clicked(self, x: int, y: int):
+        if self.rect.collidepoint(x, y):
+            return 'exit' #亂打的
+        else:
+            return 0
+
+#yj 往study的門
+class DoorToStudy:
+    def __init__(self, x, y):
+        self.image = door_image_2
+        self.x = x
+        self.y = y
+        self.rect = self.image.get_rect()
+        self.rect.center = (x, y)
+
+    def clicked(self, x: int, y: int):
+        if self.rect.collidepoint(x, y):
+            return 'study'
+        else:
+            return 0
+        
+#yj 往kichen的門
+class DoorToKitchen:
+    def __init__(self, x, y):
+        self.image = door_image_4
+        self.x = x
+        self.y = y
+        self.rect = self.image.get_rect()
+        self.rect.center = (x, y)
+
+    def clicked(self, x: int, y: int):
+        if self.rect.collidepoint(x, y):
+            return 'kitchen'
+        else:
+            return 0
 
 # 可互動物件大概會是這個架構
 
@@ -152,6 +213,52 @@ class Tv:
     def puzzle(self):
         pass
 
+# 可互動物件本身 ===========================================
+#yj
+class Clock:
+    def __init__(self,x,y):
+        self.image = clock_image
+        self.x = x
+        self.y = y
+        self.rect = self.image.get_rect()
+        self.rect.center = (x, y)
+        self.focus = pygame.transform.scale(pygame.image.load(f"image/Object/Clock/clock-investigation.png"), (GAME_WIDTH, GAME_HEIGHT))
+        # TODO : 此圖片中可互動的物件
+        self.object = [ExitButton(500,550),
+                       Hr(490,400)]
+    
+    def clicked(self, x: int, y: int):
+        # TODO : 連接到 user_request 若是可互動物件被點到 轉換場景 若是不可互動則說話或是
+        if self.rect.collidepoint(x, y):
+            return 'investigation'
+
+#yj clock時針
+class Hr:
+    def __init__(self,x,y):
+        self.image = hr_image[0]
+        self.x = x
+        self.y = y
+        self.rect = self.image.get_rect()
+        self.rect.center = (x, y)
+    
+    def clicked(self, x: int, y: int):
+        # TODO : 連接到 user_request 若是可互動物件被點到 轉換場景 若是不可互動則說話或是
+        if self.rect.collidepoint(x, y):
+            return 'hr+1'
+
+#yj clock秒針
+class mins:
+    def __init__(self,x,y):
+        self.image = mins_image[0]
+        self.x = x
+        self.y = y
+        self.rect = self.image.get_rect()
+        self.rect.center = (x, y)
+    
+    def clicked(self, x: int, y: int):
+        # TODO : 連接到 user_request 若是可互動物件被點到 轉換場景 若是不可互動則說話或是
+        if self.rect.collidepoint(x, y):
+            return 'mins+5'    
 
 # NewPaper 會用到的原件 ===========================================
 

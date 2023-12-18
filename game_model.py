@@ -59,7 +59,8 @@ class GameModel:
             self.wall = 4 #連接廚房的牆
         self.cur_room = self.room['living_room']
     def to_study(self):
-        pass
+        self.wall = 1
+        self.cur_room = self.room['study']
     def to_kitchen(self):
         pass
     def to_bedroom(self):
@@ -127,6 +128,25 @@ class GameModel:
             else:
                 pass
 
+            #yj 我先新增clock的investigation
+            if isinstance(self.investigation_item, Clock):
+                for item in self.investigation_item.object:
+                    # TODO : 若是可互動物件被點到 轉換場景 若是不可互動則說話或是
+                    # 回傳是哪個物件被點選 進而做出不同反應
+                    common = item.clicked(mouse_x, mouse_y)
+                    if common == 0:
+                        pass
+                    # 退出調查畫面
+                    elif common == 'stop_investigation':
+                        self.investigation = False
+                        self.investigation_item = None
+                    else:
+                        pass
+            elif isinstance(self.investigation_item, NewPaper):
+                pass
+            else:
+                pass
+
         else:
             for item in self.cur_room.wall[str(self.wall)].object:
                 # TODO : 若是可互動物件被點到 轉換場景 若是不可互動則說話或是
@@ -143,6 +163,8 @@ class GameModel:
                     self.to_bedroom()
                 elif common == 'living_room':
                     self.to_living_room()
+                elif common == 'study':
+                    self.to_study()
 
                 # # 退出調查畫面
                 # elif common == 'stop_investigation':
