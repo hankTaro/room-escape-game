@@ -23,7 +23,7 @@ door_image_1  = pygame.transform.scale(pygame.image.load(f"image/Object/Door/doo
 door_image_2  = pygame.transform.scale(pygame.image.load(f"image/Object/Door/door_2.png"), (int(150), int(300)))
 door_image_3  = pygame.transform.scale(pygame.image.load(f"image/Object/Door/door_3.png"), (int(150), int(300)))
 door_image_4  = pygame.transform.scale(pygame.image.load(f"image/Object/Door/door_4.png"), (int(150), int(300)))
-door_image_5  = pygame.transform.scale(pygame.image.load(f"image/Object/Door/door_4.png"), (int(150), int(300)))
+door_image_5  = pygame.transform.scale(pygame.image.load(f"image/Object/Door/door_4.png"), (int(200), int(300)))
 
 desk_image = pygame.transform.scale(pygame.image.load(f"image/study/desk.png"), (GAME_WIDTH, GAME_HEIGHT))
 wife_1_image = pygame.transform.scale(pygame.image.load(f"image/Object/Wife/wife.png"), (GAME_WIDTH, GAME_HEIGHT))
