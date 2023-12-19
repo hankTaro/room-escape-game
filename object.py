@@ -6,13 +6,13 @@ from setting import *
 # TODO : 將所有物件的圖片匯入 並調整至合適大小
 # 同個物件 不同狀況(像是開啟/關閉)可以用相同名字，後面用tv-1 tv-2 做區分
 # tv_image = [pygame.transform.scale(pygame.image.load(f"image/Object/Tv/tv-{i}.png"), (int(201), int(211))) for i in range(1)]
-tv_image = [pygame.transform.scale(pygame.image.load(f"image/living_room/Tv/tv-{i}.png"), (GAME_WIDTH, GAME_HEIGHT)) for i in range(1)]
-newspaper_image = [pygame.transform.scale(pygame.image.load(f"image/Object/Newspaper/newspaper-{i}.png"), (int(466//3), int(260//3))) for i in range(1)]
+tv_image = [pygame.transform.scale(pygame.image.load(f"image/living_room/Tv/tv_{i}.png"), (GAME_WIDTH, GAME_HEIGHT)) for i in range(1)]
+newspaper_image = [pygame.transform.scale(pygame.image.load(f"image/Object/Newspaper/newspaper_{i}.png"), (int(466//3), int(260//3))) for i in range(1)]
 
 clock_image = pygame.transform.scale(pygame.image.load(f"image/living_room/Clock/clock.png"), (GAME_WIDTH, GAME_HEIGHT))
 clock_open_image = pygame.transform.scale(pygame.image.load(f"image/living_room/Clock/clock_open.png"), (GAME_WIDTH, GAME_HEIGHT))
-hr_image = [pygame.transform.scale(pygame.image.load(f"image/living_room/Clock/hr/hr-{i}.png"), (int(1920//2), int(1080//2))) for i in range(0,12)]
-mins_image = [pygame.transform.scale(pygame.image.load(f"image/living_room/Clock/mins/mins-{i}.png"), (int(1920//2), int(1080//2))) for i in range(0,60,5)]
+hr_image = [pygame.transform.scale(pygame.image.load(f"image/living_room/Clock/hr/hr_{i}.png"), (int(1920//2), int(1080//2))) for i in range(0,12)]
+mins_image = [pygame.transform.scale(pygame.image.load(f"image/living_room/Clock/mins/mins_{i}.png"), (int(1920//2), int(1080//2))) for i in range(0,60,5)]
 
 right_image = pygame.transform.scale(pygame.image.load(f"image/Icon/right.png"), (int(30), int(30)))
 left_image = pygame.transform.scale(pygame.image.load(f"image/Icon/left.png"), (int(30), int(30)))
@@ -29,11 +29,11 @@ door_image_2_reverse  = pygame.transform.scale(pygame.image.load(f"image/study/d
 
 desk_image = pygame.transform.scale(pygame.image.load(f"image/study/desk.png"), (GAME_WIDTH, GAME_HEIGHT))
 book_image = pygame.transform.scale(pygame.image.load(f"image/study/book2.png"), (GAME_WIDTH, GAME_HEIGHT))
-book_shelf_image = pygame.transform.scale(pygame.image.load(f"image/study/book_shelf.png"), (GAME_WIDTH, GAME_HEIGHT))
+book_shelf_image = pygame.transform.scale(pygame.image.load(f"image/study/BookShelf/book_shelf.png"), (GAME_WIDTH, GAME_HEIGHT))
 globe_image = pygame.transform.scale(pygame.image.load(f"image/study/Globe/globe.png"), (GAME_WIDTH, GAME_HEIGHT))
 globe_table_image = pygame.transform.scale(pygame.image.load(f"image/study/Globe/globe_table.png"), (GAME_WIDTH, GAME_HEIGHT))
 window_image = pygame.transform.scale(pygame.image.load(f"image/study/window.png"), (GAME_WIDTH, GAME_HEIGHT))
-chest_image = pygame.transform.scale(pygame.image.load(f"image/study/chest.png"), (GAME_WIDTH, GAME_HEIGHT))
+chest_image = pygame.transform.scale(pygame.image.load(f"image/study/Chest/chest.png"), (GAME_WIDTH, GAME_HEIGHT))
 dropped_painting_image = pygame.transform.scale(pygame.image.load(f"image/study/dropped_painting.png"), (GAME_WIDTH, GAME_HEIGHT))
 wife_1_image = pygame.transform.scale(pygame.image.load(f"image/Object/Wife/wife.png"), (GAME_WIDTH, GAME_HEIGHT))
 
@@ -46,17 +46,17 @@ tv_show_1 = pygame.transform.scale(pygame.image.load(f"image/TV_show/WHY.png"), 
 # tv_show_1_sound = pygame.mixer.Sound('image/TV_show/meme_1.mp3')
 
 # 書架相關 ===================================================
-book_shelf_left_door_close_image = pygame.transform.scale(pygame.image.load(f"image/study/left_door_close.png"), (GAME_WIDTH, GAME_HEIGHT))
-book_shelf_right_door_close_image = pygame.transform.scale(pygame.image.load(f"image/study/right_door_close.png"), (GAME_WIDTH, GAME_HEIGHT))
-book_shelf_left_door_open_image = pygame.transform.scale(pygame.image.load(f"image/study/left_door_open.png"), (GAME_WIDTH, GAME_HEIGHT))
-book_shelf_right_door_open_image = pygame.transform.scale(pygame.image.load(f"image/study/right_door_open.png"), (GAME_WIDTH, GAME_HEIGHT))
+book_shelf_left_door_close_image = pygame.transform.scale(pygame.image.load(f"image/study/BookShelf/left_door_close.png"), (GAME_WIDTH, GAME_HEIGHT))
+book_shelf_right_door_close_image = pygame.transform.scale(pygame.image.load(f"image/study/BookShelf/right_door_close.png"), (GAME_WIDTH, GAME_HEIGHT))
+book_shelf_left_door_open_image = pygame.transform.scale(pygame.image.load(f"image/study/BookShelf/left_door_open.png"), (GAME_WIDTH, GAME_HEIGHT))
+book_shelf_right_door_open_image = pygame.transform.scale(pygame.image.load(f"image/study/BookShelf/right_door_open.png"), (GAME_WIDTH, GAME_HEIGHT))
 
-locker_image = pygame.transform.scale(pygame.image.load(f"image/study/locker.png"), (GAME_WIDTH, GAME_HEIGHT))
-locker_setup_image = pygame.transform.scale(pygame.image.load(f"image/study/locker_setup.png"), (GAME_WIDTH, GAME_HEIGHT))
-locker_open_image = pygame.transform.scale(pygame.image.load(f"image/study/locker_open.png"), (GAME_WIDTH, GAME_HEIGHT))
+locker_image = pygame.transform.scale(pygame.image.load(f"image/study/Locker/locker.png"), (GAME_WIDTH, GAME_HEIGHT))
+locker_setup_image = pygame.transform.scale(pygame.image.load(f"image/study/Locker/locker_setup.png"), (GAME_WIDTH, GAME_HEIGHT))
+locker_open_image = pygame.transform.scale(pygame.image.load(f"image/study/Locker/locker_open.png"), (GAME_WIDTH, GAME_HEIGHT))
 
 photo_frame_image = pygame.transform.scale(pygame.image.load(f"image/study/photo_frame.png"), (GAME_WIDTH, GAME_HEIGHT))
-chest_key_image = pygame.transform.scale(pygame.image.load(f"image/study/chest_key.png"), (GAME_WIDTH, GAME_HEIGHT))
+chest_key_image = pygame.transform.scale(pygame.image.load(f"image/study/Chest/chest_key.png"), (GAME_WIDTH, GAME_HEIGHT))
 
 knob_0_image = [pygame.transform.scale(pygame.image.load(f"image/study/knob/knob_000{i}.png"), (GAME_WIDTH, GAME_HEIGHT)) for i in range(10)]
 knob_1_image = [pygame.transform.scale(pygame.image.load(f"image/study/knob/knob_1_000{i}.png"), (GAME_WIDTH, GAME_HEIGHT)) for i in range(10)]
@@ -261,7 +261,7 @@ class Tv:
 
         # 下方要有儲存解謎進度的data
         # TODO : 點擊放大後的圖片
-        self.focus = pygame.transform.scale(pygame.image.load(f"image/living_room/Tv/tv-investigation.png"), (GAME_WIDTH, GAME_HEIGHT))
+        self.focus = pygame.transform.scale(pygame.image.load(f"image/living_room/Tv/tv_investigation.png"), (GAME_WIDTH, GAME_HEIGHT))
         # TODO : 此圖片中可互動的物件
         self.object = [ExitButton(500,550),TvShow(100,50)]
 
@@ -344,7 +344,7 @@ class Clock:
         self.rect = self.image.get_rect()
         self.rect.topleft = (x, y)
         self.mask = pygame.mask.from_surface(self.image)
-        self.focus = pygame.transform.scale(pygame.image.load(f"image/living_room/Clock/clock-investigation.png"), (GAME_WIDTH, GAME_HEIGHT))
+        self.focus = pygame.transform.scale(pygame.image.load(f"image/living_room/Clock/clock_investigation.png"), (GAME_WIDTH, GAME_HEIGHT))
         # TODO : 此圖片中可互動的物件
         self.object = [ExitButton(500,550),
                        Mins(483,400),Hr(483,400)]
@@ -361,7 +361,7 @@ class Clock:
         self.image = clock_open_image
         self.object[1].lock = True
         self.object[2].lock = True
-        self.focus = pygame.transform.scale(pygame.image.load(f"image/living_room/Clock/clock_open-investigation.png"), (GAME_WIDTH, GAME_HEIGHT))
+        self.focus = pygame.transform.scale(pygame.image.load(f"image/living_room/Clock/clock_open_investigation.png"), (GAME_WIDTH, GAME_HEIGHT))
         self.object = [ExitButton(500,550),Handle(300,200),Password_Hint_1(500,200)]
 
 
@@ -379,7 +379,7 @@ class NewPaper:
         self.rect.center = (x, y)
         # 下方要有儲存解謎進度的data
         # TODO : 點擊放大後的圖片
-        self.focus = pygame.transform.scale(pygame.image.load(f"image/living_room/Tv/tv-investigation.png"), (GAME_WIDTH, GAME_HEIGHT))
+        self.focus = pygame.transform.scale(pygame.image.load(f"image/living_room/Tv/tv_investigation.png"), (GAME_WIDTH, GAME_HEIGHT))
         # TODO : 此圖片中可互動的物件
         self.object = [ExitButton(500,550)]
 
@@ -422,7 +422,7 @@ class Desk:
 
         # 下方要有儲存解謎進度的data
         # TODO : 點擊放大後的圖片
-        self.focus = pygame.transform.scale(pygame.image.load(f"image/living_room/Tv/tv-investigation.png"), (GAME_WIDTH, GAME_HEIGHT))
+        self.focus = pygame.transform.scale(pygame.image.load(f"image/living_room/Tv/tv_investigation.png"), (GAME_WIDTH, GAME_HEIGHT))
         # TODO : 此圖片中可互動的物件
         self.object = [ExitButton(500,550)]
 
@@ -574,7 +574,7 @@ class BookShelf:
         self.rect.topleft = (x, y)
         self.mask = pygame.mask.from_surface(self.image)
 
-        self.focus = pygame.transform.scale(pygame.image.load(f"image/study/book_shelf_investigation.png"),
+        self.focus = pygame.transform.scale(pygame.image.load(f"image/study/BookShelf/book_shelf_investigation.png"),
                                             (GAME_WIDTH, GAME_HEIGHT))
         self.object = [ExitButton(500, 550), PhotoFrame(GAME_X, GAME_Y), ChestKey(GAME_X, GAME_Y),
                        Knob(GAME_X, GAME_Y, 0), Knob(GAME_X, GAME_Y, 1), Knob(GAME_X, GAME_Y, 2), Knob(GAME_X, GAME_Y, 3)
