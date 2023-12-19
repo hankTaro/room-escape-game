@@ -41,6 +41,30 @@ wife_1_image = pygame.transform.scale(pygame.image.load(f"image/Object/Wife/wife
 handle_icon = pygame.transform.scale(pygame.image.load(f"image/Object/Wife/wife.png"), (GAME_WIDTH, GAME_HEIGHT))
 password_hint_1_icon = pygame.transform.scale(pygame.image.load(f"image/Object/Wife/wife.png"), (GAME_WIDTH, GAME_HEIGHT))
 
+
+tv_show_1 = pygame.transform.scale(pygame.image.load(f"image/TV_show/WHY.png"), (320, 180))
+# tv_show_1_sound = pygame.mixer.Sound('image/TV_show/meme_1.mp3')
+
+# 書架相關 ===================================================
+book_shelf_left_door_close_image = pygame.transform.scale(pygame.image.load(f"image/study/left_door_close.png"), (GAME_WIDTH, GAME_HEIGHT))
+book_shelf_right_door_close_image = pygame.transform.scale(pygame.image.load(f"image/study/right_door_close.png"), (GAME_WIDTH, GAME_HEIGHT))
+book_shelf_left_door_open_image = pygame.transform.scale(pygame.image.load(f"image/study/left_door_open.png"), (GAME_WIDTH, GAME_HEIGHT))
+book_shelf_right_door_open_image = pygame.transform.scale(pygame.image.load(f"image/study/right_door_open.png"), (GAME_WIDTH, GAME_HEIGHT))
+
+locker_image = pygame.transform.scale(pygame.image.load(f"image/study/locker.png"), (GAME_WIDTH, GAME_HEIGHT))
+locker_setup_image = pygame.transform.scale(pygame.image.load(f"image/study/locker_setup.png"), (GAME_WIDTH, GAME_HEIGHT))
+locker_open_image = pygame.transform.scale(pygame.image.load(f"image/study/locker_open.png"), (GAME_WIDTH, GAME_HEIGHT))
+
+photo_frame_image = pygame.transform.scale(pygame.image.load(f"image/study/photo_frame.png"), (GAME_WIDTH, GAME_HEIGHT))
+chest_key_image = pygame.transform.scale(pygame.image.load(f"image/study/chest_key.png"), (GAME_WIDTH, GAME_HEIGHT))
+
+knob_0_image = [pygame.transform.scale(pygame.image.load(f"image/study/knob/knob_000{i}.png"), (GAME_WIDTH, GAME_HEIGHT)) for i in range(10)]
+knob_1_image = [pygame.transform.scale(pygame.image.load(f"image/study/knob/knob_1_000{i}.png"), (GAME_WIDTH, GAME_HEIGHT)) for i in range(10)]
+knob_2_image = [pygame.transform.scale(pygame.image.load(f"image/study/knob/knob_2_000{i}.png"), (GAME_WIDTH, GAME_HEIGHT)) for i in range(10)]
+knob_3_image = [pygame.transform.scale(pygame.image.load(f"image/study/knob/knob_3_000{i}.png"), (GAME_WIDTH, GAME_HEIGHT)) for i in range(10)]
+# ===========================================================
+
+
 # 待繪製物件
 none_image = pygame.transform.scale(BACKGROUND_IMAGE, (100, 100))
 none_icon = pygame.transform.scale(pygame.image.load(f"image/icon.png"), (45, 45))
@@ -206,6 +230,25 @@ class TvButton:
         else:
             return 0
 
+class TvShow:
+    def __init__(self, x, y):
+        self.all_show = [tv_show_1]
+        # self.sound = [tv_show_1_sound]
+        self.index = 0
+        self.size = 2
+        self.image = self.all_show[self.index]
+        self.x = x
+        self.y = y
+        self.rect = self.image.get_rect()
+        self.rect.topleft = (x, y)
+        self.mask = pygame.mask.from_surface(self.image)
+
+    def clicked(self, x: int, y: int):
+        if self.rect.collidepoint(x, y) and self.mask.get_at((x - self.rect.x, y - self.rect.y)) != 0:
+            self.index += 1
+            if self.index == self.size:
+                self.index = 0
+
 # 可互動物件本身 ===========================================
 class Tv:
     def __init__(self, x, y):
@@ -220,10 +263,7 @@ class Tv:
         # TODO : 點擊放大後的圖片
         self.focus = pygame.transform.scale(pygame.image.load(f"image/living_room/Tv/tv-investigation.png"), (GAME_WIDTH, GAME_HEIGHT))
         # TODO : 此圖片中可互動的物件
-        self.object = [ExitButton(500,550),
-                       TvButton(600,200,1),TvButton(700,200,2),TvButton(800,200,3),
-                       TvButton(600,300,4),TvButton(700,300,5),TvButton(800,300,6),
-                       TvButton(600,400,7),TvButton(700,400,8),TvButton(800,400,9)]
+        self.object = [ExitButton(500,550),TvShow(100,50)]
 
     def clicked(self, x: int, y: int):
         # TODO : 連接到 user_request 若是可互動物件被點到 轉換場景 若是不可互動則說話或是
@@ -235,7 +275,7 @@ class Tv:
         pass
 
 
-# Clock 會用到的原件 ===========================================
+# Clock 會用到的物件 ===========================================
 
 # yj clock時針
 class Hr:
@@ -264,7 +304,6 @@ class Hr:
             self.rect.center = (self.x, self.y)
             self.mask = pygame.mask.from_surface(self.image)
             return 'move'
-
 
 # yj clock秒針
 class Mins:
@@ -327,7 +366,7 @@ class Clock:
 
 
 
-# NewPaper 會用到的原件 ===========================================
+# NewPaper 會用到的物件 ===========================================
 
 
 # 可互動物件本身 ===========================================
@@ -352,7 +391,7 @@ class NewPaper:
     def puzzle(self):
         pass
 
-# Desk 會用到的原件 ===========================================
+# Desk 會用到的物件 ===========================================
 class Letter:
     def __init__(self, x, y, num):
         self.image = None
@@ -413,7 +452,119 @@ class Book:
         if self.rect.collidepoint(x, y) and self.mask.get_at((x -  self.rect.x, y -  self.rect.y)) != 0:
             return 'none'
 
-#可互動物件，investigation尚未完成
+# BookShelf 會用到的物件 ===========================================
+class RightDoor:
+    def __init__(self, x, y):
+        self.image = book_shelf_right_door_close_image
+        self.x = x
+        self.y = y
+        self.rect = self.image.get_rect()
+        self.rect.topleft = (x, y)
+        self.mask = pygame.mask.from_surface(self.image)
+        self.open = False
+    def clicked(self, x: int, y: int):
+        if self.rect.collidepoint(x, y) and self.mask.get_at((x -  self.rect.x, y -  self.rect.y)) != 0:
+            if self.open == False:
+                self.open = True
+                self.image = book_shelf_right_door_open_image
+            else:
+                self.open = False
+                self.image = book_shelf_right_door_close_image
+            self.rect = self.image.get_rect()
+            self.rect.topleft = (self.x, self.y)
+            self.mask = pygame.mask.from_surface(self.image)
+            return 'door'
+
+class LeftDoor:
+    def __init__(self, x, y):
+        self.image = book_shelf_left_door_close_image
+        self.x = x
+        self.y = y
+        self.rect = self.image.get_rect()
+        self.rect.topleft = (x, y)
+        self.mask = pygame.mask.from_surface(self.image)
+        self.open = False
+    def clicked(self, x: int, y: int):
+        if self.rect.collidepoint(x, y) and self.mask.get_at((x -  self.rect.x, y -  self.rect.y)) != 0:
+            if self.open == False:
+                self.open = True
+                self.image = book_shelf_left_door_open_image
+            else:
+                self.open = False
+                self.image = book_shelf_left_door_close_image
+            self.rect = self.image.get_rect()
+            self.rect.topleft = (self.x, self.y)
+            self.mask = pygame.mask.from_surface(self.image)
+            return 'door'
+
+class Knob:
+    def __init__(self, x, y, num):
+        self.num = num
+        self.index = 0
+        self.x = x
+        self.y = y
+        self.image = globals()[f"knob_{self.num}_image"][self.index]
+        self.rect = self.image.get_rect()
+        self.rect.topleft = (x, y)
+        self.mask = pygame.mask.from_surface(self.image)
+    def clicked(self, x: int, y: int):
+        if self.rect.collidepoint(x, y) and self.mask.get_at((x -  self.rect.x, y -  self.rect.y)) != 0:
+            self.index += 1
+            if self.index == 10:
+                self.index = 0
+            self.image = globals()[f"knob_{self.num}_image"][self.index]
+            return 'knob'
+
+
+class Locker:
+    def __init__(self, x, y):
+        self.all_image = [locker_image,locker_setup_image,locker_open_image]
+        self.index = 0
+        self.x = x
+        self.y = y
+        self.image = self.all_image[self.index]
+        self.rect = self.image.get_rect()
+        self.rect.topleft = (x, y)
+        self.mask = pygame.mask.from_surface(self.image)
+        #是否開啟
+        self.open = False
+        # 是否安裝好手把
+        self.setup = False
+
+    def clicked(self, x: int, y: int):
+        if self.rect.collidepoint(x, y) and self.mask.get_at((x -  self.rect.x, y -  self.rect.y)) != 0:
+            if self.open == False:
+                if self.setup == False:
+                    return 'close'
+                else:
+                    return 'check'
+            else:
+                pass
+    def add_handle(self):
+        self.index += 1
+        self.image = self.all_image[self.index]
+        self.setup = True
+    def unlock(self):
+        self.index += 1
+        self.image = self.all_image[self.index]
+        self.open = True
+class PhotoFrame:
+    def __init__(self, x, y):
+        self.image = photo_frame_image
+        self.x = x
+        self.y = y
+        self.rect = self.image.get_rect()
+        self.rect.topleft = (x, y)
+        self.mask = pygame.mask.from_surface(self.image)
+
+        self.focus = none_image
+        self.object = [ExitButton(500, 550)]
+    def clicked(self, x: int, y: int):
+        if self.rect.collidepoint(x, y) and self.mask.get_at((x -  self.rect.x, y -  self.rect.y)) != 0:
+            return 'investigation'
+
+
+#可互動物件
 class BookShelf:
     def __init__(self, x, y):
         self.image = book_shelf_image
@@ -423,9 +574,21 @@ class BookShelf:
         self.rect.topleft = (x, y)
         self.mask = pygame.mask.from_surface(self.image)
 
+        self.focus = pygame.transform.scale(pygame.image.load(f"image/study/book_shelf_investigation.png"),
+                                            (GAME_WIDTH, GAME_HEIGHT))
+        self.object = [ExitButton(500, 550), PhotoFrame(GAME_X, GAME_Y), ChestKey(GAME_X, GAME_Y),
+                       Knob(GAME_X, GAME_Y, 0), Knob(GAME_X, GAME_Y, 1), Knob(GAME_X, GAME_Y, 2), Knob(GAME_X, GAME_Y, 3)
+            , Locker(GAME_X, GAME_Y), RightDoor(GAME_X, GAME_Y), LeftDoor(GAME_X, GAME_Y)]
+        # locker 的密碼相關
+        self.ans = [4, 2, 7, 5]
+        self.input = [0, 0, 0, 0]
+        self.unlock = False
+
     def clicked(self, x: int, y: int):
         if self.rect.collidepoint(x, y) and self.mask.get_at((x -  self.rect.x, y -  self.rect.y)) != 0:
-            return 'none'
+            return 'investigation'
+    def remove_knob(self):
+        self.object = [item for item in self.object if not isinstance(item, Knob)]
 
 #可互動物件，investigation尚未完成
 class Globe:
@@ -559,3 +722,21 @@ class Password_Hint_1:
         if self.rect.collidepoint(x, y) and self.mask.get_at((x -  self.rect.x, y -  self.rect.y)) != 0:
             # 被撿起放入物品欄
             return 'take'
+
+class ChestKey:
+    def __init__(self, x, y):
+        self.image = chest_key_image
+        self.icon = none_icon
+        self.x = x
+        self.y = y
+        self.rect = self.image.get_rect()
+        self.rect.topleft = (x, y)
+        self.mask = pygame.mask.from_surface(self.image)
+        # 物件狀況
+        # 被檢起
+        self.in_bag = False
+    def clicked(self, x: int, y: int):
+        if self.rect.collidepoint(x, y) and self.mask.get_at((x -  self.rect.x, y -  self.rect.y)) != 0:
+            # 被撿起放入物品欄
+            return 'take'
+

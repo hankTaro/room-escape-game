@@ -155,10 +155,46 @@ class GameModel:
                     elif common == 'stop_investigation':
                         self.investigation = False
                         self.investigation_item = None
+                        self.switch = True
                     else:
                         pass
-            elif isinstance(self.investigation_item, NewPaper):
-                pass
+            elif isinstance(self.investigation_item, BookShelf):
+                for item in reversed(self.investigation_item.object):
+                    common = item.clicked(mouse_x, mouse_y)
+                    if common == 'stop_investigation':
+                        self.investigation = False
+                        self.investigation_item = None
+                        self.switch = True
+                    elif common == 'door':
+                        break
+                    elif common == 'close':
+                        if isinstance(self.bag.hold, Handle):
+                            item.add_handle()
+                        else:
+                            self.text = "沒有把手轉不動"
+                        break
+                    elif common == 'check':
+                        if self.investigation_item.unlock:
+                            item.open = True
+                            item.unlock()
+                            self.investigation_item.remove_knob()
+                        else:
+                            self.text = "咬的緊緊的...轉不開"
+                        break
+                    elif common == 'take':
+                        self.bag.save_item(item)
+                        self.investigation_item.object.remove(item)
+                    elif common == 'knob':
+                        self.investigation_item.input[item.num] = item.index
+                        if self.investigation_item.ans == self.investigation_item.input:
+                            self.investigation_item.unlock = True
+                        else:
+                            self.investigation_item.unlock = False
+                        break
+
+
+                    else:
+                        pass
             elif isinstance(self.investigation_item, Clock):
                 for item in reversed(self.investigation_item.object):
                     # 回傳是哪個物件被點選 進而做出不同反應
@@ -167,6 +203,7 @@ class GameModel:
                     if common == 'stop_investigation':
                         self.investigation = False
                         self.investigation_item = None
+                        self.switch = True
                     elif common == 'move':
                         # 檢查指針是否對應到答案
                         if item.index == item.ans:
@@ -203,6 +240,7 @@ class GameModel:
                     elif common == 'stop_investigation':
                         self.investigation = False
                         self.investigation_item = None
+                        self.switch = True
                     else:
                         pass
             else:
