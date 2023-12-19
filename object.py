@@ -367,48 +367,9 @@ class Desk:
     def puzzle(self):
         pass
 
-#非可互動物件
-class Window:
-    def __init__(self, x, y):
-        self.image = window_image
-        self.x = x
-        self.y = y
-        self.rect = self.image.get_rect()
-        self.rect.topleft = (x, y)
-        self.mask = pygame.mask.from_surface(self.image)
 
-    def clicked(self, x: int, y: int):
-        if self.rect.collidepoint(x, y) and self.mask.get_at((x -  self.rect.x, y -  self.rect.y)) != 0:
-            return 'none'
-        
-#非可互動物件  
-class GlobeTable:
-    def __init__(self, x, y):
-        self.image = globe_table_image
-        self.x = x
-        self.y = y
-        self.rect = self.image.get_rect()
-        self.rect.topleft = (x, y)
-        self.mask = pygame.mask.from_surface(self.image)
 
-    def clicked(self, x: int, y: int):
-        if self.rect.collidepoint(x, y) and self.mask.get_at((x -  self.rect.x, y -  self.rect.y)) != 0:
-            return 'none'
-
-#非可互動物件      
-class Chest:
-    def __init__(self, x, y):
-        self.image = chest_image
-        self.x = x
-        self.y = y
-        self.rect = self.image.get_rect()
-        self.rect.topleft = (x, y)
-        self.mask = pygame.mask.from_surface(self.image)
-
-    def clicked(self, x: int, y: int):
-        if self.rect.collidepoint(x, y) and self.mask.get_at((x -  self.rect.x, y -  self.rect.y)) != 0:
-            return 'none'
-
+# 我打算把他與書桌合併(圖片上) 就不必宣告這個class by hank
 #不確定是不是可互動物件
 class Book:
     def __init__(self, x, y):
@@ -463,6 +424,51 @@ class DroppedPainting:
 
     def clicked(self, x: int, y: int):
         if self.rect.collidepoint(x, y) and self.mask.get_at((x -  self.rect.x, y -  self.rect.y)) != 0:
+            return 'none'
+
+
+# 非可互動物件
+class Window:
+    def __init__(self, x, y):
+        self.image = window_image
+        self.x = x
+        self.y = y
+        self.rect = self.image.get_rect()
+        self.rect.topleft = (x, y)
+        self.mask = pygame.mask.from_surface(self.image)
+
+    def clicked(self, x: int, y: int):
+        if self.rect.collidepoint(x, y) and self.mask.get_at((x - self.rect.x, y - self.rect.y)) != 0:
+            return 'none'
+
+
+# 非可互動物件
+class GlobeTable:
+    def __init__(self, x, y):
+        self.image = globe_table_image
+        self.x = x
+        self.y = y
+        self.rect = self.image.get_rect()
+        self.rect.topleft = (x, y)
+        self.mask = pygame.mask.from_surface(self.image)
+
+    def clicked(self, x: int, y: int):
+        if self.rect.collidepoint(x, y) and self.mask.get_at((x - self.rect.x, y - self.rect.y)) != 0:
+            return 'none'
+
+
+# 非可互動物件
+class Chest:
+    def __init__(self, x, y):
+        self.image = chest_image
+        self.x = x
+        self.y = y
+        self.rect = self.image.get_rect()
+        self.rect.topleft = (x, y)
+        self.mask = pygame.mask.from_surface(self.image)
+
+    def clicked(self, x: int, y: int):
+        if self.rect.collidepoint(x, y) and self.mask.get_at((x - self.rect.x, y - self.rect.y)) != 0:
             return 'none'
 
 # 對話物件 ===========================================

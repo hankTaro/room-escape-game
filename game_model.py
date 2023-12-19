@@ -68,9 +68,9 @@ class GameModel:
     def to_living_room(self):
         self.switch = True
         if self.cur_room == self.room['bedroom'] or self.cur_room == self.room['study']:
-            self.wall = 3
+            self.wall = 2
         else:
-            self.wall = 4 #連接廚房的牆
+            self.wall = 3 #連接廚房的牆
 
         self.cur_room = self.room['living_room']
     def to_study(self):
@@ -217,8 +217,8 @@ class GameModel:
                     item.text_index += 1
                     if item.text_index == item.text_size:
                         item.text_index = 0
-
-                    print(self.text)
+                elif common == 'none':
+                    pass
                 else:
                     pass
 
