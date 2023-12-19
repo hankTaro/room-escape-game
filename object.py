@@ -19,12 +19,20 @@ exit_image = pygame.transform.scale(pygame.image.load(f"image/Icon/left.png"), (
 
 door_image = pygame.transform.scale(pygame.image.load(f"image/Object/door.png"), (int(200), int(400)))
 #yj
-door_image_1  = pygame.transform.scale(pygame.image.load(f"image/living_room/Door/door_1.png"), (int(150), int(300)))
-door_image_2  = pygame.transform.scale(pygame.image.load(f"image/living_room/Door/door_2.png"), (int(150), int(300)))
-door_image_3  = pygame.transform.scale(pygame.image.load(f"image/living_room/Door/door_3.png"), (int(150), int(300)))
-door_image_4  = pygame.transform.scale(pygame.image.load(f"image/living_room/Door/door_4.png"), (int(150), int(300)))
+door_image_1  = pygame.transform.scale(pygame.image.load(f"image/living_room/Door/door_1.png"), (GAME_WIDTH, GAME_HEIGHT))
+door_image_2  = pygame.transform.scale(pygame.image.load(f"image/living_room/Door/door_2.png"), (GAME_WIDTH, GAME_HEIGHT))
+door_image_3  = pygame.transform.scale(pygame.image.load(f"image/living_room/Door/door_3.png"), (GAME_WIDTH, GAME_HEIGHT))
+door_image_4  = pygame.transform.scale(pygame.image.load(f"image/living_room/Door/door_4.png"), (GAME_WIDTH, GAME_HEIGHT))
+door_image_2_reverse  = pygame.transform.scale(pygame.image.load(f"image/study/door_2.png"), (GAME_WIDTH, GAME_HEIGHT))
 
 desk_image = pygame.transform.scale(pygame.image.load(f"image/study/desk.png"), (GAME_WIDTH, GAME_HEIGHT))
+book_image = pygame.transform.scale(pygame.image.load(f"image/study/book2.png"), (GAME_WIDTH, GAME_HEIGHT))
+book_shelf_image = pygame.transform.scale(pygame.image.load(f"image/study/book_shelf.png"), (GAME_WIDTH, GAME_HEIGHT))
+globe_image = pygame.transform.scale(pygame.image.load(f"image/study/Globe/globe.png"), (GAME_WIDTH, GAME_HEIGHT))
+globe_table_image = pygame.transform.scale(pygame.image.load(f"image/study/Globe/globe_table.png"), (GAME_WIDTH, GAME_HEIGHT))
+window_image = pygame.transform.scale(pygame.image.load(f"image/study/window.png"), (GAME_WIDTH, GAME_HEIGHT))
+chest_image = pygame.transform.scale(pygame.image.load(f"image/study/chest.png"), (GAME_WIDTH, GAME_HEIGHT))
+dropped_painting_image = pygame.transform.scale(pygame.image.load(f"image/study/dropped_painting.png"), (GAME_WIDTH, GAME_HEIGHT))
 wife_1_image = pygame.transform.scale(pygame.image.load(f"image/Object/Wife/wife.png"), (GAME_WIDTH, GAME_HEIGHT))
 
 # 選單按鈕
@@ -92,25 +100,28 @@ class DoorToBedRoom:
         self.x = x
         self.y = y
         self.rect = self.image.get_rect()
-        self.rect.center = (x, y)
+        self.rect.topleft = (x, y)
+        self.mask = pygame.mask.from_surface(self.image)
 
     def clicked(self, x: int, y: int):
-        if self.rect.collidepoint(x, y):
+        if self.rect.collidepoint(x, y) and self.mask.get_at((x -  self.rect.x, y -  self.rect.y)) != 0:
             return 'bedroom'
         else:
             return 0
 
-
+#把所有doors存成class attribute，用room id來決定要用哪一個圖片
 class DoorToLivingRoom:
-    def __init__(self, x, y):
-        self.image = door_image
+    doors = [door_image_2_reverse, door_image]
+    def __init__(self, x, y, room):
+        self.image = self.doors[room]
         self.x = x
         self.y = y
         self.rect = self.image.get_rect()
-        self.rect.center = (x, y)
+        self.rect.topleft = (x, y)
+        self.mask = pygame.mask.from_surface(self.image)
 
     def clicked(self, x: int, y: int):
-        if self.rect.collidepoint(x, y):
+        if self.rect.collidepoint(x, y) and self.mask.get_at((x -  self.rect.x, y -  self.rect.y)) != 0:
             return 'living_room'
         else:
             return 0
@@ -122,10 +133,11 @@ class DoorToExit:
         self.x = x
         self.y = y
         self.rect = self.image.get_rect()
-        self.rect.center = (x, y)
+        self.rect.topleft = (x, y)
+        self.mask = pygame.mask.from_surface(self.image)
 
     def clicked(self, x: int, y: int):
-        if self.rect.collidepoint(x, y):
+        if self.rect.collidepoint(x, y) and self.mask.get_at((x -  self.rect.x, y -  self.rect.y)) != 0:
             return 'exit' #亂打的
         else:
             return 0
@@ -137,10 +149,11 @@ class DoorToStudy:
         self.x = x
         self.y = y
         self.rect = self.image.get_rect()
-        self.rect.center = (x, y)
+        self.rect.topleft = (x, y)
+        self.mask = pygame.mask.from_surface(self.image)
 
     def clicked(self, x: int, y: int):
-        if self.rect.collidepoint(x, y):
+        if self.rect.collidepoint(x, y) and self.mask.get_at((x -  self.rect.x, y -  self.rect.y)) != 0:
             return 'study'
         else:
             return 0
@@ -152,10 +165,11 @@ class DoorToKitchen:
         self.x = x
         self.y = y
         self.rect = self.image.get_rect()
-        self.rect.center = (x, y)
+        self.rect.topleft = (x, y)
+        self.mask = pygame.mask.from_surface(self.image)
 
     def clicked(self, x: int, y: int):
-        if self.rect.collidepoint(x, y):
+        if self.rect.collidepoint(x, y) and self.mask.get_at((x -  self.rect.x, y -  self.rect.y)) != 0:
             return 'kitchen'
         else:
             return 0
@@ -353,7 +367,103 @@ class Desk:
     def puzzle(self):
         pass
 
+#非可互動物件
+class Window:
+    def __init__(self, x, y):
+        self.image = window_image
+        self.x = x
+        self.y = y
+        self.rect = self.image.get_rect()
+        self.rect.topleft = (x, y)
+        self.mask = pygame.mask.from_surface(self.image)
 
+    def clicked(self, x: int, y: int):
+        if self.rect.collidepoint(x, y) and self.mask.get_at((x -  self.rect.x, y -  self.rect.y)) != 0:
+            return 'none'
+        
+#非可互動物件  
+class GlobeTable:
+    def __init__(self, x, y):
+        self.image = globe_table_image
+        self.x = x
+        self.y = y
+        self.rect = self.image.get_rect()
+        self.rect.topleft = (x, y)
+        self.mask = pygame.mask.from_surface(self.image)
+
+    def clicked(self, x: int, y: int):
+        if self.rect.collidepoint(x, y) and self.mask.get_at((x -  self.rect.x, y -  self.rect.y)) != 0:
+            return 'none'
+
+#非可互動物件      
+class Chest:
+    def __init__(self, x, y):
+        self.image = chest_image
+        self.x = x
+        self.y = y
+        self.rect = self.image.get_rect()
+        self.rect.topleft = (x, y)
+        self.mask = pygame.mask.from_surface(self.image)
+
+    def clicked(self, x: int, y: int):
+        if self.rect.collidepoint(x, y) and self.mask.get_at((x -  self.rect.x, y -  self.rect.y)) != 0:
+            return 'none'
+
+#不確定是不是可互動物件
+class Book:
+    def __init__(self, x, y):
+        self.image = book_image
+        self.x = x
+        self.y = y
+        self.rect = self.image.get_rect()
+        self.rect.topleft = (x, y)
+        self.mask = pygame.mask.from_surface(self.image)
+    
+    def clicked(self, x: int, y: int):
+        if self.rect.collidepoint(x, y) and self.mask.get_at((x -  self.rect.x, y -  self.rect.y)) != 0:
+            return 'none'
+
+#可互動物件，investigation尚未完成
+class BookShelf:
+    def __init__(self, x, y):
+        self.image = book_shelf_image
+        self.x = x
+        self.y = y
+        self.rect = self.image.get_rect()
+        self.rect.topleft = (x, y)
+        self.mask = pygame.mask.from_surface(self.image)
+
+    def clicked(self, x: int, y: int):
+        if self.rect.collidepoint(x, y) and self.mask.get_at((x -  self.rect.x, y -  self.rect.y)) != 0:
+            return 'none'
+
+#可互動物件，investigation尚未完成
+class Globe:
+    def __init__(self, x, y):
+        self.image = globe_image
+        self.x = x
+        self.y = y
+        self.rect = self.image.get_rect()
+        self.rect.topleft = (x, y)
+        self.mask = pygame.mask.from_surface(self.image)
+
+    def clicked(self, x: int, y: int):
+        if self.rect.collidepoint(x, y) and self.mask.get_at((x -  self.rect.x, y -  self.rect.y)) != 0:
+            return 'none'
+
+#可互動物件，investigation尚未完成        
+class DroppedPainting:
+    def __init__(self, x, y):
+        self.image = dropped_painting_image
+        self.x = x
+        self.y = y
+        self.rect = self.image.get_rect()
+        self.rect.topleft = (x, y)
+        self.mask = pygame.mask.from_surface(self.image)
+
+    def clicked(self, x: int, y: int):
+        if self.rect.collidepoint(x, y) and self.mask.get_at((x -  self.rect.x, y -  self.rect.y)) != 0:
+            return 'none'
 
 # 對話物件 ===========================================
 class Wife_Ch1:
