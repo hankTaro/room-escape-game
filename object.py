@@ -8,7 +8,9 @@ from setting import *
 # tv_image = [pygame.transform.scale(pygame.image.load(f"image/Object/Tv/tv-{i}.png"), (int(201), int(211))) for i in range(1)]
 tv_image = [pygame.transform.scale(pygame.image.load(f"image/living_room/Tv/tv-{i}.png"), (GAME_WIDTH, GAME_HEIGHT)) for i in range(1)]
 newspaper_image = [pygame.transform.scale(pygame.image.load(f"image/Object/Newspaper/newspaper-{i}.png"), (int(466//3), int(260//3))) for i in range(1)]
+
 clock_image = pygame.transform.scale(pygame.image.load(f"image/living_room/Clock/clock.png"), (GAME_WIDTH, GAME_HEIGHT))
+clock_open_image = pygame.transform.scale(pygame.image.load(f"image/living_room/Clock/clock_open.png"), (GAME_WIDTH, GAME_HEIGHT))
 hr_image = [pygame.transform.scale(pygame.image.load(f"image/living_room/Clock/hr/hr-{i}.png"), (int(1920//2), int(1080//2))) for i in range(0,12)]
 mins_image = [pygame.transform.scale(pygame.image.load(f"image/living_room/Clock/mins/mins-{i}.png"), (int(1920//2), int(1080//2))) for i in range(0,60,5)]
 
@@ -34,6 +36,14 @@ window_image = pygame.transform.scale(pygame.image.load(f"image/study/window.png
 chest_image = pygame.transform.scale(pygame.image.load(f"image/study/chest.png"), (GAME_WIDTH, GAME_HEIGHT))
 dropped_painting_image = pygame.transform.scale(pygame.image.load(f"image/study/dropped_painting.png"), (GAME_WIDTH, GAME_HEIGHT))
 wife_1_image = pygame.transform.scale(pygame.image.load(f"image/Object/Wife/wife.png"), (GAME_WIDTH, GAME_HEIGHT))
+
+
+handle_icon = pygame.transform.scale(pygame.image.load(f"image/Object/Wife/wife.png"), (GAME_WIDTH, GAME_HEIGHT))
+password_hint_1_icon = pygame.transform.scale(pygame.image.load(f"image/Object/Wife/wife.png"), (GAME_WIDTH, GAME_HEIGHT))
+
+# 待繪製物件
+none_image = pygame.transform.scale(BACKGROUND_IMAGE, (100, 100))
+none_icon = pygame.transform.scale(pygame.image.load(f"image/icon.png"), (45, 45))
 
 # 選單按鈕
 class MenuButton:
@@ -237,10 +247,14 @@ class Hr:
         self.rect = self.image.get_rect()
         self.rect.center = (x, y)
         self.mask = pygame.mask.from_surface(self.image)
+        self.ans = 1 # 1點
+        self.lock = False
 
     def clicked(self, x: int, y: int):
-        # TODO : 連接到 user_request 若是可互動物件被點到 轉換場景 若是不可互動則說話或是
         if self.rect.collidepoint(x, y) and self.mask.get_at((x -  self.rect.x, y -  self.rect.y)) != 0:
+            # 檢查是否已解完
+            if self.lock:
+                return 'lock'
             if self.index == 11:
                 self.index = 0
             else:
@@ -262,10 +276,15 @@ class Mins:
         self.rect = self.image.get_rect()
         self.rect.center = (x, y)
         self.mask = pygame.mask.from_surface(self.image)
+        self.ans = 9 #45分
+        self.lock = False
 
     def clicked(self, x: int, y: int):
-        # TODO : 連接到 user_request 若是可互動物件被點到 轉換場景 若是不可互動則說話或是
+
         if self.rect.collidepoint(x, y) and self.mask.get_at((x -  self.rect.x, y -  self.rect.y)) != 0:
+            # 檢查是否已解完
+            if self.lock:
+                return 'lock'
             if self.index == 11:
                 self.index = 0
             else:
@@ -290,11 +309,21 @@ class Clock:
         # TODO : 此圖片中可互動的物件
         self.object = [ExitButton(500,550),
                        Mins(483,400),Hr(483,400)]
+        self.hr_right = False
+        self.min_right = False
+        self.is_open = False
     
     def clicked(self, x: int, y: int):
         # TODO : 連接到 user_request 若是可互動物件被點到 轉換場景 若是不可互動則說話或是
         if self.rect.collidepoint(x, y) and self.mask.get_at((x -  self.rect.x, y -  self.rect.y)) != 0:
             return 'investigation'
+    def open(self):
+        self.is_open = True
+        self.image = clock_open_image
+        self.object[1].lock = True
+        self.object[2].lock = True
+        self.focus = pygame.transform.scale(pygame.image.load(f"image/living_room/Clock/clock_open-investigation.png"), (GAME_WIDTH, GAME_HEIGHT))
+        self.object = [ExitButton(500,550),Handle(300,200),Password_Hint_1(500,200)]
 
 
 
@@ -492,3 +521,41 @@ class Wife_Ch1:
             return 'speak'
 
 
+# 物品欄物件(可放入物品欄的東西)
+class Handle:
+    def __init__(self, x, y):
+        self.image = none_image
+        # 放入物品欄後顯示的圖示
+        self.icon = none_icon
+        self.x = x
+        self.y = y
+        self.rect = self.image.get_rect()
+        self.rect.topleft = (x, y)
+        self.mask = pygame.mask.from_surface(self.image)
+        # 物件狀況
+        # 被檢起
+        self.in_bag = False
+    # TODO : 一些交互用函式
+    def clicked(self, x: int, y: int):
+        if self.rect.collidepoint(x, y) and self.mask.get_at((x -  self.rect.x, y -  self.rect.y)) != 0:
+            # 被撿起放入物品欄
+            return 'take'
+
+class Password_Hint_1:
+    def __init__(self, x, y):
+        self.image = none_image
+        self.icon = none_icon
+        self.x = x
+        self.y = y
+        self.rect = self.image.get_rect()
+        self.rect.topleft = (x, y)
+        self.mask = pygame.mask.from_surface(self.image)
+        # 物件狀況
+        # 被檢起
+        self.in_bag = False
+    # TODO : 一些交互用函式
+
+    def clicked(self, x: int, y: int):
+        if self.rect.collidepoint(x, y) and self.mask.get_at((x -  self.rect.x, y -  self.rect.y)) != 0:
+            # 被撿起放入物品欄
+            return 'take'

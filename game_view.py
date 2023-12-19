@@ -26,9 +26,20 @@ class GameView:
         for item in investigation_item.object:
             self.win.blit(item.image, item.rect)
 
-    def speak(self,text):
+    # TODO : 可以輸入文字位置
+    def speak(self,text, pos):
         word = self.font.render(text, True, (255, 255, 255))  # 渲染文字
         self.win.blit(word, (WIN_WIDTH // 2 - word.get_width() // 2, WIN_HEIGHT // 2 - word.get_height() // 2))
+
+    def draw_bag(self, bag):
+        self.win.blit(bag.image, (bag.x, bag.y))
+        for blank in bag.blank:
+            if blank.item == bag.hold and blank.item != None:
+                self.win.blit(blank.selected_image, blank.rect)
+            else:
+                self.win.blit(blank.image, blank.rect)
+            if blank.item != None:
+                self.win.blit(blank.item.icon, blank.rect)
 
     # def fade_in(self):
     #     # 定義截圖區域的矩形範圍 (x, y, width, height)

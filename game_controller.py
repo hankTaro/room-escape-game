@@ -76,9 +76,10 @@ class GameController:
             else:
                 self.fade_count -= 20
         # 畫出物品欄
+        self.view.draw_bag(self.model.bag)
 
-        # 劃出對話框
-        self.view.speak(self.model.text)
+        # 劃出對話框 (依照位置)
+        self.view.speak(self.model.text, self.model.text_pos)
 
 
 

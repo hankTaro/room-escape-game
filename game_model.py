@@ -1,10 +1,11 @@
 import pygame
 import os
 
-import room
+
 from object import *
 from room import *
 import random
+from bag import *
 
 # from menu import UpgradeMenu, BuildMenu, MainMenu
 # from user_request import RequestSubject, TowerFactory, TowerSeller, TowerDeveloper, EnemyGenerator, Mute, Music, Continue, Pause
@@ -36,6 +37,11 @@ class GameModel:
         self.switch = False
         # 對話框文字
         self.text = ""
+        #文字位置(尚未使用)
+        self.text_pos = (0,0)
+
+        # 物品欄
+        self.bag = Bag()
 
 
 
@@ -133,9 +139,10 @@ class GameModel:
         # TODO : 在調查中就不檢查房間物件是否被點擊 反之在房間中就不檢查物件調查畫面的點擊
         # if the item is clicked, select the item
 
+        # 檢查物品欄
+        self.bag.clicked(mouse_x, mouse_y)
+
         if self.investigation:
-
-
             # TODO : 看看要不要對應不同調查物件設立不同判斷式
             if isinstance(self.investigation_item, Tv):
                 for item in self.investigation_item.object:
@@ -156,14 +163,33 @@ class GameModel:
                 for item in reversed(self.investigation_item.object):
                     # 回傳是哪個物件被點選 進而做出不同反應
                     common = item.clicked(mouse_x, mouse_y)
-                    if common == 0:
-                        pass
                     # 退出調查畫面
-                    elif common == 'stop_investigation':
+                    if common == 'stop_investigation':
                         self.investigation = False
                         self.investigation_item = None
                     elif common == 'move':
+                        # 檢查指針是否對應到答案
+                        if item.index == item.ans:
+                            if isinstance(item, Hr):
+                                self.investigation_item.hr_right = True
+                            else:
+                                self.investigation_item.min_right = True
+                        else:
+                            if isinstance(item, Hr):
+                                self.investigation_item.hr_right = False
+                            else:
+                                self.investigation_item.min_right = False
+                        if self.investigation_item.min_right == True and self.investigation_item.hr_right == True:
+                            self.investigation_item.open()
+                            self.investigation = False
+                            self.investigation_item = None
+
                         break
+                    elif common == 'lock':
+                        self.text = "指針好像卡死了..."
+                    elif common == 'take':
+                        self.bag.save_item(item)
+                        self.investigation_item.object.remove(item)
                     else:
                         pass
             elif isinstance(self.investigation_item, Desk):
@@ -213,6 +239,8 @@ class GameModel:
                     self.investigation_item = item
                     pass
                 elif common == 'speak':
+                    # TODO : 考慮不同文字出現位置
+                    # self.text_pos
                     self.text = item.text[item.text_index]
                     item.text_index += 1
                     if item.text_index == item.text_size:
