@@ -5,13 +5,16 @@ from setting import *
 
 # 待繪製物件
 none_image = pygame.transform.scale(pygame.image.load(f"image/white.png"), (70, 70))
+
 bag_image = pygame.transform.scale(pygame.image.load(f"image/bag.png"), (WIN_WIDTH, GAME_HEIGHT))
-blank_selected_image = pygame.transform.scale(pygame.image.load(f"image/y.png"), (70, 70))
+blank_image = pygame.transform.scale(pygame.image.load(f"image/Icon/blank.png"), (BLANK_SIZE, BLANK_SIZE))
+blank_selected_image = pygame.transform.scale(pygame.image.load(f"image/Icon/blank_select.png"), (BLANK_SIZE, BLANK_SIZE))
+
 
 
 class Blank:
     def __init__(self, x, y):
-        self.image = none_image
+        self.image = blank_image
         # 被手持時的背景色
         self.selected_image = blank_selected_image
         self.x = x
@@ -51,15 +54,15 @@ class Bag:
 
     # 這邊統一由 bag 確認點擊後 在將點擊位置傳入各個blank
     def clicked(self, x: int, y: int):
-        if self.rect.collidepoint(x, y) and self.mask.get_at((x - self.rect.x, y - self.rect.y)) != 0:
-            for i in self.blank:
-                if i.clicked(x, y):
-                    # 手持的物品與點選的不同
-                    if self.hold != i.item:
-                        self.hold = i.item
-                    # 手持的物品與點選的相同
-                    else:
-                        self.hold = None
+        # if self.rect.collidepoint(x, y) and self.mask.get_at((x - self.rect.x, y - self.rect.y)) != 0:
+        for i in self.blank:
+            if i.clicked(x, y):
+                # 手持的物品與點選的不同
+                if self.hold != i.item:
+                    self.hold = i.item
+                # 手持的物品與點選的相同
+                else:
+                    self.hold = None
 
 
 

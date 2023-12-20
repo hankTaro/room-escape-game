@@ -67,7 +67,7 @@ knob_3_image = [pygame.transform.scale(pygame.image.load(f"image/study/knob/knob
 
 # 待繪製物件
 none_image = pygame.transform.scale(BACKGROUND_IMAGE, (100, 100))
-none_icon = pygame.transform.scale(pygame.image.load(f"image/icon.png"), (45, 45))
+none_icon = pygame.transform.scale(pygame.image.load(f"image/icon.png"), (ICON_SIZE, ICON_SIZE))
 
 # 選單按鈕
 class MenuButton:

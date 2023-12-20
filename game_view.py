@@ -32,14 +32,14 @@ class GameView:
         self.win.blit(word, (WIN_WIDTH // 2 - word.get_width() // 2, WIN_HEIGHT // 2 - word.get_height() // 2))
 
     def draw_bag(self, bag):
-        self.win.blit(bag.image, (bag.x, bag.y))
+        # self.win.blit(bag.image, (bag.x, bag.y))
         for blank in bag.blank:
             if blank.item == bag.hold and blank.item != None:
                 self.win.blit(blank.selected_image, blank.rect)
             else:
                 self.win.blit(blank.image, blank.rect)
             if blank.item != None:
-                self.win.blit(blank.item.icon, blank.rect)
+                self.win.blit(blank.item.icon, (blank.x + ICON_POS, blank.y + ICON_POS))
 
     # def fade_in(self):
     #     # 定義截圖區域的矩形範圍 (x, y, width, height)

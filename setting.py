@@ -14,6 +14,14 @@ GAME_HEIGHT = 480  # WIN_HEIGHT * 0.8
 GAME_X = 50
 GAME_Y = 50
 
+# 物品欄大小(ICON可能就-5)
+BLANK_SIZE = 70
+ICON_SIZE = 50
+
+# ICON 座標
+ICON_POS = (BLANK_SIZE - ICON_SIZE) // 2
+
+
 # Frame Per Second
 FPS = 60
 
