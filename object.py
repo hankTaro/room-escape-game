@@ -45,6 +45,7 @@ password_hint_1_icon = pygame.transform.scale(pygame.image.load(f"image/Object/W
 
 tv_show_1 = cv2.VideoCapture("image/TV_show/meme_1.mp4")
 tv_show_2 = cv2.VideoCapture("image/TV_show/meme_1.mp4")
+tv_power_off = pygame.transform.scale(pygame.image.load(f"image/TV_show/WHY.png"), (320, 180))
 # tv_show_1_sound = pygame.mixer.Sound('image/TV_show/meme_1.mp3')
 
 # 書架相關 ===================================================
@@ -227,9 +228,7 @@ class TvSwitch:
         self.rect.center = (x, y)
 
     def clicked(self, x: int, y: int):
-        # TODO : 再看看要回傳甚麼 以及怎麼監測
         if self.rect.collidepoint(x, y):
-            # 測試
             return 'switch'
 
 class TvPower:
@@ -241,9 +240,7 @@ class TvPower:
         self.rect.center = (x, y)
 
     def clicked(self, x: int, y: int):
-        # TODO : 再看看要回傳甚麼 以及怎麼監測
         if self.rect.collidepoint(x, y):
-            # 測試
             return 'shotdown'
 
 class TvShow:
@@ -253,14 +250,16 @@ class TvShow:
         self.index = 0
         self.size = len(self.all_show)
         self.image = self.all_show[self.index]
+        self.power_off = tv_power_off
         self.x = x
         self.y = y
-        self.w = 300
-        self.h = 300
+        self.w = 300 # 設定影片用
+        self.h = 300 # 設定影片用
+        self.ispower = True
         pygame.time.set_timer(VIDEO_EVENT, int(2000 / FPS), 0)
-        # self.rect = self.image.get_rect()
-        # self.rect.topleft = (x, y)
-        # self.mask = pygame.mask.from_surface(self.image)
+        self.rect = self.power_off.get_rect()
+        self.rect.topleft = (x, y)
+        self.mask = pygame.mask.from_surface(self.power_off)
 
     def clicked(self, x: int, y: int):
         return 0
@@ -270,6 +269,9 @@ class TvShow:
         if self.index == self.size:
             self.index = 0
         self.image = self.all_show[self.index]
+    
+    def power(self):
+        self.ispower = not self.ispower
 
 # 可互動物件本身 ===========================================
 class Tv:
@@ -279,9 +281,8 @@ class Tv:
         self.y = y
         self.rect = self.image.get_rect()
         self.rect.topleft = (x, y)
-        self.mask = pygame.mask.from_surface(self.image)
-        self.ispower = True
         self.tvshow = TvShow(300,150)
+        self.mask = pygame.mask.from_surface(self.image)
 
         # 入口 也就是上一層 離開調查時要回到的地方 None 代表離開調查
         self.enter = None
@@ -300,13 +301,6 @@ class Tv:
     # TODO : 用於改變在解謎中改動到的資料
     def puzzle(self):
         pass
-
-    def power(self):
-        if not self.ispower:
-            self.object = [item for item in self.object if not isinstance(item, TvShow)]
-            self.tvshow.image.set(cv2.CAP_PROP_POS_FRAMES, 0) # 畫面重製
-        else:
-            self.object.append(TvShow(300,150))
 
 
 # Clock 會用到的物件 ===========================================
