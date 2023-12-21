@@ -171,6 +171,11 @@ class GameModel:
             common = item.clicked(mouse_x, mouse_y)
             if common == 0:
                 pass
+            elif common == 'switch':
+                self.investigation_item.tvshow.switch()
+            elif common == 'shotdown':
+                self.investigation_item.ispower = not self.investigation_item.ispower
+                self.investigation_item.power()
             # 退出調查畫面
             elif common == 'stop_investigation':
                 self.investigation_item = self.investigation_item.enter

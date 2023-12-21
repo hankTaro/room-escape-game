@@ -1,6 +1,7 @@
 import pygame
 from setting import *
-
+import cv2
+import numpy as np
 
 class GameView:
     def __init__(self):
@@ -24,7 +25,19 @@ class GameView:
     def draw_item(self, investigation_item):
         self.win.blit(investigation_item.focus, (GAME_X, GAME_Y))
         for item in investigation_item.object:
-            self.win.blit(item.image, item.rect)
+            try:
+                self.win.blit(item.image, item.rect)
+            except: # 動畫
+                ret, frame = item.image.read() #ret判斷結束了沒
+                if not ret:
+                    item.image.set(cv2.CAP_PROP_POS_FRAMES, 0) # 結束將影片重製
+                    return
+                frame = cv2.resize(frame,(item.w,item.h)) #設定大小
+                frame = cv2.flip(frame, 1) # 做左右向反
+                frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB) # 換成彩色
+                frame = pygame.surfarray.make_surface((np.rot90(frame)))  # 轉90度 畫在畫面上
+                self.win.blit(frame, (item.x, item.y)) #設定化的位置
+
 
     # TODO : 可以輸入文字位置
     def speak(self,text, pos):
