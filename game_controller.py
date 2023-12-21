@@ -34,7 +34,9 @@ class GameController:
         self.events = {"game quit": False,
                        "mouse position": None,
                        "keyboard key": None,
-                       "pause": False
+                       "pause": False,
+                       "mouse motion":None,
+                       "release button":False
                        }
         # update event
         for event in pygame.event.get():
@@ -49,6 +51,17 @@ class GameController:
             if event.type == pygame.MOUSEBUTTONDOWN:
                 x, y = pygame.mouse.get_pos()
                 self.events["mouse position"] = [x, y]
+
+            if event.type == pygame.MOUSEBUTTONUP:
+                if event.button == 1:  # 左鍵釋放
+                    self.events["release button"] = True
+
+            if event.type == pygame.MOUSEMOTION:
+                self.events["mouse motion"] = event.rel
+
+
+
+
 
         if self.model.is_pause:
             self.events["pause"] = True

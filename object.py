@@ -46,6 +46,7 @@ tv_show_1 = pygame.transform.scale(pygame.image.load(f"image/TV_show/WHY.png"), 
 # tv_show_1_sound = pygame.mixer.Sound('image/TV_show/meme_1.mp3')
 
 # 書架相關 ===================================================
+book_shelf_puzzle = pygame.transform.scale(pygame.image.load(f"image/study/BookShelf/book_shelf_investigation.png"), (GAME_WIDTH, GAME_HEIGHT))
 book_shelf_left_door_close_image = pygame.transform.scale(pygame.image.load(f"image/study/BookShelf/left_door_close.png"), (GAME_WIDTH, GAME_HEIGHT))
 book_shelf_right_door_close_image = pygame.transform.scale(pygame.image.load(f"image/study/BookShelf/right_door_close.png"), (GAME_WIDTH, GAME_HEIGHT))
 book_shelf_left_door_open_image = pygame.transform.scale(pygame.image.load(f"image/study/BookShelf/left_door_open.png"), (GAME_WIDTH, GAME_HEIGHT))
@@ -55,14 +56,17 @@ locker_image = pygame.transform.scale(pygame.image.load(f"image/study/Locker/loc
 locker_setup_image = pygame.transform.scale(pygame.image.load(f"image/study/Locker/locker_setup.png"), (GAME_WIDTH, GAME_HEIGHT))
 locker_open_image = pygame.transform.scale(pygame.image.load(f"image/study/Locker/locker_open.png"), (GAME_WIDTH, GAME_HEIGHT))
 
-photo_frame_image = pygame.transform.scale(pygame.image.load(f"image/study/photo_frame.png"), (GAME_WIDTH, GAME_HEIGHT))
 chest_key_image = pygame.transform.scale(pygame.image.load(f"image/study/Chest/chest_key.png"), (GAME_WIDTH, GAME_HEIGHT))
 
 knob_0_image = [pygame.transform.scale(pygame.image.load(f"image/study/knob/knob_000{i}.png"), (GAME_WIDTH, GAME_HEIGHT)) for i in range(10)]
 knob_1_image = [pygame.transform.scale(pygame.image.load(f"image/study/knob/knob_1_000{i}.png"), (GAME_WIDTH, GAME_HEIGHT)) for i in range(10)]
 knob_2_image = [pygame.transform.scale(pygame.image.load(f"image/study/knob/knob_2_000{i}.png"), (GAME_WIDTH, GAME_HEIGHT)) for i in range(10)]
 knob_3_image = [pygame.transform.scale(pygame.image.load(f"image/study/knob/knob_3_000{i}.png"), (GAME_WIDTH, GAME_HEIGHT)) for i in range(10)]
-# ===========================================================
+# 相框相關 ===========================================================
+photo_frame_image = pygame.transform.scale(pygame.image.load(f"image/study/PhotoFrame/photo_frame.png"), (GAME_WIDTH, GAME_HEIGHT))
+photo_fragments_image = [pygame.transform.scale(pygame.image.load(f"image/study/PhotoFrame/photo_{i}.png"), (GAME_WIDTH, GAME_HEIGHT)) for i in range(1)]
+photo_frame_puzzle = pygame.transform.scale(pygame.image.load(f"image/study/PhotoFrame/photo_frame_puzzle.png"), (GAME_WIDTH, GAME_HEIGHT))
+# XX相關 ===========================================================
 
 
 # 待繪製物件
@@ -259,6 +263,9 @@ class Tv:
         self.rect.topleft = (x, y)
         self.mask = pygame.mask.from_surface(self.image)
 
+        # 入口 也就是上一層 離開調查時要回到的地方 None 代表離開調查
+        self.enter = None
+
         # 下方要有儲存解謎進度的data
         # TODO : 點擊放大後的圖片
         self.focus = pygame.transform.scale(pygame.image.load(f"image/living_room/Tv/tv_investigation.png"), (GAME_WIDTH, GAME_HEIGHT))
@@ -344,6 +351,8 @@ class Clock:
         self.rect = self.image.get_rect()
         self.rect.topleft = (x, y)
         self.mask = pygame.mask.from_surface(self.image)
+        # 入口 也就是上一層 離開調查時要回到的地方 None 代表離開調查
+        self.enter = None
         self.focus = pygame.transform.scale(pygame.image.load(f"image/living_room/Clock/clock_investigation.png"), (GAME_WIDTH, GAME_HEIGHT))
         # TODO : 此圖片中可互動的物件
         self.object = [ExitButton(500,550),
@@ -377,6 +386,8 @@ class NewPaper:
         self.y = y
         self.rect = self.image.get_rect()
         self.rect.center = (x, y)
+
+
         # 下方要有儲存解謎進度的data
         # TODO : 點擊放大後的圖片
         self.focus = pygame.transform.scale(pygame.image.load(f"image/living_room/Tv/tv_investigation.png"), (GAME_WIDTH, GAME_HEIGHT))
@@ -419,6 +430,9 @@ class Desk:
         self.rect = self.image.get_rect()
         self.rect.topleft = (x, y)
         self.mask = pygame.mask.from_surface(self.image)
+
+        # 入口 也就是上一層 離開調查時要回到的地方 None 代表離開調查
+        self.enter = None
 
         # 下方要有儲存解謎進度的data
         # TODO : 點擊放大後的圖片
@@ -548,21 +562,6 @@ class Locker:
         self.index += 1
         self.image = self.all_image[self.index]
         self.open = True
-class PhotoFrame:
-    def __init__(self, x, y):
-        self.image = photo_frame_image
-        self.x = x
-        self.y = y
-        self.rect = self.image.get_rect()
-        self.rect.topleft = (x, y)
-        self.mask = pygame.mask.from_surface(self.image)
-
-        self.focus = none_image
-        self.object = [ExitButton(500, 550)]
-    def clicked(self, x: int, y: int):
-        if self.rect.collidepoint(x, y) and self.mask.get_at((x -  self.rect.x, y -  self.rect.y)) != 0:
-            return 'investigation'
-
 
 #可互動物件
 class BookShelf:
@@ -574,8 +573,10 @@ class BookShelf:
         self.rect.topleft = (x, y)
         self.mask = pygame.mask.from_surface(self.image)
 
-        self.focus = pygame.transform.scale(pygame.image.load(f"image/study/BookShelf/book_shelf_investigation.png"),
-                                            (GAME_WIDTH, GAME_HEIGHT))
+        # 入口 也就是上一層 離開調查時要回到的地方 None 代表離開調查
+        self.enter = None
+
+        self.focus = book_shelf_puzzle
         self.object = [ExitButton(500, 550), PhotoFrame(GAME_X, GAME_Y), ChestKey(GAME_X, GAME_Y),
                        Knob(GAME_X, GAME_Y, 0), Knob(GAME_X, GAME_Y, 1), Knob(GAME_X, GAME_Y, 2), Knob(GAME_X, GAME_Y, 3)
             , Locker(GAME_X, GAME_Y), RightDoor(GAME_X, GAME_Y), LeftDoor(GAME_X, GAME_Y)]
@@ -589,6 +590,59 @@ class BookShelf:
             return 'investigation'
     def remove_knob(self):
         self.object = [item for item in self.object if not isinstance(item, Knob)]
+# 相框謎題 ======================================================================
+class PhotoFragments:
+    def __init__(self, x, y, num):
+        self.num = num
+        self.image = photo_fragments_image[num]
+        self.x = x
+        self.y = y
+        self.rect = self.image.get_rect()
+        self.rect.topleft = (x, y)
+        self.mask = pygame.mask.from_surface(self.image)
+        self.drag = False
+        self.ans = pygame.Rect(GAME_X - 15,GAME_Y - 15,30,30)
+
+        # 因為碎片也是用畫面大小輸出 只是涂色位置不同 所以所有碎片對準 GAME_X, GAME_Y 就會是正確位置
+    def clicked(self, x: int, y: int):
+        # 除了被點到 還要確定滑鼠是按住的才能拖動
+        if self.rect.collidepoint(x, y) and self.mask.get_at((x - self.rect.x, y - self.rect.y)) != 0:
+            return 'drag'
+    def drag_set(self):
+        self.drag = True
+        # self.rect.move_ip(event.rel)
+    def release(self):
+        correct_position = (GAME_X, GAME_Y)
+        # 畫面重疊區域大小必需高於此
+        min_intersection_width = self.rect.width * 0.95
+        min_intersection_height = self.rect.height * 0.95
+        self.drag = False
+        if self.rect.colliderect(pygame.Rect(correct_position, self.rect.size)):
+            intersection = self.rect.clip(pygame.Rect(correct_position, self.rect.size))
+            if intersection.width >= min_intersection_width and intersection.height >= min_intersection_height:
+                print("拼圖正確放置！且相交區域足夠大")
+    def move(self, rel):
+        if self.drag:
+            self.rect.move_ip(rel)
+
+class PhotoFrame:
+    def __init__(self, x, y):
+        self.image = photo_frame_image
+        self.x = x
+        self.y = y
+        self.rect = self.image.get_rect()
+        self.rect.topleft = (x, y)
+        self.mask = pygame.mask.from_surface(self.image)
+
+        # 入口 也就是上一層 離開調查時要回到的地方 None 代表離開調查
+        self.enter = None
+        self.focus = none_image
+        # 這裡的起始位置要手動調整，使得碎片一開始疊在向框的外面
+        self.object = [ExitButton(500, 550),PhotoFragments(GAME_X + 100, GAME_Y + 10, 0)]
+    def clicked(self, x: int, y: int):
+        if self.rect.collidepoint(x, y) and self.mask.get_at((x -  self.rect.x, y -  self.rect.y)) != 0:
+            return 'investigation'
+# 相框謎題 ======================================================================
 
 #可互動物件，investigation尚未完成
 class Globe:
@@ -695,9 +749,6 @@ class Handle:
         self.rect = self.image.get_rect()
         self.rect.topleft = (x, y)
         self.mask = pygame.mask.from_surface(self.image)
-        # 物件狀況
-        # 被檢起
-        self.in_bag = False
     # TODO : 一些交互用函式
     def clicked(self, x: int, y: int):
         if self.rect.collidepoint(x, y) and self.mask.get_at((x -  self.rect.x, y -  self.rect.y)) != 0:
@@ -713,9 +764,6 @@ class Password_Hint_1:
         self.rect = self.image.get_rect()
         self.rect.topleft = (x, y)
         self.mask = pygame.mask.from_surface(self.image)
-        # 物件狀況
-        # 被檢起
-        self.in_bag = False
     # TODO : 一些交互用函式
 
     def clicked(self, x: int, y: int):
@@ -732,9 +780,6 @@ class ChestKey:
         self.rect = self.image.get_rect()
         self.rect.topleft = (x, y)
         self.mask = pygame.mask.from_surface(self.image)
-        # 物件狀況
-        # 被檢起
-        self.in_bag = False
     def clicked(self, x: int, y: int):
         if self.rect.collidepoint(x, y) and self.mask.get_at((x -  self.rect.x, y -  self.rect.y)) != 0:
             # 被撿起放入物品欄

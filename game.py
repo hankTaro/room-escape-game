@@ -18,6 +18,8 @@ class Game:
         pause = False
 
         game_model.start_ch1()
+        # game_model.test_init()
+
         while not quit_game:
             pygame.time.Clock().tick(FPS)  # control the frame rate
             game_control.receive_user_input()  # receive user input
