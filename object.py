@@ -810,7 +810,7 @@ class ChestKey:
         # 調查中此物品的樣貌
         self.observe = observe_image
         # 調查中此物品的敘述
-        self.description = "test\n123\n1111\n111\n555\n588"
+        self.description = ""
         self.x = x
         self.y = y
         self.rect = self.image.get_rect()
