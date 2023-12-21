@@ -1,5 +1,7 @@
 import os
 import pygame
+import cv2
+import numpy as np
 from user_request import *
 from setting import *
 
@@ -41,8 +43,9 @@ wife_1_image = pygame.transform.scale(pygame.image.load(f"image/Object/Wife/wife
 handle_icon = pygame.transform.scale(pygame.image.load(f"image/Object/Wife/wife.png"), (GAME_WIDTH, GAME_HEIGHT))
 password_hint_1_icon = pygame.transform.scale(pygame.image.load(f"image/Object/Wife/wife.png"), (GAME_WIDTH, GAME_HEIGHT))
 
-
-tv_show_1 = pygame.transform.scale(pygame.image.load(f"image/TV_show/WHY.png"), (320, 180))
+tv_show_1 = cv2.VideoCapture("image/TV_show/meme_1.mp4")
+tv_show_2 = cv2.VideoCapture("image/TV_show/meme_1.mp4")
+tv_power_off = pygame.transform.scale(pygame.image.load(f"image/TV_show/WHY.png"), (320, 180))
 # tv_show_1_sound = pygame.mixer.Sound('image/TV_show/meme_1.mp3')
 
 # 書架相關 ===================================================
@@ -216,43 +219,59 @@ class DoorToKitchen:
 # 可互動物件大概會是這個架構
 
 # TV 會用到的原件 ===========================================
-class TvButton:
-    def __init__(self, x, y, num):
+class TvSwitch:
+    def __init__(self, x, y):
         self.image = pygame.transform.scale(pygame.image.load(f"image/living_room/Tv/btn.png"), (50, 50))
-        self.number = num
         self.x = x
         self.y = y
         self.rect = self.image.get_rect()
         self.rect.center = (x, y)
 
     def clicked(self, x: int, y: int):
-        # TODO : 再看看要回傳甚麼 以及怎麼監測
         if self.rect.collidepoint(x, y):
-            # 測試
-            print(self.number)
+            return 'switch'
 
-            return self.number
-        else:
-            return 0
-
-class TvShow:
+class TvPower:
     def __init__(self, x, y):
-        self.all_show = [tv_show_1]
-        # self.sound = [tv_show_1_sound]
-        self.index = 0
-        self.size = 2
-        self.image = self.all_show[self.index]
+        self.image = pygame.transform.scale(pygame.image.load(f"image/living_room/Tv/btn.png"), (50, 50))
         self.x = x
         self.y = y
         self.rect = self.image.get_rect()
-        self.rect.topleft = (x, y)
-        self.mask = pygame.mask.from_surface(self.image)
+        self.rect.center = (x, y)
 
     def clicked(self, x: int, y: int):
-        if self.rect.collidepoint(x, y) and self.mask.get_at((x - self.rect.x, y - self.rect.y)) != 0:
-            self.index += 1
-            if self.index == self.size:
-                self.index = 0
+        if self.rect.collidepoint(x, y):
+            return 'shotdown'
+
+class TvShow:
+    def __init__(self, x, y):
+        self.all_show = [tv_show_1,tv_show_2]
+        # self.sound = [tv_show_1_sound]
+        self.index = 0
+        self.size = len(self.all_show)
+        self.image = self.all_show[self.index]
+        self.power_off = tv_power_off
+        self.x = x
+        self.y = y
+        self.w = 300 # 設定影片用
+        self.h = 300 # 設定影片用
+        self.ispower = True
+        pygame.time.set_timer(VIDEO_EVENT, int(2000 / FPS), 0)
+        self.rect = self.power_off.get_rect()
+        self.rect.topleft = (x, y)
+        self.mask = pygame.mask.from_surface(self.power_off)
+
+    def clicked(self, x: int, y: int):
+        return 0
+
+    def switch(self):
+        self.index += 1
+        if self.index == self.size:
+            self.index = 0
+        self.image = self.all_show[self.index]
+    
+    def power(self):
+        self.ispower = not self.ispower
 
 # 可互動物件本身 ===========================================
 class Tv:
@@ -262,6 +281,7 @@ class Tv:
         self.y = y
         self.rect = self.image.get_rect()
         self.rect.topleft = (x, y)
+        self.tvshow = TvShow(300,150)
         self.mask = pygame.mask.from_surface(self.image)
 
         # 入口 也就是上一層 離開調查時要回到的地方 None 代表離開調查
@@ -271,7 +291,7 @@ class Tv:
         # TODO : 點擊放大後的圖片
         self.focus = pygame.transform.scale(pygame.image.load(f"image/living_room/Tv/tv_investigation.png"), (GAME_WIDTH, GAME_HEIGHT))
         # TODO : 此圖片中可互動的物件
-        self.object = [ExitButton(500,550),TvShow(100,50)]
+        self.object = [ExitButton(500,550),TvSwitch(800,250),TvPower(800,500),self.tvshow]
 
     def clicked(self, x: int, y: int):
         # TODO : 連接到 user_request 若是可互動物件被點到 轉換場景 若是不可互動則說話或是

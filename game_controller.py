@@ -1,5 +1,5 @@
 import pygame
-
+from object import *
 
 # controller
 class GameController:
@@ -80,7 +80,10 @@ class GameController:
         if not self.model.investigation:
             self.view.draw_room(self.model.cur_room, self.model.wall)
         else:
-            self.view.draw_item(self.model.investigation_item)
+            if isinstance(self.model.investigation_item, Tv):
+                self.view.draw_tv_item(self.model.investigation_item)
+            else:
+                self.view.draw_item(self.model.investigation_item)
             pass
 
         # 轉場檢測
