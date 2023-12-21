@@ -8,9 +8,16 @@ class GameView:
         self.win = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT))
         self.font_size = 30
         self.font = pygame.font.Font("文鼎中特標準宋體.TTF", self.font_size)
+        self.font_item = pygame.font.Font("金梅書法豆豆字體.ttf", 24)
+        self.font_description = pygame.font.Font("文鼎中特毛楷.TTF", 24)
         self.bg = None
         self.black = pygame.transform.scale(pygame.image.load(f"image/black.png"), (GAME_WIDTH, GAME_HEIGHT))
         self.transparency = 0
+        # 調查畫面圖片框
+        self.observe_rect = pygame.Rect(GAME_X + 25, GAME_Y + 25, GAME_WIDTH//2 - 50 , GAME_HEIGHT//2 - 50)
+        # 調查畫面文字起始點
+        self.description_x = GAME_X + 25 + GAME_WIDTH//2
+        self.description_y = GAME_Y + 25
 
     def draw_bg(self):
         self.win.blit(BACKGROUND_IMAGE, (0, 0))
@@ -49,37 +56,46 @@ class GameView:
         for blank in bag.blank:
             if blank.item == bag.hold and blank.item != None:
                 self.win.blit(blank.selected_image, blank.rect)
+                word = self.font_item.render(blank.item.name, True, (255, 255, 255))
+                rect = word.get_rect()
+                rect.topright = (860, 80)
+                self.win.blit(word, rect)
             else:
                 self.win.blit(blank.image, blank.rect)
             if blank.item != None:
                 self.win.blit(blank.item.icon, (blank.x + ICON_POS, blank.y + ICON_POS))
+    def draw_observe(self, item):
+        # 畫面灰化
+        black_surface = self.black
+        black_surface.set_alpha(150)
+        self.win.blit(black_surface, (GAME_X, GAME_Y))
 
-    # def fade_in(self):
-    #     # 定義截圖區域的矩形範圍 (x, y, width, height)
-    #     capture_rect = pygame.Rect(GAME_X, GAME_Y, GAME_WIDTH, GAME_HEIGHT)
-    #
-    #     # 使用 subsurface() 創建限定範圍的子表面
-    #     cropped_surface = self.win.subsurface(capture_rect)
-    #
-    #     # 將子表面的像素數據轉換為字串
-    #     screenshot_data = pygame.image.tostring(cropped_surface, 'RGB')
-    #
-    #     # 創建新的 Surface
-    #     new_surface = pygame.Surface((GAME_WIDTH, GAME_HEIGHT))
-    #
-    #     # 將 screenshot_data 轉換為 Surface
-    #     pygame.image.fromstring(screenshot_data, (GAME_WIDTH, GAME_HEIGHT), 'RGB').convert(new_surface)
-    #
-    #     transparency = 0
-    #
-    #     black_surface = self.black
-    #     if transparency < 255:
-    #         transparency += 1
-    #         if transparency >= 255:
-    #             transparency = 255
-    #         black_surface.set_alpha(transparency)
-    #         self.win.blit(new_surface, (GAME_X, GAME_Y))
-    #         self.win.blit(black_surface, (0, 0))
+        # 顯示圖片
+        scaled_image = self.scale_image_to_rect(item.observe, self.observe_rect)
+        self.win.blit(scaled_image, self.observe_rect.midleft)
+
+        # 顯示文字
+        text = item.description
+        lines = text.splitlines()
+
+        y = WIN_HEIGHT // 2 - sum(self.font.get_linesize() for _ in lines) // 2
+
+        for line in lines:
+            word = self.font_description.render(line, True, (255, 255, 255))
+            self.win.blit(word, (WIN_WIDTH // 2 - word.get_width() // 2, y))
+            y += self.font_description.get_linesize()
+
+
+
+    def scale_image_to_rect(self, image, rect):
+        # 等比縮放圖片至符合方形
+        aspect_ratio = image.get_width() / image.get_height()
+        target_width = rect.width
+        target_height = int(target_width / aspect_ratio)
+        scaled_image = pygame.transform.scale(image, (target_width, target_height))
+        return scaled_image
+
+
 
     def fade_out(self,transparency):
         black_surface = self.black
