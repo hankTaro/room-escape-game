@@ -39,6 +39,8 @@ class GameModel:
         self.text = ""
         #文字位置(尚未使用)
         self.text_pos = (0,0)
+        # 是否在調查手中物品
+        self.observe = False
 
         # 物品欄
         self.bag = Bag()
@@ -121,48 +123,56 @@ class GameModel:
         if events["keyboard key"] == pygame.K_ESCAPE:
             # TODO : 叫出暫停選單
             pass
+        elif events["keyboard key"] == pygame.K_f and self.observe == False and self.bag.hold is not None:
+            # 跳出調查手中物品畫面
+            self.start_observe()
+        elif events["keyboard key"] == pygame.K_f and self.observe:
+            self.end_observe()
 
         # mouse event
-        # 如果在轉場中 無法點擊物件
-        if self.switch:
-            pass
-        elif events["mouse position"] is not None:
-            x, y = events["mouse position"]
-            # 重製對話
-            self.text = ""
-            # 檢查物品欄
-            self.bag.clicked(x, y)
-            # 檢查 menu btn
-            self.btn.clicked(x, y)
+        # 如果在轉場中 或是調查手中物品時 無法執行操作
+        if not (self.switch or self.observe):
+            if events["mouse position"] is not None:
+                x, y = events["mouse position"]
+                # 重製對話
+                self.text = ""
+                # 檢查物品欄
+                self.bag.clicked(x, y)
+                # 檢查 menu btn
+                self.btn.clicked(x, y)
 
-            if self.investigation:
-                if isinstance(self.investigation_item, Tv):
-                    self.tv_select(x, y)
-                elif isinstance(self.investigation_item, BookShelf):
-                    self.book_shelf_select(x, y)
-                elif isinstance(self.investigation_item, Clock):
-                    self.clock_select(x, y)
-                elif isinstance(self.investigation_item, Desk):
-                    self.desk_select(x, y)
-                elif isinstance(self.investigation_item, PhotoFrame):
-                    self.photo_frame_select(x, y, 'down')
+                if self.investigation:
+                    if isinstance(self.investigation_item, Tv):
+                        self.tv_select(x, y)
+                    elif isinstance(self.investigation_item, BookShelf):
+                        self.book_shelf_select(x, y)
+                    elif isinstance(self.investigation_item, Clock):
+                        self.clock_select(x, y)
+                    elif isinstance(self.investigation_item, Desk):
+                        self.desk_select(x, y)
+                    elif isinstance(self.investigation_item, PhotoFrame):
+                        self.photo_frame_select(x, y, 'down')
+                    else:
+                        pass
+                elif not self.investigation :
+                    self.basic_function(x, y)
                 else:
                     pass
-            elif not self.investigation :
-                self.basic_function(x, y)
-            else:
-                pass
-        if events["mouse motion"] is not None:
-            if self.investigation:
-                if isinstance(self.investigation_item, PhotoFrame):
-                    self.photo_frame_select(0, 0, events["mouse motion"])
-        if events["release button"]:
-            if self.investigation:
-                if isinstance(self.investigation_item, PhotoFrame):
-                    self.photo_frame_select(0, 0, 'up')
+            if events["mouse motion"] is not None:
+                if self.investigation:
+                    if isinstance(self.investigation_item, PhotoFrame):
+                        self.photo_frame_select(0, 0, events["mouse motion"])
+            if events["release button"]:
+                if self.investigation:
+                    if isinstance(self.investigation_item, PhotoFrame):
+                        self.photo_frame_select(0, 0, 'up')
 
 
 
+    def start_observe(self):
+        self.observe = True
+    def end_observe(self):
+        self.observe = False
 
     def tv_select(self, mouse_x: int, mouse_y: int):
         for item in self.investigation_item.object:

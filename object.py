@@ -72,6 +72,7 @@ photo_frame_puzzle = pygame.transform.scale(pygame.image.load(f"image/study/Phot
 # 待繪製物件
 none_image = pygame.transform.scale(BACKGROUND_IMAGE, (100, 100))
 none_icon = pygame.transform.scale(pygame.image.load(f"image/icon.png"), (ICON_SIZE, ICON_SIZE))
+observe_image = pygame.image.load(f"image/Observe/observe.png")
 
 # 選單按鈕
 class MenuButton:
@@ -741,9 +742,14 @@ class Wife_Ch1:
 # 物品欄物件(可放入物品欄的東西)
 class Handle:
     def __init__(self, x, y):
+        self.name = "把手"
         self.image = none_image
         # 放入物品欄後顯示的圖示
         self.icon = none_icon
+        # 調查中此物品的樣貌
+        self.observe = observe_image
+        # 調查中此物品的敘述
+        self.description = ""
         self.x = x
         self.y = y
         self.rect = self.image.get_rect()
@@ -757,8 +763,13 @@ class Handle:
 
 class Password_Hint_1:
     def __init__(self, x, y):
+        self.name = "皺巴巴的筆記"
         self.image = none_image
         self.icon = none_icon
+        # 調查中此物品的樣貌
+        self.observe = observe_image
+        # 調查中此物品的敘述
+        self.description = ""
         self.x = x
         self.y = y
         self.rect = self.image.get_rect()
@@ -773,13 +784,20 @@ class Password_Hint_1:
 
 class ChestKey:
     def __init__(self, x, y):
+        self.name = "黃色鑰匙"
         self.image = chest_key_image
         self.icon = none_icon
+        # 調查中此物品的樣貌
+        self.observe = observe_image
+        # 調查中此物品的敘述
+        self.description = "test\n123\n1111\n111\n555\n588"
         self.x = x
         self.y = y
         self.rect = self.image.get_rect()
         self.rect.topleft = (x, y)
         self.mask = pygame.mask.from_surface(self.image)
+
+
     def clicked(self, x: int, y: int):
         if self.rect.collidepoint(x, y) and self.mask.get_at((x -  self.rect.x, y -  self.rect.y)) != 0:
             # 被撿起放入物品欄

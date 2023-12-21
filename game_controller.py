@@ -47,6 +47,9 @@ class GameController:
                 if event.key == pygame.K_ESCAPE:
                     # 叫出選單
                     self.events["keyboard key"] = pygame.K_ESCAPE
+                elif event.key == pygame.K_f:
+                    # 調查手中物件
+                    self.events["keyboard key"] = pygame.K_f
             # player click action
             if event.type == pygame.MOUSEBUTTONDOWN:
                 x, y = pygame.mouse.get_pos()
@@ -93,6 +96,10 @@ class GameController:
 
         # 劃出對話框 (依照位置)
         self.view.speak(self.model.text, self.model.text_pos)
+
+        # 畫出手中物品調查頁面
+        if self.model.observe:
+            self.view.draw_observe(self.model.bag.hold)
 
 
 
