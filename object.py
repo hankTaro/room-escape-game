@@ -40,9 +40,6 @@ dropped_painting_image = pygame.transform.scale(pygame.image.load(f"image/study/
 wife_1_image = pygame.transform.scale(pygame.image.load(f"image/Object/Wife/wife.png"), (GAME_WIDTH, GAME_HEIGHT))
 
 
-handle_icon = pygame.transform.scale(pygame.image.load(f"image/Object/Wife/wife.png"), (GAME_WIDTH, GAME_HEIGHT))
-password_hint_1_icon = pygame.transform.scale(pygame.image.load(f"image/Object/Wife/wife.png"), (GAME_WIDTH, GAME_HEIGHT))
-
 tv_channel_1 = cv2.VideoCapture("image/living_room/Tv/TV_show/meme_1.mp4")
 tv_channel_2 = cv2.VideoCapture("image/living_room/Tv/TV_show/tyler1 scream meme.mp4")
 tv_channel_3 = pygame.transform.scale(pygame.image.load(f"image/living_room/Tv/TV_show/channel_1.png"), (GAME_WIDTH, GAME_HEIGHT))
@@ -78,6 +75,21 @@ knob_3_image = [pygame.transform.scale(pygame.image.load(f"image/study/knob/knob
 photo_frame_image = pygame.transform.scale(pygame.image.load(f"image/study/PhotoFrame/photo_frame.png"), (GAME_WIDTH, GAME_HEIGHT))
 photo_fragments_image = [pygame.transform.scale(pygame.image.load(f"image/study/PhotoFrame/photo_{i}.png"), (GAME_WIDTH, GAME_HEIGHT)) for i in range(1)]
 photo_frame_puzzle = pygame.transform.scale(pygame.image.load(f"image/study/PhotoFrame/photo_frame_puzzle.png"), (GAME_WIDTH, GAME_HEIGHT))
+
+# 可拾取物件 ===========================================================
+handle_image = pygame.transform.scale(pygame.image.load(f"image/living_room/Clock/Handle.png"), (GAME_WIDTH, GAME_HEIGHT))
+password_hint_1_image = pygame.transform.scale(pygame.image.load(f"image/living_room/Clock/Password_Hint_1.png"), (GAME_WIDTH, GAME_HEIGHT))
+
+# icon==================================================================
+password_hint_1_icon = pygame.transform.scale(pygame.image.load(f"image/Icon/password_hint_1_icon.png"), (ICON_SIZE, ICON_SIZE))
+handle_icon = pygame.transform.scale(pygame.image.load(f"image/Icon/handle_icon.png"), (ICON_SIZE, ICON_SIZE))
+chest_key_icon = pygame.transform.scale(pygame.image.load(f"image/Icon/chest_key_icon.png"), (ICON_SIZE, ICON_SIZE))
+tv_decipher_card_detail_icon = pygame.transform.scale(pygame.image.load(f"image/Icon/tv_decipher_card_detail_icon.png"), (ICON_SIZE, ICON_SIZE))
+# 調查畫面===============================================================
+password_hint_1_observe = pygame.image.load(f"image/Observe/password_hint_1_observe.png")
+handle_observe = pygame.image.load(f"image/Observe/handle_observe.png")
+chest_key_observe = pygame.image.load(f"image/Observe/chest_key_observe.png")
+
 # XX相關 ===========================================================
 
 
@@ -442,7 +454,7 @@ class Clock:
         self.object[1].lock = True
         self.object[2].lock = True
         self.focus = pygame.transform.scale(pygame.image.load(f"image/living_room/Clock/clock_open_investigation.png"), (GAME_WIDTH, GAME_HEIGHT))
-        self.object = [ExitButton(500,550),Handle(300,200),Password_Hint_1(500,200)]
+        self.object = [ExitButton(500,550),Handle(GAME_X, GAME_Y),Password_Hint_1(GAME_X, GAME_Y)]
 
 
 
@@ -814,13 +826,14 @@ class Wife_Ch1:
 class Handle:
     def __init__(self, x, y):
         self.name = "把手"
-        self.image = none_image
+        self.image = handle_image
         # 放入物品欄後顯示的圖示
-        self.icon = none_icon
+        self.icon = handle_icon
         # 調查中此物品的樣貌
-        self.observe = observe_image
+        self.observe = handle_observe
         # 調查中此物品的敘述
-        self.description = ""
+        self.description = "老舊的把手，十分沉重\n" \
+                           "裏頭有個凹槽，似乎可以插進甚麼地方"
         self.x = x
         self.y = y
         self.rect = self.image.get_rect()
@@ -835,12 +848,18 @@ class Handle:
 class Password_Hint_1:
     def __init__(self, x, y):
         self.name = "皺巴巴的筆記"
-        self.image = none_image
-        self.icon = none_icon
+        self.image = password_hint_1_image
+        self.icon = password_hint_1_icon
         # 調查中此物品的樣貌
-        self.observe = observe_image
+        self.observe = password_hint_1_observe
         # 調查中此物品的敘述
-        self.description = ""
+        self.description = "一個皺巴巴的筆記\n" \
+                           "已經放到泛黃了\n" \
+                           "上頭寫著:" \
+                           "A + B = 6\n" \
+                           "A + C = 11\n" \
+                           "B + D = C\n" \
+                           "A + D = B + C"
         self.x = x
         self.y = y
         self.rect = self.image.get_rect()
@@ -857,11 +876,12 @@ class ChestKey:
     def __init__(self, x, y):
         self.name = "黃色鑰匙"
         self.image = chest_key_image
-        self.icon = none_icon
+        self.icon = chest_key_icon
         # 調查中此物品的樣貌
-        self.observe = observe_image
+        self.observe = chest_key_observe
         # 調查中此物品的敘述
-        self.description = "1111111111111111111\n111\n1"
+        self.description = "有著些許鏽斑的黃色鑰匙\n" \
+                           "不知道能打開哪道索"
         self.x = x
         self.y = y
         self.rect = self.image.get_rect()
@@ -879,7 +899,7 @@ class TvDecipherCard:
     def __init__(self, x, y):
         self.name = "佈滿洞的膠片"
         self.image = none_image
-        self.icon = none_icon
+        self.icon = tv_decipher_card_detail_icon
         # 調查中此物品的樣貌
         self.observe = tv_decipher_card_detail_image
         # 調查中此物品的敘述

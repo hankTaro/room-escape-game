@@ -231,7 +231,6 @@ class GameModel:
         #         self.switch = True
         #     else:
         #         pass
-
         for item in reversed(self.investigation_item.object):
             if events == 'down':
                 common = item.clicked(mouse_x, mouse_y)

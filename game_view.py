@@ -27,7 +27,7 @@ class GameView:
         self.dialog_x = GAME_X + 50
         self.dialog_y = GAME_Y + GAME_HEIGHT - 25 - self.font_dialog.get_linesize()
         # 調查畫面圖片框
-        self.observe_rect = pygame.Rect(GAME_X + 25, GAME_Y + 25, GAME_WIDTH//2 - 50 , GAME_HEIGHT//2 - 50)
+        self.observe_rect = pygame.Rect(GAME_X + 25, GAME_Y + 25, GAME_WIDTH//2 - 50 , GAME_HEIGHT - 50)
         # 調查畫面文字起始點
         self.description_x = GAME_X + 0 + GAME_WIDTH//2
         self.description_y = GAME_Y + 100
@@ -120,7 +120,10 @@ class GameView:
 
         # 顯示圖片
         scaled_image = self.scale_image_to_rect(item.observe, self.observe_rect)
-        self.win.blit(scaled_image, self.observe_rect.midleft)
+        rect = scaled_image.get_rect()
+        # 讓圖片中央的Y對其self.observe_rect 這樣不管圖片形狀 都會置中
+        rect.midleft = self.observe_rect.midleft
+        self.win.blit(scaled_image, rect.topleft)
 
         # 顯示文字
         text = item.description
