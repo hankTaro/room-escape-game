@@ -175,7 +175,7 @@ class GameModel:
 
                 if self.investigation:
                     if isinstance(self.investigation_item, Tv):
-                        self.tv_select(x, y)
+                        self.tv_select(x, y, 'down')
                     elif isinstance(self.investigation_item, BookShelf):
                         self.book_shelf_select(x, y)
                     elif isinstance(self.investigation_item, Clock):
@@ -194,10 +194,14 @@ class GameModel:
                 if self.investigation:
                     if isinstance(self.investigation_item, PhotoFrame):
                         self.photo_frame_select(0, 0, events["mouse motion"])
+                    elif isinstance(self.investigation_item, Tv):
+                        self.tv_select(0, 0, events["mouse motion"])
             if events["release button"]:
                 if self.investigation:
                     if isinstance(self.investigation_item, PhotoFrame):
                         self.photo_frame_select(0, 0, 'up')
+                    elif isinstance(self.investigation_item, Tv):
+                        self.tv_select(0, 0, 'up')
 
 
 
@@ -208,25 +212,60 @@ class GameModel:
     def end_observe(self):
         self.observe = False
 
-    def tv_select(self, mouse_x: int, mouse_y: int):
-        for item in self.investigation_item.object:
-            # TODO : 若是可互動物件被點到 轉換場景 若是不可互動則說話或是
-            # 回傳是哪個物件被點選 進而做出不同反應
-            common = item.clicked(mouse_x, mouse_y)
-            if common == 0:
+    def tv_select(self, mouse_x: int, mouse_y: int, events):
+        # for item in self.investigation_item.object:
+        #     # TODO : 若是可互動物件被點到 轉換場景 若是不可互動則說話或是
+        #     # 回傳是哪個物件被點選 進而做出不同反應
+        #     common = item.clicked(mouse_x, mouse_y)
+        #     if common == 0:
+        #         pass
+        #     elif common == 'switch':
+        #         self.investigation_item.tvshow.switch()
+        #     elif common == 'shotdown':
+        #         self.investigation_item.tvshow.power()
+        #     # 退出調查畫面
+        #     elif common == 'stop_investigation':
+        #         self.investigation_item = self.investigation_item.enter
+        #         if not self.investigation_item:
+        #             self.investigation = False
+        #         self.switch = True
+        #     else:
+        #         pass
+
+        for item in reversed(self.investigation_item.object):
+            if events == 'down':
+                common = item.clicked(mouse_x, mouse_y)
+                if common == 'stop_investigation':
+                    self.investigation_item = self.investigation_item.enter
+                    if not self.investigation_item:
+                        self.investigation = False
+                    self.switch = True
+
+                elif common == 'drag':
+                    item.drag_set()
+                    break
+
+                elif common == 'switch':
+                    self.investigation_item.tvshow.switch()
+
+                elif common == 'shotdown':
+                    self.investigation_item.tvshow.power()
+                # 點擊電視螢幕 如果手上有膠片 就放上去
+                elif common == 'card' and isinstance(self.bag.hold, TvDecipherCard):
+                    print("a")
+                    self.bag.remove_hold_item()
+                    # 故意不讓他是對準好的
+                    self.investigation_item.object.append(TvDecipherCardPuzzle(GAME_X + 190, GAME_Y + 90))
+
+
+                else:
+                    pass
+            elif not isinstance(item,TvDecipherCardPuzzle):
                 pass
-            elif common == 'switch':
-                self.investigation_item.tvshow.switch()
-            elif common == 'shotdown':
-                self.investigation_item.tvshow.power()
-            # 退出調查畫面
-            elif common == 'stop_investigation':
-                self.investigation_item = self.investigation_item.enter
-                if not self.investigation_item:
-                    self.investigation = False
-                self.switch = True
+            elif events == 'up':
+                item.release()
             else:
-                pass
+                item.move(events)
 
     def book_shelf_select(self, mouse_x: int, mouse_y: int):
         for item in reversed(self.investigation_item.object):
@@ -334,6 +373,8 @@ class GameModel:
                 # 除了被點到 還要確定滑鼠是按住的才能拖動
                 elif common == 'drag':
                     item.drag_set()
+                    # 避免重疊的一起點到
+                    break
                 else:
                     pass
             elif not isinstance(item,PhotoFragments):
@@ -368,6 +409,10 @@ class GameModel:
                 self.investigation = True
                 self.investigation_item = item
                 pass
+
+            elif common == 'take':
+                self.bag.save_item(item)
+                self.cur_room.wall[str(self.wall)].object.remove(item)
             elif common == 'speak':
                 # TODO : 考慮不同文字出現位置
                 # self.text_pos

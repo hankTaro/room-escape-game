@@ -11,7 +11,7 @@ class GameView:
         self.font_size = 30
         self.font = pygame.font.Font("文鼎中特標準宋體.TTF", self.font_size)
         self.font_item = pygame.font.Font("金梅書法豆豆字體.ttf", 24)
-        self.font_description = pygame.font.Font("文鼎中特毛楷.TTF", 24)
+        self.font_description = pygame.font.Font("文鼎中特毛楷.TTF", 20)
         self.font_dialog = pygame.font.Font("文鼎中特毛楷.TTF", 24)
         self.font_speaker = pygame.font.Font("文鼎中特毛楷.TTF", 24)
         self.font_tip = pygame.font.Font("文鼎中特毛楷.TTF", 16)
@@ -29,7 +29,7 @@ class GameView:
         # 調查畫面圖片框
         self.observe_rect = pygame.Rect(GAME_X + 25, GAME_Y + 25, GAME_WIDTH//2 - 50 , GAME_HEIGHT//2 - 50)
         # 調查畫面文字起始點
-        self.description_x = GAME_X + 25 + GAME_WIDTH//2
+        self.description_x = GAME_X + 0 + GAME_WIDTH//2
         self.description_y = GAME_Y + 100
 
         # 文字置中
@@ -51,23 +51,33 @@ class GameView:
             self.win.blit(item.image, item.rect)
 
     def draw_tv_item(self, investigation_item):
-        self.win.blit(investigation_item.focus, (GAME_X, GAME_Y))
         for item in investigation_item.object:
             if isinstance(item, TvShow):
                 if item.ispower:
-                    ret, frame = item.image.read() #ret判斷結束了沒
-                    if not ret:
-                        item.image.set(cv2.CAP_PROP_POS_FRAMES, 0) # 結束將影片重製
-                        return
-                    frame = cv2.resize(frame,(item.w,item.h)) #設定大小
-                    frame = cv2.flip(frame, 1) # 做左右向反
-                    frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB) # 換成彩色
-                    frame = pygame.surfarray.make_surface((np.rot90(frame)))  # 轉90度 畫在畫面上
-                    self.win.blit(frame, (item.x, item.y)) #設定化的位置
-                else:
+                    # 檢測是相片還是MP4
+                    if isinstance(item.image, pygame.Surface):
+                        self.win.blit(item.image, item.rect)
+                    else:
+                        ret, frame = item.image.read() #ret判斷結束了沒
+                        if not ret:
+                            item.image.set(cv2.CAP_PROP_POS_FRAMES, 0) # 結束將影片重製
+                            # TODO :　解決重播會閃一下的問題
+                            break
+
+                        frame = cv2.resize(frame,(item.w,item.h)) #設定大小
+                        frame = cv2.flip(frame, 1) # 做左右向反
+                        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB) # 換成彩色
+                        frame = pygame.surfarray.make_surface((np.rot90(frame)))  # 轉90度 畫在畫面上
+                        self.win.blit(frame, (item.x, item.y)) #設定化的位置
+        # 讓電視框可以遮住超出範圍的節目畫面
+        self.win.blit(investigation_item.focus, (GAME_X, GAME_Y))
+        for item in investigation_item.object:
+            if isinstance(item, TvShow):
+                if not item.ispower:
                     self.win.blit(item.power_off, item.rect)
             else:
                 self.win.blit(item.image, item.rect)
+
 
     # TODO : 可以輸入文字位置
     def speak(self,text, pos):
@@ -125,7 +135,7 @@ class GameView:
         for line in lines:
             word = self.font_description.render(line, True, (255, 255, 255))
             self.win.blit(word, (self.description_x, y))
-            y += self.font_description.get_linesize()
+            y += self.font_description.get_linesize() + 2 # 增加行距
 
         # 操作說明
         tip = self.font_tip.render("點擊[F]退出調查", True, (255, 255, 255))  # 渲染文字

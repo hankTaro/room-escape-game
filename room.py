@@ -27,7 +27,7 @@ class LivingRoom:
 
         # 此房間在不同牆面有的物品/座標 (包括移動鍵)
         # 牆面1有這些東西
-        self.__object_1 = [RightButton(WIN_WIDTH - 50,WIN_HEIGHT/2),LeftButton(20,WIN_HEIGHT/2),MenuButton(900, 50),DoorToExit(GAME_X, GAME_Y)]
+        self.__object_1 = [RightButton(WIN_WIDTH - 50,WIN_HEIGHT/2),LeftButton(20,WIN_HEIGHT/2),MenuButton(900, 50),DoorToExit(GAME_X, GAME_Y),TvDecipherCard(GAME_X, GAME_Y)]
         # 牆面2有這些東西
         self.__object_2 = [RightButton(WIN_WIDTH - 50,WIN_HEIGHT/2),LeftButton(20,WIN_HEIGHT/2),MenuButton(900, 50),DoorToStudy(GAME_X, GAME_Y),
                            DoorToBedRoom(GAME_X, GAME_Y),Clock(GAME_X, GAME_Y)]

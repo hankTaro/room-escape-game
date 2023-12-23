@@ -43,9 +43,18 @@ wife_1_image = pygame.transform.scale(pygame.image.load(f"image/Object/Wife/wife
 handle_icon = pygame.transform.scale(pygame.image.load(f"image/Object/Wife/wife.png"), (GAME_WIDTH, GAME_HEIGHT))
 password_hint_1_icon = pygame.transform.scale(pygame.image.load(f"image/Object/Wife/wife.png"), (GAME_WIDTH, GAME_HEIGHT))
 
-tv_show_1 = cv2.VideoCapture("image/TV_show/meme_1.mp4")
-tv_show_2 = cv2.VideoCapture("image/TV_show/meme_1.mp4")
-tv_power_off = pygame.transform.scale(pygame.image.load(f"image/TV_show/WHY.png"), (320, 180))
+tv_channel_1 = cv2.VideoCapture("image/living_room/Tv/TV_show/meme_1.mp4")
+tv_channel_2 = cv2.VideoCapture("image/living_room/Tv/TV_show/tyler1 scream meme.mp4")
+tv_channel_3 = pygame.transform.scale(pygame.image.load(f"image/living_room/Tv/TV_show/channel_1.png"), (GAME_WIDTH, GAME_HEIGHT))
+tv_channel_4 = cv2.VideoCapture("image/living_room/Tv/TV_show/Pornhub Video intro.mp4")
+tv_channel_5 = cv2.VideoCapture("image/living_room/Tv/TV_show/KFC Chickendales Mother’s Day Performance.mp4")
+
+
+tv_power_off_image = pygame.transform.scale(pygame.image.load(f"image/living_room/Tv/power_off.png"), (GAME_WIDTH, GAME_HEIGHT))
+tv_power_btn = pygame.transform.scale(pygame.image.load(f"image/living_room/Tv/power.png"), (GAME_WIDTH, GAME_HEIGHT))
+tv_switch_btn = pygame.transform.scale(pygame.image.load(f"image/living_room/Tv/switch.png"), (GAME_WIDTH, GAME_HEIGHT))
+tv_decipher_card_detail_image = pygame.transform.scale(pygame.image.load(f"image/living_room/Tv/tv_decipher_card.png"), (GAME_WIDTH, GAME_HEIGHT))
+
 # tv_show_1_sound = pygame.mixer.Sound('image/TV_show/meme_1.mp3')
 
 # 書架相關 ===================================================
@@ -227,57 +236,89 @@ class DoorToKitchen:
 # TV 會用到的原件 ===========================================
 class TvSwitch:
     def __init__(self, x, y):
-        self.image = pygame.transform.scale(pygame.image.load(f"image/living_room/Tv/btn.png"), (50, 50))
+        self.image = tv_switch_btn
         self.x = x
         self.y = y
         self.rect = self.image.get_rect()
-        self.rect.center = (x, y)
+        self.rect.topleft = (x, y)
+        self.mask = pygame.mask.from_surface(self.image)
 
     def clicked(self, x: int, y: int):
-        if self.rect.collidepoint(x, y):
+        if self.rect.collidepoint(x, y) and self.mask.get_at((x -  self.rect.x, y -  self.rect.y)) != 0:
             return 'switch'
 
 class TvPower:
     def __init__(self, x, y):
-        self.image = pygame.transform.scale(pygame.image.load(f"image/living_room/Tv/btn.png"), (50, 50))
+        self.image = tv_power_btn
         self.x = x
         self.y = y
         self.rect = self.image.get_rect()
-        self.rect.center = (x, y)
+        self.rect.topleft = (x, y)
+        self.mask = pygame.mask.from_surface(self.image)
 
     def clicked(self, x: int, y: int):
-        if self.rect.collidepoint(x, y):
+        if self.rect.collidepoint(x, y) and self.mask.get_at((x -  self.rect.x, y -  self.rect.y)) != 0:
             return 'shotdown'
 
 class TvShow:
     def __init__(self, x, y):
-        self.all_show = [tv_show_1,tv_show_2]
+        self.all_show = [tv_channel_1,tv_channel_2,tv_channel_3,tv_channel_4,tv_channel_5]
         # self.sound = [tv_show_1_sound]
         self.index = 0
         self.size = len(self.all_show)
         self.image = self.all_show[self.index]
-        self.power_off = tv_power_off
-        self.x = x
-        self.y = y
-        self.w = 300 # 設定影片用
+        self.power_off = tv_power_off_image
+        # 影片位置起始點與長寬
+        self.x = 110
+        self.y = 130
+        self.w = 470 # 設定影片用
         self.h = 300 # 設定影片用
-        self.ispower = True
+        self.ispower = False
         pygame.time.set_timer(VIDEO_EVENT, int(2000 / FPS), 0)
         self.rect = self.power_off.get_rect()
         self.rect.topleft = (x, y)
         self.mask = pygame.mask.from_surface(self.power_off)
 
     def clicked(self, x: int, y: int):
-        return 0
+        if self.rect.collidepoint(x, y) and self.mask.get_at((x - self.rect.x, y - self.rect.y)) != 0 and \
+                self.index == 2 and self.ispower:
+            return 'card'
 
     def switch(self):
-        self.index += 1
-        if self.index == self.size:
-            self.index = 0
-        self.image = self.all_show[self.index]
+        if self.ispower:
+            self.index += 1
+            if self.index == self.size:
+                self.index = 0
+            self.image = self.all_show[self.index]
     
     def power(self):
         self.ispower = not self.ispower
+
+
+class TvDecipherCardPuzzle:
+    def __init__(self, x, y):
+        self.image = tv_decipher_card_detail_image
+        self.x = x
+        self.y = y
+        self.rect = self.image.get_rect()
+        self.rect.topleft = (x, y)
+        self.mask = pygame.mask.from_surface(self.image)
+        self.drag = False
+
+    def clicked(self, x: int, y: int):
+        # 除了被點到 還要確定滑鼠是按住的才能拖動
+        if self.rect.collidepoint(x, y) and self.mask.get_at((x - self.rect.x, y - self.rect.y)) != 0:
+            return 'drag'
+
+    def drag_set(self):
+        self.drag = True
+
+    def release(self):
+        self.drag = False
+
+    def move(self, rel):
+        if self.drag:
+            self.rect.move_ip(rel)
 
 # 可互動物件本身 ===========================================
 class Tv:
@@ -287,17 +328,20 @@ class Tv:
         self.y = y
         self.rect = self.image.get_rect()
         self.rect.topleft = (x, y)
-        self.tvshow = TvShow(300,150)
+        self.tvshow = TvShow(GAME_X, GAME_Y)
         self.mask = pygame.mask.from_surface(self.image)
 
         # 入口 也就是上一層 離開調查時要回到的地方 None 代表離開調查
         self.enter = None
 
+        # 是否放上了膠片
+        self.card = False
+
         # 下方要有儲存解謎進度的data
         # TODO : 點擊放大後的圖片
         self.focus = pygame.transform.scale(pygame.image.load(f"image/living_room/Tv/tv_investigation.png"), (GAME_WIDTH, GAME_HEIGHT))
         # TODO : 此圖片中可互動的物件
-        self.object = [ExitButton(500,550),TvSwitch(800,250),TvPower(800,500),self.tvshow]
+        self.object = [ExitButton(500,550),TvSwitch(GAME_X, GAME_Y),TvPower(GAME_X, GAME_Y),self.tvshow]
 
     def clicked(self, x: int, y: int):
         # TODO : 連接到 user_request 若是可互動物件被點到 轉換場景 若是不可互動則說話或是
@@ -631,6 +675,7 @@ class PhotoFragments:
         self.ans = pygame.Rect(GAME_X - 15,GAME_Y - 15,30,30)
 
         # 因為碎片也是用畫面大小輸出 只是涂色位置不同 所以所有碎片對準 GAME_X, GAME_Y 就會是正確位置
+
     def clicked(self, x: int, y: int):
         # 除了被點到 還要確定滑鼠是按住的才能拖動
         if self.rect.collidepoint(x, y) and self.mask.get_at((x - self.rect.x, y - self.rect.y)) != 0:
@@ -817,6 +862,30 @@ class ChestKey:
         self.observe = observe_image
         # 調查中此物品的敘述
         self.description = "1111111111111111111\n111\n1"
+        self.x = x
+        self.y = y
+        self.rect = self.image.get_rect()
+        self.rect.topleft = (x, y)
+        self.mask = pygame.mask.from_surface(self.image)
+
+
+    def clicked(self, x: int, y: int):
+        if self.rect.collidepoint(x, y) and self.mask.get_at((x -  self.rect.x, y -  self.rect.y)) != 0:
+            # 被撿起放入物品欄
+            return 'take'
+
+
+class TvDecipherCard:
+    def __init__(self, x, y):
+        self.name = "佈滿洞的膠片"
+        self.image = none_image
+        self.icon = none_icon
+        # 調查中此物品的樣貌
+        self.observe = tv_decipher_card_detail_image
+        # 調查中此物品的敘述
+        self.description = "一張佈滿洞的膠片，上面還畫著時鐘的圖案\n" \
+                           "中間還有著一個像是用於校準的孔洞\n" \
+                           "或許是某種用於加密與破譯的工具..."
         self.x = x
         self.y = y
         self.rect = self.image.get_rect()
