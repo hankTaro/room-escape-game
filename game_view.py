@@ -4,6 +4,7 @@ from object import *
 import cv2
 import numpy as np
 
+
 class GameView:
     def __init__(self):
         self.win = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT))
@@ -11,14 +12,27 @@ class GameView:
         self.font = pygame.font.Font("文鼎中特標準宋體.TTF", self.font_size)
         self.font_item = pygame.font.Font("金梅書法豆豆字體.ttf", 24)
         self.font_description = pygame.font.Font("文鼎中特毛楷.TTF", 24)
+        self.font_dialog = pygame.font.Font("文鼎中特毛楷.TTF", 24)
+        self.font_speaker = pygame.font.Font("文鼎中特毛楷.TTF", 24)
         self.bg = None
         self.black = pygame.transform.scale(pygame.image.load(f"image/black.png"), (GAME_WIDTH, GAME_HEIGHT))
         self.transparency = 0
+        # 對話框
+        self.dialog_box_image = pygame.transform.scale(pygame.image.load(f"image/對話背景.png"), (GAME_WIDTH, GAME_HEIGHT))
+        # 對話框說話者位置
+        self.speaker_x = GAME_X + 20
+        self.speaker_y = GAME_Y + GAME_HEIGHT - 70 - self.font_dialog.get_linesize()
+        # 對話框文字位置
+        self.dialog_x = GAME_X + 50
+        self.dialog_y = GAME_Y + GAME_HEIGHT - 25 - self.font_dialog.get_linesize()
         # 調查畫面圖片框
         self.observe_rect = pygame.Rect(GAME_X + 25, GAME_Y + 25, GAME_WIDTH//2 - 50 , GAME_HEIGHT//2 - 50)
         # 調查畫面文字起始點
         self.description_x = GAME_X + 25 + GAME_WIDTH//2
-        self.description_y = GAME_Y + 25
+        self.description_y = GAME_Y + 100
+
+        # 文字置中
+        # WIN_WIDTH // 2 - word.get_width() // 2
 
     def draw_bg(self):
         self.win.blit(BACKGROUND_IMAGE, (0, 0))
@@ -59,6 +73,18 @@ class GameView:
         word = self.font.render(text, True, (255, 255, 255))  # 渲染文字
         self.win.blit(word, (WIN_WIDTH // 2 - word.get_width() // 2, WIN_HEIGHT // 2 - word.get_height() // 2))
 
+    def murmur(self, speaker, text, index):
+        # 畫出對話框(灰色漸層)
+        self.win.blit(self.dialog_box_image, (GAME_X, GAME_Y))
+
+        # 說話者
+        title = self.font_speaker.render(speaker, True, (255, 255, 255))  # 渲染文字
+        self.win.blit(title, (self.speaker_x, self.speaker_y))
+        # 內容
+        word = self.font_dialog.render(text, True, (255, 255, 255))  # 渲染文字
+        self.win.blit(word, (self.dialog_x, self.dialog_y))
+
+
     def draw_bag(self, bag):
         # self.win.blit(bag.image, (bag.x, bag.y))
         for blank in bag.blank:
@@ -86,11 +112,15 @@ class GameView:
         text = item.description
         lines = text.splitlines()
 
-        y = WIN_HEIGHT // 2 - sum(self.font.get_linesize() for _ in lines) // 2
+        # 用於使文字框置中
+        # y = WIN_HEIGHT // 2 - sum(self.font.get_linesize() for _ in lines) // 2
+
+        # 使文字固定從這個 y 開始
+        y = self.description_y
 
         for line in lines:
             word = self.font_description.render(line, True, (255, 255, 255))
-            self.win.blit(word, (WIN_WIDTH // 2 - word.get_width() // 2, y))
+            self.win.blit(word, (self.description_x, y))
             y += self.font_description.get_linesize()
 
 

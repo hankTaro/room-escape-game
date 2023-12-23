@@ -98,7 +98,12 @@ class GameController:
         self.view.draw_bag(self.model.bag)
 
         # 劃出對話框 (依照位置)
-        self.view.speak(self.model.text, self.model.text_pos)
+        if self.model.text != "":
+            self.view.speak(self.model.text, self.model.text_pos)
+
+        # 劃出對話框(下方固定位置)
+        if self.model.dialog != "":
+            self.view.murmur(self.model.speaker, self.model.dialog.splitlines()[self.model.dialog_index], self.model.dialog_index)
 
         # 畫出手中物品調查頁面
         if self.model.observe:

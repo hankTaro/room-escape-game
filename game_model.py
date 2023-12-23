@@ -25,8 +25,6 @@ class GameModel:
         self.cur_room = None
         # 當前牆面
         self.wall = 1
-        # 玩家點選的物件
-        self.selected_button = None
         # 選單按鈕
         self.btn = MenuButton(900,50)
         # 是否有在調查物件
@@ -39,6 +37,12 @@ class GameModel:
         self.text = ""
         #文字位置(尚未使用)
         self.text_pos = (0,0)
+        # 對話框的說話者
+        self.speaker = ""
+        # 下方對話框文字
+        self.dialog = ""
+        # 下方對話框文字的index
+        self.dialog_index = 0
         # 是否在調查手中物品
         self.observe = False
 
@@ -118,28 +122,56 @@ class GameModel:
     def get_request(self, events: dict):
         """get keyboard response or button response"""
         # initial
-        self.selected_button = None
-        # key event
+
+        # 叫出選單
         if events["keyboard key"] == pygame.K_ESCAPE:
             # TODO : 叫出暫停選單
             pass
-        elif events["keyboard key"] == pygame.K_f and self.observe == False and self.bag.hold is not None:
+            return
+
+        # 檢查 menu btn
+        if events["mouse position"] is not None:
+            x, y = events["mouse position"]
+            if self.btn.clicked(x, y) == 'menu':
+                # TODO : 叫出暫停選單
+                pass
+                return
+
+        if self.switch:
+            # 讓後面部分不執行
+            return
+
+        # 如果在對話 執行對話功能 並讓後面部分不執行
+        if self.dialog != "":
+            if events["mouse position"] is not None:
+                # 點擊以下一句
+                self.dialog_index += 1
+
+                # 代表話說完了 對話結束 做初始化
+                if len(self.dialog.splitlines()) == self.dialog_index:
+                    self.dialog_index = 0
+                    self.dialog = ""
+
+            # 讓後面部分不執行
+            return
+
+        # 調查手中物件
+        # 如果在轉場 或是對話中 無法執行操作
+        if events["keyboard key"] == pygame.K_f and self.observe == False and self.bag.hold is not None:
             # 跳出調查手中物品畫面
             self.start_observe()
         elif events["keyboard key"] == pygame.K_f and self.observe:
             self.end_observe()
 
-        # mouse event
-        # 如果在轉場中 或是調查手中物品時 無法執行操作
-        if not (self.switch or self.observe):
+        # 點擊物件 調查 解謎
+        # 如果在轉場中 或是調查手中物品時 或是對話中 無法執行操作
+        if not self.observe:
             if events["mouse position"] is not None:
                 x, y = events["mouse position"]
                 # 重製對話
                 self.text = ""
                 # 檢查物品欄
                 self.bag.clicked(x, y)
-                # 檢查 menu btn
-                self.btn.clicked(x, y)
 
                 if self.investigation:
                     if isinstance(self.investigation_item, Tv):
@@ -166,6 +198,8 @@ class GameModel:
                 if self.investigation:
                     if isinstance(self.investigation_item, PhotoFrame):
                         self.photo_frame_select(0, 0, 'up')
+
+
 
 
 
@@ -341,6 +375,10 @@ class GameModel:
                 item.text_index += 1
                 if item.text_index == item.text_size:
                     item.text_index = 0
+            elif common == 'dialog':
+                self.dialog = item.dialog
+                self.speaker = item.speaker
+
             elif common == 'none':
                 pass
             else:

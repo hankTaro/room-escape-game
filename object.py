@@ -90,8 +90,8 @@ class MenuButton:
         if self.rect.collidepoint(x, y):
             # 測試用
             print('menu btn been press')
-            # TODO : 叫出暫停選單
-            pass
+
+            return 'menu'
 
 class RightButton:
     def __init__(self, x, y):
@@ -144,10 +144,16 @@ class DoorToBedRoom:
         self.rect = self.image.get_rect()
         self.rect.topleft = (x, y)
         self.mask = pygame.mask.from_surface(self.image)
+        self.lock = True
+        self.speaker = "旁白"
+        self.dialog = "你嘗試打開這個扭曲變形的門\n...\n你使勁全力依然打不開他"
 
     def clicked(self, x: int, y: int):
         if self.rect.collidepoint(x, y) and self.mask.get_at((x -  self.rect.x, y -  self.rect.y)) != 0:
-            return 'bedroom'
+            if self.lock:
+                return 'dialog'
+            else:
+                return 'bedroom'
         else:
             return 0
 
@@ -810,7 +816,7 @@ class ChestKey:
         # 調查中此物品的樣貌
         self.observe = observe_image
         # 調查中此物品的敘述
-        self.description = ""
+        self.description = "1111111111111111111\n111\n1"
         self.x = x
         self.y = y
         self.rect = self.image.get_rect()

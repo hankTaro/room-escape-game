@@ -3,11 +3,11 @@
   <component name="ChangeListManager">
     <list default="true" id="3e0b4790-5d83-4476-a83f-f94379d1ad2c" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/image/study/BookShelf/book_shelf_investigation.png" beforeDir="false" afterPath="$PROJECT_DIR$/image/study/BookShelf/book_shelf_investigation.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/image/study/Wall/study_1.png" beforeDir="false" afterPath="$PROJECT_DIR$/image/study/Wall/study_1.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/image/study/Wall/study_2.png" beforeDir="false" afterPath="$PROJECT_DIR$/image/study/Wall/study_2.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/image/study/Wall/study_3.png" beforeDir="false" afterPath="$PROJECT_DIR$/image/study/Wall/study_3.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/game_controller.py" beforeDir="false" afterPath="$PROJECT_DIR$/game_controller.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/game_model.py" beforeDir="false" afterPath="$PROJECT_DIR$/game_model.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/game_view.py" beforeDir="false" afterPath="$PROJECT_DIR$/game_view.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/object.py" beforeDir="false" afterPath="$PROJECT_DIR$/object.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/test.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -83,7 +83,8 @@
       <workItem from="1702958178356" duration="28053000" />
       <workItem from="1703068811051" duration="4335000" />
       <workItem from="1703133411654" duration="4851000" />
-      <workItem from="1703138989049" duration="18040000" />
+      <workItem from="1703138989049" duration="18132000" />
+      <workItem from="1703313120339" duration="5432000" />
     </task>
     <servers />
   </component>
@@ -103,9 +104,10 @@
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/room_escape_game$main.coverage" NAME="main Coverage Results" MODIFIED="1702864813713" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/room_escape_game$test.coverage" NAME="test Coverage Results" MODIFIED="1702970409312" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/room_escape_game$main_py.coverage" NAME="main.py Coverage Results" MODIFIED="1703178131375" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/room_escape_game$test.coverage" NAME="test Coverage Results" MODIFIED="1703317862174" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/room_escape_game$main_py.coverage" NAME="main.py Coverage Results" MODIFIED="1703318595084" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/room_escape_game$game_controller.coverage" NAME="game_controller Coverage Results" MODIFIED="1702876073459" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/room_escape_game$game_view.coverage" NAME="game_view Coverage Results" MODIFIED="1703317900740" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/room_escape_game$room_escape_game.coverage" NAME="main.py Coverage Results" MODIFIED="1702889470582" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/room_escape_game$game_model.coverage" NAME="game_model Coverage Results" MODIFIED="1702864806350" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
