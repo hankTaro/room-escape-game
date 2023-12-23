@@ -48,6 +48,8 @@ class GameModel:
 
         # 物品欄
         self.bag = Bag()
+        # 物品欄換頁按鈕
+        self.page_bnt = BagPageButton()
 
 
 
@@ -112,12 +114,6 @@ class GameModel:
             self.wall -= 1
 
 
-    # 要預先儲存是在哪個房間點擊這個物件的，以便回到原本點擊的地方 (可選)
-    def to_newspaper(self):
-        pass
-
-
-
     # 在 update_model 裡()
     def get_request(self, events: dict):
         """get keyboard response or button response"""
@@ -140,6 +136,7 @@ class GameModel:
         if self.switch:
             # 讓後面部分不執行
             return
+
 
         # 如果在對話 執行對話功能 並讓後面部分不執行
         if self.dialog != "":
@@ -172,6 +169,12 @@ class GameModel:
                 self.text = ""
                 # 檢查物品欄
                 self.bag.clicked(x, y)
+                # 物品欄切換
+                page = self.page_bnt.clicked(x, y)
+                if page == 'right' and self.bag.page < 2:
+                    self.bag.page += 1
+                elif page == 'left' and self.bag.page > 1:
+                    self.bag.page -= 1
 
                 if self.investigation:
                     if isinstance(self.investigation_item, Tv):

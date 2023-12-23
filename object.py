@@ -18,8 +18,10 @@ mins_image = [pygame.transform.scale(pygame.image.load(f"image/living_room/Clock
 
 right_image = pygame.transform.scale(pygame.image.load(f"image/Icon/right.png"), (int(30), int(30)))
 left_image = pygame.transform.scale(pygame.image.load(f"image/Icon/left.png"), (int(30), int(30)))
-menu_image = pygame.transform.scale(pygame.image.load(f"image/Icon/menu.png"), (int(30), int(30)))
+menu_image = pygame.transform.scale(pygame.image.load(f"image/Icon/menu_w.png"), (int(42), int(30)))
 exit_image = pygame.transform.scale(pygame.image.load(f"image/Icon/left.png"), (int(30), int(30)))
+
+
 
 door_image = pygame.transform.scale(pygame.image.load(f"image/Object/door.png"), (int(200), int(400)))
 #yj
@@ -113,7 +115,27 @@ class MenuButton:
             print('menu btn been press')
 
             return 'menu'
+# 包包換頁按鈕
+class BagPageButton:
+    def __init__(self):
+        self.right_image = right_image
+        self.left_image = left_image
+        self.x_r = GAME_X + GAME_WIDTH + 70
+        self.y_r = GAME_Y + GAME_HEIGHT + 25
+        self.x_l = GAME_X + GAME_WIDTH + 20
+        self.y_l = GAME_Y + GAME_HEIGHT + 25
+        self.rect_r = self.right_image.get_rect()
+        self.rect_r.topleft = (self.x_r, self.y_r)
+        self.rect_l = self.left_image.get_rect()
+        self.rect_l.topleft = (self.x_l, self.y_l)
+        self.mask_r = pygame.mask.from_surface(self.right_image)
+        self.mask_l = pygame.mask.from_surface(self.left_image)
 
+    def clicked(self, x: int, y: int):
+        if self.rect_r.collidepoint(x, y) and self.mask_r.get_at((x -  self.rect_r.x, y -  self.rect_r.y)) != 0:
+            return 'right'
+        if self.rect_l.collidepoint(x, y) and self.mask_l.get_at((x -  self.rect_l.x, y -  self.rect_l.y)) != 0:
+            return 'left'
 class RightButton:
     def __init__(self, x, y):
         self.image = right_image

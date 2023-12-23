@@ -100,8 +100,8 @@ class GameView:
         self.win.blit(tip, (GAME_X + GAME_WIDTH - tip.get_width() - 10, GAME_Y + GAME_HEIGHT - tip.get_height() - 10))
 
     def draw_bag(self, bag):
-        # self.win.blit(bag.image, (bag.x, bag.y))
-        for blank in bag.blank:
+        # 依照頁數輸出此頁的物品格
+        for blank in bag.blank[6 * (bag.page - 1): 6 * bag.page]:
             if blank.item == bag.hold and blank.item != None:
                 self.win.blit(blank.selected_image, blank.rect)
                 word = self.font_item.render(blank.item.name, True, (255, 255, 255))
@@ -112,6 +112,10 @@ class GameView:
                 self.win.blit(blank.image, blank.rect)
             if blank.item != None:
                 self.win.blit(blank.item.icon, (blank.x + ICON_POS, blank.y + ICON_POS))
+
+    def draw_bag_page(self, bnt):
+        self.win.blit(bnt.right_image, bnt.rect_r)
+        self.win.blit(bnt.left_image, bnt.rect_l)
     def draw_observe(self, item):
         # 畫面灰化
         black_surface = self.black

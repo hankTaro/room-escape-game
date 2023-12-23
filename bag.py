@@ -26,7 +26,7 @@ class Blank:
         self.item = None
 
     def clicked(self, x: int, y: int):
-        if self.rect.collidepoint(x, y) and self.mask.get_at((x - self.rect.x, y - self.rect.y)) != 0:
+        if self.rect.collidepoint(x, y) and self.mask.get_at((x - self.rect.x, y - self.rect.y)) != 0 and self.item is not None:
             return True
         else:
             return False
@@ -43,10 +43,16 @@ class Bag:
         self.mask = pygame.mask.from_surface(self.image)
 
         self.blank = [Blank(885, 70),Blank(885, 150),Blank(885, 230),
+                      Blank(885, 310),Blank(885, 390),Blank(885, 470),
+                      Blank(885, 70),Blank(885, 150),Blank(885, 230),
                       Blank(885, 310),Blank(885, 390),Blank(885, 470)]
+
         # 手持的物品(最多只能手持一個東西)
         self.hold = None
         self.hold_blank = None
+
+        # 當前頁數(包包數量等於 頁數*6)
+        self.page = 1
 
     def save_item(self, item):
         for i in self.blank:
@@ -56,7 +62,7 @@ class Bag:
 
     # 這邊統一由 bag 確認點擊後 在將點擊位置傳入各個blank
     def clicked(self, x: int, y: int):
-        for i in self.blank:
+        for i in self.blank[6 * (self.page - 1): 6 * self.page]:
             if i.clicked(x, y):
                 # 手持的物品與點選的不同
                 if self.hold != i.item:
@@ -70,6 +76,7 @@ class Bag:
         self.hold_blank.item = None
         self.hold = None
         self.hold_blank = None
+
 
 
 

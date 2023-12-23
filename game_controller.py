@@ -96,6 +96,8 @@ class GameController:
                 self.fade_count -= 20
         # 畫出物品欄
         self.view.draw_bag(self.model.bag)
+        # 劃出物品頁面切換鍵
+        self.view.draw_bag_page(self.model.page_bnt)
 
         # 劃出對話框 (依照位置)
         if self.model.text != "":
