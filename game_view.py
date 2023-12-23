@@ -14,6 +14,7 @@ class GameView:
         self.font_description = pygame.font.Font("文鼎中特毛楷.TTF", 24)
         self.font_dialog = pygame.font.Font("文鼎中特毛楷.TTF", 24)
         self.font_speaker = pygame.font.Font("文鼎中特毛楷.TTF", 24)
+        self.font_tip = pygame.font.Font("文鼎中特毛楷.TTF", 16)
         self.bg = None
         self.black = pygame.transform.scale(pygame.image.load(f"image/black.png"), (GAME_WIDTH, GAME_HEIGHT))
         self.transparency = 0
@@ -84,6 +85,9 @@ class GameView:
         word = self.font_dialog.render(text, True, (255, 255, 255))  # 渲染文字
         self.win.blit(word, (self.dialog_x, self.dialog_y))
 
+        # 操作說明
+        tip = self.font_tip.render("點擊滑鼠以繼續...", True, (255, 255, 255))  # 渲染文字
+        self.win.blit(tip, (GAME_X + GAME_WIDTH - tip.get_width() - 10, GAME_Y + GAME_HEIGHT - tip.get_height() - 10))
 
     def draw_bag(self, bag):
         # self.win.blit(bag.image, (bag.x, bag.y))
@@ -122,6 +126,10 @@ class GameView:
             word = self.font_description.render(line, True, (255, 255, 255))
             self.win.blit(word, (self.description_x, y))
             y += self.font_description.get_linesize()
+
+        # 操作說明
+        tip = self.font_tip.render("點擊[F]退出調查", True, (255, 255, 255))  # 渲染文字
+        self.win.blit(tip, (GAME_X + (GAME_WIDTH - tip.get_width())//2, GAME_Y + GAME_HEIGHT - tip.get_height() - 10))
 
 
 
