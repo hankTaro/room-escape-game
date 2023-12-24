@@ -69,6 +69,11 @@ door_open_sound = pygame.mixer.Sound('music/door_open.wav')
 tv_change_channel_sound = pygame.mixer.Sound('music/tv_change_channel.wav')
 tv_power_sound = pygame.mixer.Sound('music/tv_change_channel.wav')
 knob_twist_sound = pygame.mixer.Sound('music/knob_twist.wav')
+knob_open_sound = pygame.mixer.Sound('music/knob_open.wav')
+locker_setup_sound = pygame.mixer.Sound('music/locker_setup.wav')
+locker_open_sound = pygame.mixer.Sound('music/locker_open.wav')
+little_cabinet_open_sound = pygame.mixer.Sound('music/little_cabinet_open.wav')
+little_cabinet_close_sound = pygame.mixer.Sound('music/little_cabinet_open.wav')
 
 # 書架相關 ===================================================
 book_shelf_puzzle = pygame.transform.scale(pygame.image.load(f"image/study/BookShelf/book_shelf_investigation.png"), (GAME_WIDTH, GAME_HEIGHT))
@@ -625,14 +630,18 @@ class RightDoor:
         self.rect.topleft = (x, y)
         self.mask = pygame.mask.from_surface(self.image)
         self.open = False
+        self.open_music = little_cabinet_open_sound
+        self.close_music = little_cabinet_close_sound
     def clicked(self, x: int, y: int):
         if self.rect.collidepoint(x, y) and self.mask.get_at((x -  self.rect.x, y -  self.rect.y)) != 0:
             if self.open == False:
                 self.open = True
                 self.image = book_shelf_right_door_open_image
+                self.open_music.play()
             else:
                 self.open = False
                 self.image = book_shelf_right_door_close_image
+                self.close_music.play()
             self.rect = self.image.get_rect()
             self.rect.topleft = (self.x, self.y)
             self.mask = pygame.mask.from_surface(self.image)
@@ -647,14 +656,18 @@ class LeftDoor:
         self.rect.topleft = (x, y)
         self.mask = pygame.mask.from_surface(self.image)
         self.open = False
+        self.open_music = little_cabinet_open_sound
+        self.close_music = little_cabinet_close_sound
     def clicked(self, x: int, y: int):
         if self.rect.collidepoint(x, y) and self.mask.get_at((x -  self.rect.x, y -  self.rect.y)) != 0:
             if self.open == False:
                 self.open = True
                 self.image = book_shelf_left_door_open_image
+                self.open_music.play()
             else:
                 self.open = False
                 self.image = book_shelf_left_door_close_image
+                self.close_music.play()
             self.rect = self.image.get_rect()
             self.rect.topleft = (self.x, self.y)
             self.mask = pygame.mask.from_surface(self.image)
@@ -695,6 +708,8 @@ class Locker:
         self.open = False
         # 是否安裝好手把
         self.setup = False
+        self.setup_music = locker_setup_sound
+        self.open_music = locker_open_sound
 
     def clicked(self, x: int, y: int):
         if self.rect.collidepoint(x, y) and self.mask.get_at((x -  self.rect.x, y -  self.rect.y)) != 0:
@@ -709,10 +724,12 @@ class Locker:
         self.index += 1
         self.image = self.all_image[self.index]
         self.setup = True
+        self.setup_music.play()
     def unlock(self):
         self.index += 1
         self.image = self.all_image[self.index]
         self.open = True
+        self.open_music.play()
 
 #可互動物件
 class BookShelf:
