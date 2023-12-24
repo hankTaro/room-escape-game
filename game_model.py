@@ -249,6 +249,8 @@ class GameModel:
 
                 elif common == 'switch':
                     self.investigation_item.tvshow.switch()
+                    if self.investigation_item.tvshow.ispower:
+                        item.music.play()
 
                 elif common == 'shotdown':
                     self.investigation_item.tvshow.power()
