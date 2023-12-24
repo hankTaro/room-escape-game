@@ -304,8 +304,6 @@ class TvSwitch:
 
     def clicked(self, x: int, y: int):
         if self.rect.collidepoint(x, y) and self.mask.get_at((x -  self.rect.x, y -  self.rect.y)) != 0:
-            # 目前還在想要怎麼只有在電視開啟時有聲音
-            self.music.play()
             return 'switch'
 
 class TvPower:
@@ -338,7 +336,7 @@ class TvShow:
         self.w = 470 # 設定影片用
         self.h = 300 # 設定影片用
         self.ispower = False
-        pygame.time.set_timer(VIDEO_EVENT, int(2000 / FPS), 0)
+        # pygame.time.set_timer(VIDEO_EVENT, int(2000 / FPS), 0)
         self.rect = self.power_off.get_rect()
         self.rect.topleft = (x, y)
         self.mask = pygame.mask.from_surface(self.power_off)
