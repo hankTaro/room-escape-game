@@ -8,6 +8,9 @@ from setting import *
 # TODO : 將所有物件的圖片匯入 並調整至合適大小
 # 同個物件 不同狀況(像是開啟/關閉)可以用相同名字，後面用tv-1 tv-2 做區分
 # tv_image = [pygame.transform.scale(pygame.image.load(f"image/Object/Tv/tv-{i}.png"), (int(201), int(211))) for i in range(1)]
+pygame.mixer.init()
+pygame.mixer.music.set_volume(0.2)
+
 tv_image = [pygame.transform.scale(pygame.image.load(f"image/living_room/Tv/tv_{i}.png"), (GAME_WIDTH, GAME_HEIGHT)) for i in range(1)]
 newspaper_image = [pygame.transform.scale(pygame.image.load(f"image/Object/Newspaper/newspaper_{i}.png"), (int(466//3), int(260//3))) for i in range(1)]
 
@@ -54,7 +57,18 @@ tv_power_btn = pygame.transform.scale(pygame.image.load(f"image/living_room/Tv/p
 tv_switch_btn = pygame.transform.scale(pygame.image.load(f"image/living_room/Tv/switch.png"), (GAME_WIDTH, GAME_HEIGHT))
 tv_decipher_card_detail_image = pygame.transform.scale(pygame.image.load(f"image/living_room/Tv/tv_decipher_card.png"), (GAME_WIDTH, GAME_HEIGHT))
 
-# tv_show_1_sound = pygame.mixer.Sound('image/TV_show/meme_1.mp3')
+# 聲音
+tv_show_1_sound = pygame.mixer.Sound('music/meme_1.wav')
+tv_show_2_sound = pygame.mixer.Sound('music/tyler1 scream meme.wav')
+tv_show_4_sound = pygame.mixer.Sound('music/Pornhub Video intro.wav')
+tv_show_5_sound = pygame.mixer.Sound('music/KFC Chickendales Mother’s Day Performance.wav')
+clock_sound = pygame.mixer.Sound('music/clock.wav')
+clock_hand_sound = pygame.mixer.Sound('music/clock_hand.wav')
+walking_sound = pygame.mixer.Sound('music/walking.wav')
+door_open_sound = pygame.mixer.Sound('music/door_open.wav')
+tv_change_channel_sound = pygame.mixer.Sound('music/tv_change_channel.wav')
+tv_power_sound = pygame.mixer.Sound('music/tv_change_channel.wav')
+knob_twist_sound = pygame.mixer.Sound('music/knob_twist.wav')
 
 # 書架相關 ===================================================
 book_shelf_puzzle = pygame.transform.scale(pygame.image.load(f"image/study/BookShelf/book_shelf_investigation.png"), (GAME_WIDTH, GAME_HEIGHT))
@@ -143,9 +157,11 @@ class RightButton:
         self.y = y
         self.rect = self.image.get_rect()
         self.rect.center = (x, y)
+        self.music = walking_sound
 
     def clicked(self, x: int, y: int):
         if self.rect.collidepoint(x, y):
+            self.music.play()
             return 'right'
         else:
             return 0
@@ -157,9 +173,11 @@ class LeftButton:
         self.y = y
         self.rect = self.image.get_rect()
         self.rect.center = (x, y)
+        self.music = walking_sound
 
     def clicked(self, x: int, y: int):
         if self.rect.collidepoint(x, y):
+            self.music.play()
             return 'left'
         else:
             return 0
@@ -190,12 +208,14 @@ class DoorToBedRoom:
         self.lock = True
         self.speaker = "旁白"
         self.dialog = "你嘗試打開這個扭曲變形的門\n...\n你使勁全力依然打不開他"
+        self.music = door_open_sound
 
     def clicked(self, x: int, y: int):
         if self.rect.collidepoint(x, y) and self.mask.get_at((x -  self.rect.x, y -  self.rect.y)) != 0:
             if self.lock:
                 return 'dialog'
             else:
+                self.music.play()
                 return 'bedroom'
         else:
             return 0
@@ -210,9 +230,11 @@ class DoorToLivingRoom:
         self.rect = self.image.get_rect()
         self.rect.topleft = (x, y)
         self.mask = pygame.mask.from_surface(self.image)
+        self.music = door_open_sound
 
     def clicked(self, x: int, y: int):
         if self.rect.collidepoint(x, y) and self.mask.get_at((x -  self.rect.x, y -  self.rect.y)) != 0:
+            self.music.play()
             return 'living_room'
         else:
             return 0
@@ -242,9 +264,11 @@ class DoorToStudy:
         self.rect = self.image.get_rect()
         self.rect.topleft = (x, y)
         self.mask = pygame.mask.from_surface(self.image)
+        self.music = door_open_sound
 
     def clicked(self, x: int, y: int):
         if self.rect.collidepoint(x, y) and self.mask.get_at((x -  self.rect.x, y -  self.rect.y)) != 0:
+            self.music.play()
             return 'study'
         else:
             return 0
@@ -276,9 +300,12 @@ class TvSwitch:
         self.rect = self.image.get_rect()
         self.rect.topleft = (x, y)
         self.mask = pygame.mask.from_surface(self.image)
+        self.music = tv_change_channel_sound
 
     def clicked(self, x: int, y: int):
         if self.rect.collidepoint(x, y) and self.mask.get_at((x -  self.rect.x, y -  self.rect.y)) != 0:
+            # 目前還在想要怎麼只有在電視開啟時有聲音
+            self.music.play()
             return 'switch'
 
 class TvPower:
@@ -289,18 +316,21 @@ class TvPower:
         self.rect = self.image.get_rect()
         self.rect.topleft = (x, y)
         self.mask = pygame.mask.from_surface(self.image)
+        self.music = tv_power_sound
 
     def clicked(self, x: int, y: int):
         if self.rect.collidepoint(x, y) and self.mask.get_at((x -  self.rect.x, y -  self.rect.y)) != 0:
+            self.music.play()
             return 'shotdown'
 
 class TvShow:
     def __init__(self, x, y):
         self.all_show = [tv_channel_1,tv_channel_2,tv_channel_3,tv_channel_4,tv_channel_5]
-        # self.sound = [tv_show_1_sound]
+        self.all_music = [tv_show_1_sound,tv_show_2_sound,0,tv_show_4_sound,tv_show_5_sound]
         self.index = 0
         self.size = len(self.all_show)
         self.image = self.all_show[self.index]
+        self.music = self.all_music[self.index]
         self.power_off = tv_power_off_image
         # 影片位置起始點與長寬
         self.x = 110
@@ -324,9 +354,20 @@ class TvShow:
             if self.index == self.size:
                 self.index = 0
             self.image = self.all_show[self.index]
+            if self.music:
+                self.music.stop()
+            self.music = self.all_music[self.index]
+            if self.music:
+                self.music.play()
     
     def power(self):
         self.ispower = not self.ispower
+        if self.ispower:
+            if self.music:
+                self.music.play()
+        else:
+            if self.music:
+                self.music.stop()
 
 
 class TvDecipherCardPuzzle:
@@ -401,9 +442,11 @@ class Hr:
         self.mask = pygame.mask.from_surface(self.image)
         self.ans = 1 # 1點
         self.lock = False
+        self.music = clock_hand_sound
 
     def clicked(self, x: int, y: int):
         if self.rect.collidepoint(x, y) and self.mask.get_at((x -  self.rect.x, y -  self.rect.y)) != 0:
+            self.music.play()
             # 檢查是否已解完
             if self.lock:
                 return 'lock'
@@ -429,10 +472,11 @@ class Mins:
         self.mask = pygame.mask.from_surface(self.image)
         self.ans = 9 #45分
         self.lock = False
+        self.music = clock_hand_sound
 
     def clicked(self, x: int, y: int):
-
         if self.rect.collidepoint(x, y) and self.mask.get_at((x -  self.rect.x, y -  self.rect.y)) != 0:
+            self.music.play()
             # 檢查是否已解完
             if self.lock:
                 return 'lock'
@@ -465,10 +509,13 @@ class Clock:
         self.hr_right = False
         self.min_right = False
         self.is_open = False
+        self.music = clock_sound
     
     def clicked(self, x: int, y: int):
         # TODO : 連接到 user_request 若是可互動物件被點到 轉換場景 若是不可互動則說話或是
         if self.rect.collidepoint(x, y) and self.mask.get_at((x -  self.rect.x, y -  self.rect.y)) != 0:
+            if not self.is_open:
+                self.music.play()
             return 'investigation'
     def open(self):
         self.is_open = True
@@ -626,8 +673,10 @@ class Knob:
         self.rect = self.image.get_rect()
         self.rect.topleft = (x, y)
         self.mask = pygame.mask.from_surface(self.image)
+        self.music = knob_twist_sound
     def clicked(self, x: int, y: int):
         if self.rect.collidepoint(x, y) and self.mask.get_at((x -  self.rect.x, y -  self.rect.y)) != 0:
+            self.music.play()
             self.index += 1
             if self.index == 10:
                 self.index = 0
