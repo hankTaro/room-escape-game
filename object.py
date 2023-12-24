@@ -514,8 +514,6 @@ class Clock:
     def clicked(self, x: int, y: int):
         # TODO : 連接到 user_request 若是可互動物件被點到 轉換場景 若是不可互動則說話或是
         if self.rect.collidepoint(x, y) and self.mask.get_at((x -  self.rect.x, y -  self.rect.y)) != 0:
-            if not self.is_open:
-                self.music.play()
             return 'investigation'
     def open(self):
         self.is_open = True
@@ -524,6 +522,7 @@ class Clock:
         self.object[2].lock = True
         self.focus = pygame.transform.scale(pygame.image.load(f"image/living_room/Clock/clock_open_investigation.png"), (GAME_WIDTH, GAME_HEIGHT))
         self.object = [ExitButton(500,550),Handle(GAME_X, GAME_Y),Password_Hint_1(GAME_X, GAME_Y)]
+        self.music.play()
 
 
 
