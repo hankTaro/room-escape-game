@@ -110,11 +110,19 @@ class GameView:
         # 依照頁數輸出此頁的物品格
         for blank in bag.blank[6 * (bag.page - 1): 6 * bag.page]:
             if blank.item == bag.hold and blank.item != None:
+                # 高亮物品格背景
                 self.win.blit(blank.selected_image, blank.rect)
+                # 顯示物品名稱
                 word = self.font_item.render(blank.item.name, True, (255, 255, 255))
                 rect = word.get_rect()
                 rect.topright = (860, 80)
                 self.win.blit(word, rect)
+
+                # 操作說明
+                tip = self.font_tip.render("點擊[F]以調查物品...", True, (255, 255, 255))  # 渲染文字
+                self.win.blit(tip, (GAME_X + GAME_WIDTH - tip.get_width() - 10, GAME_Y + GAME_HEIGHT - tip.get_height() - 10))
+
+
             else:
                 self.win.blit(blank.image, blank.rect)
             if blank.item != None:

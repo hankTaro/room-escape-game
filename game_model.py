@@ -309,7 +309,8 @@ class GameModel:
                     item.add_handle()
                     self.bag.remove_hold_item()
                 else:
-                    self.text = "沒有把手轉不動"
+                    self.dialog = "沒有把手轉不動"
+                    # self.text = "沒有把手轉不動"
                 break
             elif common == 'check':
                 if self.investigation_item.unlock:
@@ -317,7 +318,8 @@ class GameModel:
                     item.unlock()
                     self.investigation_item.remove_knob()
                 else:
-                    self.text = "咬的緊緊的...轉不開"
+                    self.dialog = "咬的緊緊的...轉不開"
+                    # self.text = "咬的緊緊的...轉不開"
                 break
             elif common == 'take':
                 self.bag.save_item(item)
@@ -364,7 +366,8 @@ class GameModel:
 
                 break
             elif common == 'lock':
-                self.text = "指針好像卡死了..."
+                self.dialog = "指針好像卡死了..."
+                # self.text = "指針好像卡死了..."
             elif common == 'take':
                 self.bag.save_item(item)
                 self.investigation_item.object.remove(item)
