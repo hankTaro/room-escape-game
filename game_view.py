@@ -38,6 +38,9 @@ class GameView:
     def draw_bg(self):
         self.win.blit(BACKGROUND_IMAGE, (0, 0))
 
+    def draw_menu_button(self, btn):
+        self.win.blit(btn.image, btn.rect)
+
     # TODO : 畫出不同房間與牆面的布局 裏頭要有個判別式 以便選擇背景
     # 依照 room 中的 layout data 將物品畫出
     def draw_room(self, room,wall):

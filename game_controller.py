@@ -75,6 +75,9 @@ class GameController:
         # render background
         self.view.draw_bg()
 
+        # 畫出選單按鈕
+        self.view.draw_menu_button(self.model.btn)
+
 
         # TODO : 各房間的場景切換
         if not self.model.investigation:

@@ -11,8 +11,7 @@ from setting import *
 pygame.mixer.init()
 pygame.mixer.music.set_volume(0.2)
 
-tv_image = [pygame.transform.scale(pygame.image.load(f"image/living_room/Tv/tv_{i}.png"), (GAME_WIDTH, GAME_HEIGHT)) for i in range(1)]
-newspaper_image = [pygame.transform.scale(pygame.image.load(f"image/Object/Newspaper/newspaper_{i}.png"), (int(466//3), int(260//3))) for i in range(1)]
+# newspaper_image = pygame.transform.scale(pygame.image.load(f"image/Object/Newspaper/newspaper.png"), (int(466//3), int(260//3)))
 
 clock_image = pygame.transform.scale(pygame.image.load(f"image/living_room/Clock/clock.png"), (GAME_WIDTH, GAME_HEIGHT))
 clock_open_image = pygame.transform.scale(pygame.image.load(f"image/living_room/Clock/clock_open.png"), (GAME_WIDTH, GAME_HEIGHT))
@@ -40,11 +39,21 @@ book_shelf_image = pygame.transform.scale(pygame.image.load(f"image/study/BookSh
 globe_image = pygame.transform.scale(pygame.image.load(f"image/study/Globe/globe.png"), (GAME_WIDTH, GAME_HEIGHT))
 globe_table_image = pygame.transform.scale(pygame.image.load(f"image/study/Globe/globe_table.png"), (GAME_WIDTH, GAME_HEIGHT))
 window_image = pygame.transform.scale(pygame.image.load(f"image/study/window.png"), (GAME_WIDTH, GAME_HEIGHT))
-chest_image = pygame.transform.scale(pygame.image.load(f"image/study/Chest/chest.png"), (GAME_WIDTH, GAME_HEIGHT))
+chest_image = pygame.transform.scale(pygame.image.load(f"image/living_room/TvShelf/chest.png"), (GAME_WIDTH, GAME_HEIGHT))
 dropped_painting_image = pygame.transform.scale(pygame.image.load(f"image/study/dropped_painting.png"), (GAME_WIDTH, GAME_HEIGHT))
 wife_1_image = pygame.transform.scale(pygame.image.load(f"image/Object/Wife/wife.png"), (GAME_WIDTH, GAME_HEIGHT))
 
+# 電視櫃相關 =================================================================================================
+tv_shelf_image = pygame.transform.scale(pygame.image.load(f"image/living_room/TvShelf/tv_shelf.png"), (GAME_WIDTH, GAME_HEIGHT))
+tv_shelf_investigation_l = pygame.transform.scale(pygame.image.load(f"image/living_room/TvShelf/tv_shelf_investigation_l.png"), (GAME_WIDTH, GAME_HEIGHT))
+tv_shelf_investigation_r = pygame.transform.scale(pygame.image.load(f"image/living_room/TvShelf/tv_shelf_investigation_r.png"), (GAME_WIDTH, GAME_HEIGHT))
+tv_shelf_left_door_close_image = pygame.transform.scale(pygame.image.load(f"image/living_room/TvShelf/tv_shelf_door_close_l.png"), (GAME_WIDTH, GAME_HEIGHT))
+tv_shelf_right_door_close_image = pygame.transform.scale(pygame.image.load(f"image/living_room/TvShelf/tv_shelf_door_close_r.png"), (GAME_WIDTH, GAME_HEIGHT))
+tv_shelf_left_door_open_image = pygame.transform.scale(pygame.image.load(f"image/living_room/TvShelf/tv_shelf_door_open_l.png"), (GAME_WIDTH, GAME_HEIGHT))
+tv_shelf_right_door_open_image = pygame.transform.scale(pygame.image.load(f"image/living_room/TvShelf/tv_shelf_door_open_r.png"), (GAME_WIDTH, GAME_HEIGHT))
 
+# TV 相關 ==================================================================================================================================
+tv_image = pygame.transform.scale(pygame.image.load(f"image/living_room/Tv/tv.png"), (GAME_WIDTH, GAME_HEIGHT))
 tv_channel_1 = cv2.VideoCapture("image/living_room/Tv/TV_show/meme_1.mp4")
 tv_channel_2 = cv2.VideoCapture("image/living_room/Tv/TV_show/tyler1 scream meme.mp4")
 tv_channel_3 = pygame.transform.scale(pygame.image.load(f"image/living_room/Tv/TV_show/channel_1.png"), (GAME_WIDTH, GAME_HEIGHT))
@@ -86,7 +95,7 @@ locker_image = pygame.transform.scale(pygame.image.load(f"image/study/Locker/loc
 locker_setup_image = pygame.transform.scale(pygame.image.load(f"image/study/Locker/locker_setup.png"), (GAME_WIDTH, GAME_HEIGHT))
 locker_open_image = pygame.transform.scale(pygame.image.load(f"image/study/Locker/locker_open.png"), (GAME_WIDTH, GAME_HEIGHT))
 
-chest_key_image = pygame.transform.scale(pygame.image.load(f"image/study/Chest/chest_key.png"), (GAME_WIDTH, GAME_HEIGHT))
+chest_key_image = pygame.transform.scale(pygame.image.load(f"image/study/BookShelf/chest_key.png"), (GAME_WIDTH, GAME_HEIGHT))
 
 knob_0_image = [pygame.transform.scale(pygame.image.load(f"image/study/knob/knob_000{i}.png"), (GAME_WIDTH, GAME_HEIGHT)) for i in range(10)]
 knob_1_image = [pygame.transform.scale(pygame.image.load(f"image/study/knob/knob_1_000{i}.png"), (GAME_WIDTH, GAME_HEIGHT)) for i in range(10)]
@@ -94,7 +103,8 @@ knob_2_image = [pygame.transform.scale(pygame.image.load(f"image/study/knob/knob
 knob_3_image = [pygame.transform.scale(pygame.image.load(f"image/study/knob/knob_3_000{i}.png"), (GAME_WIDTH, GAME_HEIGHT)) for i in range(10)]
 # 相框相關 ===========================================================
 photo_frame_image = pygame.transform.scale(pygame.image.load(f"image/study/PhotoFrame/photo_frame.png"), (GAME_WIDTH, GAME_HEIGHT))
-photo_fragments_image = [pygame.transform.scale(pygame.image.load(f"image/study/PhotoFrame/photo_{i}.png"), (GAME_WIDTH, GAME_HEIGHT)) for i in range(1)]
+photo_fragments_image = [pygame.transform.scale(pygame.image.load(f"image/study/PhotoFrame/photo_{i}.png"), (GAME_WIDTH, GAME_HEIGHT)) for i in range(4)]
+photo_fragments_take_image = [pygame.transform.scale(pygame.image.load(f"image/study/PhotoFrame/photo_take_{i}.png"), (GAME_WIDTH, GAME_HEIGHT)) for i in range(1)]
 photo_frame_puzzle = pygame.transform.scale(pygame.image.load(f"image/study/PhotoFrame/photo_frame_puzzle.png"), (GAME_WIDTH, GAME_HEIGHT))
 
 # 可拾取物件 ===========================================================
@@ -294,6 +304,95 @@ class DoorToKitchen:
         else:
             return 0
 
+# 電視櫃相關 ===============================================================
+class TvShelfRightDoor:
+    def __init__(self, x, y):
+        self.image = tv_shelf_right_door_close_image
+        self.x = x
+        self.y = y
+        self.rect = self.image.get_rect()
+        self.rect.topleft = (x, y)
+        self.mask = pygame.mask.from_surface(self.image)
+        self.open = False
+        self.open_music = little_cabinet_open_sound
+        self.close_music = little_cabinet_close_sound
+    def clicked(self, x: int, y: int):
+        if self.rect.collidepoint(x, y) and self.mask.get_at((x -  self.rect.x, y -  self.rect.y)) != 0:
+            if self.open == False:
+                self.open = True
+                self.image = tv_shelf_right_door_open_image
+                self.open_music.play()
+            else:
+                self.open = False
+                self.image = tv_shelf_right_door_close_image
+                self.close_music.play()
+            self.rect = self.image.get_rect()
+            self.rect.topleft = (self.x, self.y)
+            self.mask = pygame.mask.from_surface(self.image)
+            return 'door'
+
+class TvShelfLeftDoor:
+    def __init__(self, x, y):
+        self.image = tv_shelf_left_door_close_image
+        self.x = x
+        self.y = y
+        self.rect = self.image.get_rect()
+        self.rect.topleft = (x, y)
+        self.mask = pygame.mask.from_surface(self.image)
+        self.open = False
+        self.open_music = little_cabinet_open_sound
+        self.close_music = little_cabinet_close_sound
+    def clicked(self, x: int, y: int):
+        if self.rect.collidepoint(x, y) and self.mask.get_at((x -  self.rect.x, y -  self.rect.y)) != 0:
+            if self.open == False:
+                self.open = True
+                self.image = tv_shelf_left_door_open_image
+                self.open_music.play()
+            else:
+                self.open = False
+                self.image = tv_shelf_left_door_close_image
+                self.close_music.play()
+            self.rect = self.image.get_rect()
+            self.rect.topleft = (self.x, self.y)
+            self.mask = pygame.mask.from_surface(self.image)
+            return 'door'
+
+
+
+class TvShelf:
+    def __init__(self, x, y):
+        self.image = tv_shelf_image
+        self.x = x
+        self.y = y
+        self.rect = self.image.get_rect()
+        self.rect.topleft = (x, y)
+        self.mask = pygame.mask.from_surface(self.image)
+
+        # 入口 也就是上一層 離開調查時要回到的地方 None 代表離開調查
+        self.enter = None
+
+        self.focus = None
+        self.focus_r = tv_shelf_investigation_r
+        self.focus_l = tv_shelf_investigation_l
+        self.object = None
+        self.object_r = [ExitButton(500, 550), TvShelfRightDoor(GAME_X, GAME_Y)]
+        self.object_l = [ExitButton(500, 550), TvShelfLeftDoor(GAME_X, GAME_Y)]
+
+
+    def clicked(self, x: int, y: int):
+        if self.rect.collidepoint(x, y) and self.mask.get_at((x -  self.rect.x, y -  self.rect.y)) != 0:
+            # 代表右側櫃子被點到
+            if x > 252:
+                # 將物件與調查畫面設為右側
+                self.focus = self.focus_r
+                self.object = self.object_r
+            else:
+                # 將物件與調查畫面設為左側
+                self.focus = self.focus_l
+                self.object = self.object_l
+            return 'investigation'
+    def remove_knob(self):
+        self.object = [item for item in self.object if not isinstance(item, Knob)]
 # 可互動物件大概會是這個架構
 
 # TV 會用到的原件 ===========================================
@@ -401,7 +500,7 @@ class TvDecipherCardPuzzle:
 # 可互動物件本身 ===========================================
 class Tv:
     def __init__(self, x, y):
-        self.image = tv_image[0]
+        self.image = tv_image
         self.x = x
         self.y = y
         self.rect = self.image.get_rect()
@@ -745,9 +844,9 @@ class BookShelf:
         self.enter = None
 
         self.focus = book_shelf_puzzle
-        self.object = [ExitButton(500, 550), PhotoFrame(GAME_X, GAME_Y), ChestKey(GAME_X, GAME_Y),
-                       Knob(GAME_X, GAME_Y, 0), Knob(GAME_X, GAME_Y, 1), Knob(GAME_X, GAME_Y, 2), Knob(GAME_X, GAME_Y, 3)
-            , Locker(GAME_X, GAME_Y), RightDoor(GAME_X, GAME_Y), LeftDoor(GAME_X, GAME_Y)]
+        self.object = [ExitButton(500, 550), PhotoFrame(GAME_X, GAME_Y), ChestKey(GAME_X, GAME_Y), PhotoFragmentsTake(GAME_X, GAME_Y, 0),
+                       Knob(GAME_X, GAME_Y, 0), Knob(GAME_X, GAME_Y, 1), Knob(GAME_X, GAME_Y, 2), Knob(GAME_X, GAME_Y, 3),
+                       Locker(GAME_X, GAME_Y), RightDoor(GAME_X, GAME_Y), LeftDoor(GAME_X, GAME_Y)]
         # locker 的密碼相關
         self.ans = [4, 2, 7, 5]
         self.input = [0, 0, 0, 0]
@@ -770,26 +869,31 @@ class PhotoFragments:
         self.mask = pygame.mask.from_surface(self.image)
         self.drag = False
         self.ans = pygame.Rect(GAME_X - 15,GAME_Y - 15,30,30)
+        self.lock = False
 
         # 因為碎片也是用畫面大小輸出 只是涂色位置不同 所以所有碎片對準 GAME_X, GAME_Y 就會是正確位置
 
     def clicked(self, x: int, y: int):
-        # 除了被點到 還要確定滑鼠是按住的才能拖動
-        if self.rect.collidepoint(x, y) and self.mask.get_at((x - self.rect.x, y - self.rect.y)) != 0:
+        # 除了被點到 還要確定滑鼠是按住的才能拖動 還要是未完成(lock == F)
+        if self.rect.collidepoint(x, y) and self.mask.get_at((x - self.rect.x, y - self.rect.y)) != 0 and self.lock == False:
             return 'drag'
     def drag_set(self):
         self.drag = True
         # self.rect.move_ip(event.rel)
     def release(self):
-        correct_position = (GAME_X, GAME_Y)
-        # 畫面重疊區域大小必需高於此
-        min_intersection_width = self.rect.width * 0.95
-        min_intersection_height = self.rect.height * 0.95
-        self.drag = False
-        if self.rect.colliderect(pygame.Rect(correct_position, self.rect.size)):
-            intersection = self.rect.clip(pygame.Rect(correct_position, self.rect.size))
-            if intersection.width >= min_intersection_width and intersection.height >= min_intersection_height:
-                print("拼圖正確放置！且相交區域足夠大")
+        if not self.lock:
+            correct_position = (GAME_X, GAME_Y)
+            # 畫面重疊區域大小必需高於此
+            min_intersection_width = self.rect.width * 0.95
+            min_intersection_height = self.rect.height * 0.95
+            self.drag = False
+            if self.rect.colliderect(pygame.Rect(correct_position, self.rect.size)):
+                intersection = self.rect.clip(pygame.Rect(correct_position, self.rect.size))
+                if intersection.width >= min_intersection_width and intersection.height >= min_intersection_height:
+                    # 鎖住 並切將其對其好
+                    self.lock = True
+                    self.rect.topleft = (GAME_X,GAME_Y)
+
     def move(self, rel):
         if self.drag:
             self.rect.move_ip(rel)
@@ -805,12 +909,16 @@ class PhotoFrame:
 
         # 入口 也就是上一層 離開調查時要回到的地方 None 代表離開調查
         self.enter = None
-        self.focus = none_image
+        self.focus = photo_frame_puzzle
         # 這裡的起始位置要手動調整，使得碎片一開始疊在向框的外面
-        self.object = [ExitButton(500, 550),PhotoFragments(GAME_X + 100, GAME_Y + 10, 0)]
+        self.object = [ExitButton(500, 550)]
+        self.fragments = [PhotoFragments(GAME_X + 400, GAME_Y + 150, 0),PhotoFragments(GAME_X + 450, GAME_Y + 150, 1),
+                       PhotoFragments(GAME_X + 300, GAME_Y + 40, 2),PhotoFragments(GAME_X + 300, GAME_Y - 20, 3)]
     def clicked(self, x: int, y: int):
         if self.rect.collidepoint(x, y) and self.mask.get_at((x -  self.rect.x, y -  self.rect.y)) != 0:
             return 'investigation'
+    def add_fragments(self,fragment):
+        self.object.append(self.fragments[fragment.num])
 # 相框謎題 ======================================================================
 
 #可互動物件，investigation尚未完成
@@ -1003,3 +1111,27 @@ class TvDecipherCard:
             # 被撿起放入物品欄
             return 'take'
 
+class PhotoFragmentsTake:
+    def __init__(self, x, y, num):
+        self.name = "相片碎片"
+        self.icon = tv_decipher_card_detail_icon
+        # 調查中此物品的樣貌
+        self.observe = tv_decipher_card_detail_image
+        # 調查中此物品的敘述
+        self.description = "一張因時間而泛黃的相片碎片\n" \
+                           "裡頭似乎描繪著某個你無比熟悉的事物\n" \
+                           "相片的背面有一些數字與符號\n" \
+                           "但是太片段了，無法理解其含義..."
+
+        self.num = num
+        self.image = photo_fragments_take_image[num]
+        self.x = x
+        self.y = y
+        self.rect = self.image.get_rect()
+        self.rect.topleft = (x, y)
+        self.mask = pygame.mask.from_surface(self.image)
+
+    def clicked(self, x: int, y: int):
+        if self.rect.collidepoint(x, y) and self.mask.get_at((x - self.rect.x, y - self.rect.y)) != 0:
+            # 被撿起放入物品欄
+            return 'take'

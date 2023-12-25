@@ -17,6 +17,8 @@ class GameModel:
         # data
         # 基礎背景(全黑)
         self.bg_image = pygame.transform.scale(BACKGROUND_IMAGE, (WIN_WIDTH, WIN_HEIGHT))
+        # 選單按鈕
+        self.btn = MenuButton(910, 50)
         # 當前章節
         self.chapter = 1
         # 本章節會用到的所有房間
@@ -25,8 +27,6 @@ class GameModel:
         self.cur_room = None
         # 當前牆面
         self.wall = 1
-        # 選單按鈕
-        self.btn = MenuButton(900,50)
         # 是否有在調查物件
         self.investigation = False
         # 在調查哪個物件
@@ -179,6 +179,8 @@ class GameModel:
                 if self.investigation:
                     if isinstance(self.investigation_item, Tv):
                         self.tv_select(x, y, 'down')
+                    elif isinstance(self.investigation_item, TvShelf):
+                        self.tv_shelf_select(x, y)
                     elif isinstance(self.investigation_item, BookShelf):
                         self.book_shelf_select(x, y)
                     elif isinstance(self.investigation_item, Clock):
@@ -214,6 +216,25 @@ class GameModel:
         self.observe = True
     def end_observe(self):
         self.observe = False
+
+    def tv_shelf_select(self, mouse_x: int, mouse_y: int):
+        for item in reversed(self.investigation_item.object):
+            common = item.clicked(mouse_x, mouse_y)
+            if common == 'stop_investigation':
+                self.investigation_item = self.investigation_item.enter
+                if not self.investigation_item:
+                    self.investigation = False
+                self.switch = True
+            elif common == 'door':
+                break
+            elif common == 'take':
+                self.bag.save_item(item)
+                self.investigation_item.object.remove(item)
+            elif common == 'investigation':
+                item.enter = self.investigation_item
+                self.investigation_item = item
+            else:
+                pass
 
     def tv_select(self, mouse_x: int, mouse_y: int, events):
         # for item in self.investigation_item.object:
@@ -367,8 +388,12 @@ class GameModel:
                 pass
 
     def photo_frame_select(self, mouse_x: int, mouse_y: int, events):
-        for item in self.investigation_item.object:
+        for item in reversed(self.investigation_item.object):
             if events == 'down':
+                if isinstance(self.bag.hold, PhotoFragmentsTake):
+                    self.investigation_item.add_fragments(self.bag.hold)
+                    self.bag.remove_hold_item()
+                    return
                 common = item.clicked(mouse_x, mouse_y)
                 if common == 'stop_investigation':
                     self.investigation_item = self.investigation_item.enter
