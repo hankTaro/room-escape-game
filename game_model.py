@@ -390,7 +390,7 @@ class GameModel:
     def photo_frame_select(self, mouse_x: int, mouse_y: int, events):
         for item in reversed(self.investigation_item.object):
             if events == 'down':
-                if isinstance(self.bag.hold, PhotoFragmentsTake):
+                if isinstance(self.bag.hold, PhotoFragmentsTake) and self.investigation_item.rect.collidepoint(mouse_x, mouse_y):
                     self.investigation_item.add_fragments(self.bag.hold)
                     self.bag.remove_hold_item()
                     return

@@ -104,7 +104,7 @@ knob_3_image = [pygame.transform.scale(pygame.image.load(f"image/study/knob/knob
 # 相框相關 ===========================================================
 photo_frame_image = pygame.transform.scale(pygame.image.load(f"image/study/PhotoFrame/photo_frame.png"), (GAME_WIDTH, GAME_HEIGHT))
 photo_fragments_image = [pygame.transform.scale(pygame.image.load(f"image/study/PhotoFrame/photo_{i}.png"), (GAME_WIDTH, GAME_HEIGHT)) for i in range(4)]
-photo_fragments_take_image = [pygame.transform.scale(pygame.image.load(f"image/study/PhotoFrame/photo_take_{i}.png"), (GAME_WIDTH, GAME_HEIGHT)) for i in range(1)]
+photo_fragments_take_image = [pygame.transform.scale(pygame.image.load(f"image/study/PhotoFrame/photo_take_{i}.png"), (GAME_WIDTH, GAME_HEIGHT)) for i in range(2)]
 photo_frame_puzzle = pygame.transform.scale(pygame.image.load(f"image/study/PhotoFrame/photo_frame_puzzle.png"), (GAME_WIDTH, GAME_HEIGHT))
 
 # 可拾取物件 ===========================================================
@@ -116,10 +116,12 @@ password_hint_1_icon = pygame.transform.scale(pygame.image.load(f"image/Icon/pas
 handle_icon = pygame.transform.scale(pygame.image.load(f"image/Icon/handle_icon.png"), (ICON_SIZE, ICON_SIZE))
 chest_key_icon = pygame.transform.scale(pygame.image.load(f"image/Icon/chest_key_icon.png"), (ICON_SIZE, ICON_SIZE))
 tv_decipher_card_detail_icon = pygame.transform.scale(pygame.image.load(f"image/Icon/tv_decipher_card_detail_icon.png"), (ICON_SIZE, ICON_SIZE))
+photo_fragments_icon = [pygame.transform.scale(pygame.image.load(f"image/Icon/photo_{i}_icon.png"), (ICON_SIZE, ICON_SIZE)) for i in range(4)]
 # 調查畫面===============================================================
 password_hint_1_observe = pygame.image.load(f"image/Observe/password_hint_1_observe.png")
 handle_observe = pygame.image.load(f"image/Observe/handle_observe.png")
 chest_key_observe = pygame.image.load(f"image/Observe/chest_key_observe.png")
+photo_fragments_observe = [pygame.image.load(f"image/Icon/photo_{i}_icon.png") for i in range(4)]
 
 # XX相關 ===========================================================
 
@@ -375,7 +377,7 @@ class TvShelf:
         self.focus_r = tv_shelf_investigation_r
         self.focus_l = tv_shelf_investigation_l
         self.object = None
-        self.object_r = [ExitButton(500, 550), TvShelfRightDoor(GAME_X, GAME_Y)]
+        self.object_r = [ExitButton(500, 550),PhotoFragmentsTake(GAME_X, GAME_Y, 1), TvShelfRightDoor(GAME_X, GAME_Y)]
         self.object_l = [ExitButton(500, 550), TvShelfLeftDoor(GAME_X, GAME_Y)]
 
 
@@ -1114,9 +1116,9 @@ class TvDecipherCard:
 class PhotoFragmentsTake:
     def __init__(self, x, y, num):
         self.name = "相片碎片"
-        self.icon = tv_decipher_card_detail_icon
+        self.icon = photo_fragments_icon[num]
         # 調查中此物品的樣貌
-        self.observe = tv_decipher_card_detail_image
+        self.observe = photo_fragments_observe[num]
         # 調查中此物品的敘述
         self.description = "一張因時間而泛黃的相片碎片\n" \
                            "裡頭似乎描繪著某個你無比熟悉的事物\n" \
