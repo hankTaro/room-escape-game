@@ -82,7 +82,7 @@ knob_open_sound = pygame.mixer.Sound('music/knob_open.wav')
 locker_setup_sound = pygame.mixer.Sound('music/locker_setup.wav')
 locker_open_sound = pygame.mixer.Sound('music/locker_open.wav')
 little_cabinet_open_sound = pygame.mixer.Sound('music/little_cabinet_open.wav')
-little_cabinet_close_sound = pygame.mixer.Sound('music/little_cabinet_open.wav')
+little_cabinet_close_sound = pygame.mixer.Sound('music/little_cabinet_close.wav')
 
 # 書架相關 ===================================================
 book_shelf_puzzle = pygame.transform.scale(pygame.image.load(f"image/study/BookShelf/book_shelf_investigation.png"), (GAME_WIDTH, GAME_HEIGHT))
