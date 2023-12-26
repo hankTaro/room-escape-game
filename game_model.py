@@ -229,8 +229,6 @@ class GameModel:
             if events == 'down':
                 common = item.clicked(mouse_x, mouse_y)
                 if common == 'stop_investigation':
-                    if self.investigation_item.tvshow.music:
-                        self.investigation_item.tvshow.music.stop()
                     self.investigation_item = self.investigation_item.enter
                     if not self.investigation_item:
                         self.investigation = False
