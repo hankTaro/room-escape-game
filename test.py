@@ -47,11 +47,21 @@ class Game:
         self.description_x = GAME_X + 0 + GAME_WIDTH//2
         self.description_y = GAME_Y + 100
 
-        self.speaker = ["Tom","Tom2","John"]
-        self.image = [BLACK,WHITE,BLUE]
-        self.text = ["11111111111111","22222222222","0000000000"]
+        self.speaker = ["Tom","Tom2","John","John2"]
+        self.images = [(BLACK,2),(WHITE,3)]
+        self.text = ["111111111\n????\n######","22222222222","0000000000", "!!!!!!!!\n#####"]
+        # 目前人物說的話
         self.disp_text = ""
+        # 第幾位人物
         self.index = 0
+        # 人物台詞第幾句
+        self.dialog_index = 0
+        # 目前背景
+        self.images_index = 0
+        # 該更換背景的時機
+        self.images_change_index = self.images[self.images_index][1]
+        # 人物所有台詞分據
+        self.text_lines = self.text[self.index].splitlines()
 
     # draw background
     def draw_bg(self, surf):
@@ -78,10 +88,10 @@ class Game:
 
     # 更新顯示文字
     def update(self):
-        if self.text:
-            if len(self.disp_text) < len(self.text):
-                self.disp_text = self.text[:len(self.disp_text)+1]
-            self.murmur(self.speaker[self.index], self.disp_text[self.index], self.image[self.index])
+        if self.text_lines:
+            if len(self.disp_text) < len(self.text_lines[self.dialog_index]):
+                self.disp_text = self.text_lines[self.dialog_index][:len(self.disp_text)+1]
+            self.murmur(self.speaker[self.index], self.disp_text, self.images[self.images_index][0])
 
 
     def game_run(self):
@@ -99,13 +109,22 @@ class Game:
                     run = False
 
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    self.index += 1
-                    if self.index == len(self.speaker):
-                        self.index = 0 
-            
+                    self.dialog_index += 1
+                    self.disp_text = ""
+                    if self.dialog_index == len(self.text_lines):
+                        self.dialog_index = 0
+                        self.index += 1
+                        if self.index == len(self.speaker):
+                            self.index = 0
+                            self.images_index = 0
+                        self.text_lines = self.text[self.index].splitlines()
+                        if self.index == self.images_change_index:
+                            self.images_index += 1
+
+
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_q:
-                        self.text = ""
+                        self.text_lines = ""
                         self.disp_text = ""
                         print("quite")
 
@@ -119,3 +138,4 @@ if __name__ == "__main__":
     start_time = time.time()
     game = Game()
     game.game_run()
+        
