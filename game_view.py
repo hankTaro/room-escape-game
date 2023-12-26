@@ -17,6 +17,7 @@ class GameView:
         self.font_tip = pygame.font.Font("文鼎中特毛楷.TTF", 16)
         self.bg = None
         self.black = pygame.transform.scale(pygame.image.load(f"image/black.png"), (GAME_WIDTH, GAME_HEIGHT))
+        self.black_b = pygame.transform.scale(pygame.image.load(f"image/black.png"), (WIN_WIDTH, WIN_HEIGHT))
         self.transparency = 0
         # 對話框
         self.dialog_box_image = pygame.transform.scale(pygame.image.load(f"image/對話背景.png"), (GAME_WIDTH, GAME_HEIGHT))
@@ -209,4 +210,13 @@ class GameView:
             return 'end'
         else:
             return 0
+
+    def draw_opening(self,opening,value):
+        # 畫背景
+        self.win.blit(opening.image, (0, 0))
+        black_surface = self.black_b
+        black_surface.set_alpha(value)
+        self.win.blit(black_surface, (0, 0))
+
+
 

@@ -21,9 +21,9 @@ mins_image = [pygame.transform.scale(pygame.image.load(f"image/living_room/Clock
 right_image = pygame.transform.scale(pygame.image.load(f"image/Icon/right.png"), (int(30), int(30)))
 left_image = pygame.transform.scale(pygame.image.load(f"image/Icon/left.png"), (int(30), int(30)))
 menu_image = pygame.transform.scale(pygame.image.load(f"image/Icon/menu_w.png"), (int(42), int(30)))
-exit_image = pygame.transform.scale(pygame.image.load(f"image/Icon/left.png"), (int(30), int(30)))
+exit_image = pygame.transform.scale(pygame.image.load(f"image/Icon/exit.png"), (int(30), int(30)))
 
-
+living_room_window_image = pygame.transform.scale(pygame.image.load(f"image/living_room/window.png"), (GAME_WIDTH, GAME_HEIGHT))
 
 door_image = pygame.transform.scale(pygame.image.load(f"image/Object/door.png"), (int(200), int(400)))
 #yj
@@ -35,7 +35,6 @@ door_image_2_reverse  = pygame.transform.scale(pygame.image.load(f"image/study/d
 
 desk_image = pygame.transform.scale(pygame.image.load(f"image/study/desk.png"), (GAME_WIDTH, GAME_HEIGHT))
 book_image = pygame.transform.scale(pygame.image.load(f"image/study/book2.png"), (GAME_WIDTH, GAME_HEIGHT))
-book_shelf_image = pygame.transform.scale(pygame.image.load(f"image/study/BookShelf/book_shelf.png"), (GAME_WIDTH, GAME_HEIGHT))
 globe_image = pygame.transform.scale(pygame.image.load(f"image/study/Globe/globe.png"), (GAME_WIDTH, GAME_HEIGHT))
 globe_table_image = pygame.transform.scale(pygame.image.load(f"image/study/Globe/globe_table.png"), (GAME_WIDTH, GAME_HEIGHT))
 window_image = pygame.transform.scale(pygame.image.load(f"image/study/window.png"), (GAME_WIDTH, GAME_HEIGHT))
@@ -44,7 +43,7 @@ dropped_painting_image = pygame.transform.scale(pygame.image.load(f"image/study/
 wife_1_image = pygame.transform.scale(pygame.image.load(f"image/Object/Wife/wife.png"), (GAME_WIDTH, GAME_HEIGHT))
 
 # 繪畫相關 ============================================================
-painting_i_image = pygame.transform.scale(pygame.image.load(f"image/study/painting_1.png"), (GAME_WIDTH, GAME_HEIGHT))
+painting_i_image = pygame.transform.scale(pygame.image.load(f"image/study/painting.png"), (GAME_WIDTH, GAME_HEIGHT))
 
 # 電視櫃相關 =================================================================================================
 tv_shelf_image = pygame.transform.scale(pygame.image.load(f"image/living_room/TvShelf/tv_shelf.png"), (GAME_WIDTH, GAME_HEIGHT))
@@ -89,7 +88,8 @@ little_cabinet_close_sound = pygame.mixer.Sound('music/little_cabinet_close.wav'
 cheat_code_sound = pygame.mixer.Sound('music/cheat_code.mp3')
 
 # 書架相關 ===================================================
-book_shelf_puzzle = pygame.transform.scale(pygame.image.load(f"image/study/BookShelf/book_shelf_investigation.png"), (GAME_WIDTH, GAME_HEIGHT))
+book_shelf_image = pygame.transform.scale(pygame.image.load(f"image/living_room/book_shelf.png"), (GAME_WIDTH, GAME_HEIGHT))
+book_shelf_puzzle = pygame.transform.scale(pygame.image.load(f"image/study/BookShelf/book_shelf_investigation_d.png"), (GAME_WIDTH, GAME_HEIGHT))
 book_shelf_left_door_close_image = pygame.transform.scale(pygame.image.load(f"image/study/BookShelf/left_door_close.png"), (GAME_WIDTH, GAME_HEIGHT))
 book_shelf_right_door_close_image = pygame.transform.scale(pygame.image.load(f"image/study/BookShelf/right_door_close.png"), (GAME_WIDTH, GAME_HEIGHT))
 book_shelf_left_door_open_image = pygame.transform.scale(pygame.image.load(f"image/study/BookShelf/left_door_open.png"), (GAME_WIDTH, GAME_HEIGHT))
@@ -108,7 +108,7 @@ knob_3_image = [pygame.transform.scale(pygame.image.load(f"image/study/knob/knob
 # 相框相關 ===========================================================
 photo_frame_image = pygame.transform.scale(pygame.image.load(f"image/study/PhotoFrame/photo_frame.png"), (GAME_WIDTH, GAME_HEIGHT))
 photo_fragments_image = [pygame.transform.scale(pygame.image.load(f"image/study/PhotoFrame/photo_{i}.png"), (GAME_WIDTH, GAME_HEIGHT)) for i in range(4)]
-photo_fragments_take_image = [pygame.transform.scale(pygame.image.load(f"image/study/PhotoFrame/photo_take_{i}.png"), (GAME_WIDTH, GAME_HEIGHT)) for i in range(2)]
+photo_fragments_take_image = [pygame.transform.scale(pygame.image.load(f"image/study/PhotoFrame/photo_take_{i}.png"), (GAME_WIDTH, GAME_HEIGHT)) for i in range(4)]
 photo_frame_puzzle = pygame.transform.scale(pygame.image.load(f"image/study/PhotoFrame/photo_frame_puzzle.png"), (GAME_WIDTH, GAME_HEIGHT))
 
 # 可拾取物件 ===========================================================
@@ -138,6 +138,28 @@ cheat_code_image = pygame.transform.scale(pygame.image.load(f"image/living_room/
 none_image = pygame.transform.scale(BACKGROUND_IMAGE, (100, 100))
 none_icon = pygame.transform.scale(pygame.image.load(f"image/icon.png"), (ICON_SIZE, ICON_SIZE))
 observe_image = pygame.transform.scale(pygame.image.load(f"image/living_room/Tv/cheat_code.png"), (GAME_WIDTH, GAME_HEIGHT))
+
+# 開場畫面
+opening_1_image = pygame.transform.scale(pygame.image.load(f"image/開場.png"), (WIN_WIDTH, WIN_HEIGHT))
+opening_2_image = pygame.transform.scale(pygame.image.load(f"image/開場_2.png"), (WIN_WIDTH, WIN_HEIGHT))
+
+# 開場畫面
+class OpenMenu:
+    def __init__(self, x, y):
+        self.image = opening_1_image
+        self.x = x
+        self.y = y
+        self.rect = self.image.get_rect()
+        self.rect.topleft = (x, y)
+        self.music = door_open_sound
+        self.lock = False
+
+    def clicked(self, x: int, y: int):
+        if self.rect.collidepoint(x, y) and self.lock == False:
+            self.lock = True
+            self.music.play()
+            self.image = opening_2_image
+            return 'start'
 
 # 選單按鈕
 class MenuButton:
@@ -263,7 +285,7 @@ class DoorToLivingRoom:
             return 'living_room'
         else:
             return 0
-        
+
 #yj living room通往外面的門
 class DoorToExit:
     def __init__(self, x, y):
@@ -274,9 +296,14 @@ class DoorToExit:
         self.rect.topleft = (x, y)
         self.mask = pygame.mask.from_surface(self.image)
 
+        self.speaker = "旁白"
+        self.dialog = "離開房屋的門\n手把上充滿著鏽蝕與歲月痕跡\n" \
+                      "在你進屋開門時，他發出了吵雜的摩擦噪音" #\n千里迢迢來到這裡可不只是為了進來撇一眼的\n你使勁全力依然打不開他
+        self.music = door_open_sound
+
     def clicked(self, x: int, y: int):
         if self.rect.collidepoint(x, y) and self.mask.get_at((x -  self.rect.x, y -  self.rect.y)) != 0:
-            return 'exit' #亂打的
+            return 'dialog'
         else:
             return 0
 
@@ -308,9 +335,20 @@ class DoorToKitchen:
         self.rect.topleft = (x, y)
         self.mask = pygame.mask.from_surface(self.image)
 
+        self.speaker = "旁白"
+        self.dialog = "這條通往廚房的通道已經被碎石瓦礫掩埋了\n你靠近嘗試挖掘...\n...\n...\n" \
+                      "挖掘的好一陣子，碎石瓦礫依舊阻擋著通道\n但是你在瓦礫堆中找到了一張...膠片?"
+        self.dialog_2 = "你看著自己紅腫刺痛的手，想想還是別再挖了好了"
+        # 是否互動過(獲得膠片
+        self.lock = False
+        self.give = DecipherCard(GAME_X, GAME_Y)
+
     def clicked(self, x: int, y: int):
         if self.rect.collidepoint(x, y) and self.mask.get_at((x -  self.rect.x, y -  self.rect.y)) != 0:
-            return 'kitchen'
+            if self.lock == False:
+                return 'dialog_sp'
+            else:
+                return 'dialog'
         else:
             return 0
 
@@ -433,7 +471,7 @@ class TvShelf:
         self.focus_l = tv_shelf_investigation_l
         self.object = None
         self.object_r = [ExitButton(500, 550),PhotoFragmentsTake(GAME_X, GAME_Y, 1), TvShelfRightDoor(GAME_X, GAME_Y)]
-        self.object_l = [ExitButton(500, 550), TvShelfLeftDoor(GAME_X, GAME_Y)]
+        self.object_l = [ExitButton(500, 550),PhotoFragmentsTake(GAME_X, GAME_Y, 3), TvShelfLeftDoor(GAME_X, GAME_Y)]
 
 
     def clicked(self, x: int, y: int):
@@ -967,8 +1005,7 @@ class PhotoFrame:
         self.enter = None
         self.focus = photo_frame_puzzle
         # 這裡的起始位置要手動調整，使得碎片一開始疊在向框的外面
-        self.object = [ExitButton(500, 550),PhotoFragments(GAME_X + 400, GAME_Y + 150, 0),PhotoFragments(GAME_X + 450, GAME_Y + 150, 1),
-                       PhotoFragments(GAME_X + 300, GAME_Y + 40, 2),PhotoFragments(GAME_X + 300, GAME_Y - 20, 3)]
+        self.object = [ExitButton(500, 550)]
         self.fragments = [PhotoFragments(GAME_X + 400, GAME_Y + 150, 0),PhotoFragments(GAME_X + 450, GAME_Y + 150, 1),
                        PhotoFragments(GAME_X + 300, GAME_Y + 40, 2),PhotoFragments(GAME_X + 300, GAME_Y - 20, 3)]
         # 拚好的碎片數
@@ -994,9 +1031,19 @@ class Globe:
         self.rect.topleft = (x, y)
         self.mask = pygame.mask.from_surface(self.image)
 
+        self.speaker = "旁白"
+        self.dialog = "你轉動這個生鏽的地球儀\n鏽化的輪軸發出刺耳的摩擦聲\n在你因刺耳的聲音想抵住耳朵時\n看見地球儀的轉軸上纏繞著一塊碎片"
+        self.dialog_2 = "你不想在製造出那種恐怖的聲音"
+        # 是否互動過(獲得相片碎片
+        self.lock = False
+        self.give = PhotoFragmentsTake(GAME_X, GAME_Y, 2)
+
     def clicked(self, x: int, y: int):
-        if self.rect.collidepoint(x, y) and self.mask.get_at((x -  self.rect.x, y -  self.rect.y)) != 0:
-            return 'none'
+        if self.rect.collidepoint(x, y) and self.mask.get_at((x - self.rect.x, y - self.rect.y)) != 0:
+            if self.lock == False:
+                return 'dialog_sp'
+            else:
+                return 'dialog'
 
 #可互動物件，investigation尚未完成        
 class DroppedPainting:
@@ -1013,6 +1060,26 @@ class DroppedPainting:
             return 'none'
 
 
+
+# 非可互動物件
+class LivingRoomWindow:
+    def __init__(self, x, y):
+        self.image = living_room_window_image
+        self.x = x
+        self.y = y
+        self.rect = self.image.get_rect()
+        self.rect.topleft = (x, y)
+        self.mask = pygame.mask.from_surface(self.image)
+
+        self.music = tv_power_sound
+
+        self.speaker = "旁白"
+        self.dialog = "寒冷的空氣從破碎的窗戶灌入\n破碎的玻璃映出你疲憊的臉\n" \
+                      "前往這裡的過程顯然耗費了你許多心神..."
+
+    def clicked(self, x: int, y: int):
+        if self.rect.collidepoint(x, y) and self.mask.get_at((x - self.rect.x, y - self.rect.y)) != 0:
+            return 'dialog'
 # 非可互動物件
 class Window:
     def __init__(self, x, y):

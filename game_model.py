@@ -49,6 +49,12 @@ class GameModel:
         self.observe = False
         # 在播的動畫
         self.show = None
+        # 是否在開場畫面
+        self.opening = None
+        # 亮度
+        self.value = 0
+        # 開始變暗
+        self.to_dark = False
 
         # 第一章的包包
         self.bag_ch1 = Bag()
@@ -62,7 +68,7 @@ class GameModel:
 
 
 
-        self._is_pause = False
+        self._is_pause = None
 
     # 使用 chapter, wall 與 room 的數值來判斷要畫出甚麼畫面(思考是否要用這方法，而非直接讓不同房間的移動按鈕指向不同房間)
 
@@ -131,6 +137,24 @@ class GameModel:
         if events["keyboard key"] == pygame.K_ESCAPE:
             # TODO : 叫出暫停選單
             pass
+            return
+
+        # 在開場
+        if self.opening is not None:
+            if self.to_dark == True:
+                self.value += 3
+            # 當亮度降到0
+            if self.value >= 255:
+                self.to_dark = False
+                self.value = 0
+                self.opening = None
+                self.start_ch1()
+
+            if events["mouse position"] is not None:
+                x, y = events["mouse position"]
+                common = self.opening.clicked(x, y)
+                if common == 'start':
+                    self.to_dark = True
             return
 
         # 檢查 menu btn
@@ -484,6 +508,12 @@ class GameModel:
             elif common == 'dialog':
                 self.dialog = item.dialog
                 self.speaker = item.speaker
+            elif common == 'dialog_sp':
+                self.dialog = item.dialog
+                self.speaker = item.speaker
+                item.dialog = item.dialog_2
+                self.bag.save_item(item.give)
+                item.lock = True
 
             elif common == 'none':
                 pass
@@ -496,6 +526,8 @@ class GameModel:
     # 第一張結束後自動執行第二張初始化 依此類推
     # TODO : 初始化需要依照 room 的架構方式來考慮是否要清除舊物件
     #  若每一章的房間為獨立物件 則不一定要清除 但清掉會比較好 乾淨嘛 也比較不肥 也不容易 memory leak 大專案就一定要清
+    def start_ch0(self):
+        self.opening = OpenMenu(0,0)
 
     def start_ch1(self):
         # TODO :　建立房間/物品/可互動元素
@@ -503,6 +535,7 @@ class GameModel:
                       'study': Study(),
                       'bedroom': Bedroom()}
         self.cur_room = self.room['living_room']
+
 
         # 開場動畫
         # self.show = Show(CH1_START_TEXT,CH1_START_SPEAKER,CH1_START_IMAGE)
@@ -543,6 +576,8 @@ class GameModel:
         self.bag = self.bag_ch2
 
         self.show = Show(CH2_START_TEXT, CH2_START_SPEAKER, CH2_START_IMAGE)
+        for i in range(5000):
+            a = i
         pass
     def start_ch3(self):
         # TODO :　清除上一章的物件(可選)

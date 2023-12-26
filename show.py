@@ -47,5 +47,4 @@ class Show:
         else:
             self.dialog_index += 1
             self.cur_text = self.text_lines[self.dialog_index]
-            print(self.dialog_index)
             return 'continue'

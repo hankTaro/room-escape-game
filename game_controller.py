@@ -38,6 +38,11 @@ class GameController:
                        "mouse motion":None,
                        "release button":False
                        }
+
+        #在第二章關閉
+        if self.model.chapter == 2 and self.model.show == None:
+            self.events["game quit"] = True
+
         # update event
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -76,6 +81,10 @@ class GameController:
     def update_view(self):
         # render background
         self.view.draw_bg()
+
+        if self.model.opening is not None:
+            self.view.draw_opening(self.model.opening,self.model.value)
+            return
 
         # 畫出選單按鈕
         self.view.draw_menu_button(self.model.btn)
