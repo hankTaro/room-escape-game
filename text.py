@@ -12,6 +12,6 @@ CH1_START_SPEAKER = ["開發者","???"]
 CH1_START_IMAGE = [(image_1,0)]
 
 # 章節2開場 (當你拚完照片)
-CH2_START_TEXT = ["Demo版本到此結束\n感謝您的遊玩\n在遊戲過程如果遇到bug或是問題\n歡迎聯絡/通知我\ngithub:https://github.com/hankTaro/room-escape-game"]
+CH2_START_TEXT = ["Demo版本到此結束\nDemo版本到此結束\n感謝您的遊玩\n在遊戲過程如果遇到bug或是問題\n歡迎聯絡/通知我\ngithub:https://github.com/hankTaro/room-escape-game"]
 CH2_START_SPEAKER = ["開發者"]
 CH2_START_IMAGE = [(image_1,0)]

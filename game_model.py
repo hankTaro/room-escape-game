@@ -538,7 +538,7 @@ class GameModel:
 
 
         # 開場動畫
-        # self.show = Show(CH1_START_TEXT,CH1_START_SPEAKER,CH1_START_IMAGE)
+        self.show = Show(CH1_START_TEXT,CH1_START_SPEAKER,CH1_START_IMAGE)
 
         pass
     def start_ch2(self):

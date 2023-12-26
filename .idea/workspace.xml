@@ -3,43 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="3e0b4790-5d83-4476-a83f-f94379d1ad2c" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/game_controller.py" beforeDir="false" afterPath="$PROJECT_DIR$/game_controller.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/game_model.py" beforeDir="false" afterPath="$PROJECT_DIR$/game_model.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/game_view.py" beforeDir="false" afterPath="$PROJECT_DIR$/game_view.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/image/living_room/Clock/Handle.png" beforeDir="false" afterPath="$PROJECT_DIR$/image/living_room/Clock/Handle.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/image/living_room/Clock/Password_Hint_1.png" beforeDir="false" afterPath="$PROJECT_DIR$/image/living_room/Clock/Password_Hint_1.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/image/living_room/Clock/clock.png" beforeDir="false" afterPath="$PROJECT_DIR$/image/living_room/Clock/clock.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/image/living_room/Clock/clock_investigation.png" beforeDir="false" afterPath="$PROJECT_DIR$/image/living_room/Clock/clock_investigation.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/image/living_room/Clock/clock_open.PNG" beforeDir="false" afterPath="$PROJECT_DIR$/image/living_room/Clock/clock_open.PNG" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/image/living_room/Clock/clock_open_investigation.png" beforeDir="false" afterPath="$PROJECT_DIR$/image/living_room/Clock/clock_open_investigation.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/image/living_room/Door/door_1.PNG" beforeDir="false" afterPath="$PROJECT_DIR$/image/living_room/Door/door_1.PNG" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/image/living_room/Door/door_3.PNG" beforeDir="false" afterPath="$PROJECT_DIR$/image/living_room/Door/door_3.PNG" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/image/living_room/Tv/power.png" beforeDir="false" afterPath="$PROJECT_DIR$/image/living_room/Tv/power.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/image/living_room/Tv/power_off.png" beforeDir="false" afterPath="$PROJECT_DIR$/image/living_room/Tv/power_off.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/image/living_room/Tv/switch.png" beforeDir="false" afterPath="$PROJECT_DIR$/image/living_room/Tv/switch.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/image/living_room/Tv/tv_investigation.png" beforeDir="false" afterPath="$PROJECT_DIR$/image/living_room/Tv/tv_investigation.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/image/living_room/TvShelf/tv_shelf.png" beforeDir="false" afterPath="$PROJECT_DIR$/image/living_room/TvShelf/tv_shelf.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/image/living_room/TvShelf/tv_shelf_door_close_l.png" beforeDir="false" afterPath="$PROJECT_DIR$/image/living_room/TvShelf/tv_shelf_door_close_l.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/image/living_room/TvShelf/tv_shelf_door_close_r.png" beforeDir="false" afterPath="$PROJECT_DIR$/image/living_room/TvShelf/tv_shelf_door_close_r.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/image/living_room/TvShelf/tv_shelf_door_open_l.png" beforeDir="false" afterPath="$PROJECT_DIR$/image/living_room/TvShelf/tv_shelf_door_open_l.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/image/living_room/TvShelf/tv_shelf_door_open_r.png" beforeDir="false" afterPath="$PROJECT_DIR$/image/living_room/TvShelf/tv_shelf_door_open_r.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/image/living_room/TvShelf/tv_shelf_investigation_l.png" beforeDir="false" afterPath="$PROJECT_DIR$/image/living_room/TvShelf/tv_shelf_investigation_l.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/image/living_room/TvShelf/tv_shelf_investigation_r.png" beforeDir="false" afterPath="$PROJECT_DIR$/image/living_room/TvShelf/tv_shelf_investigation_r.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/image/living_room/Wall/living_room_1.png" beforeDir="false" afterPath="$PROJECT_DIR$/image/living_room/Wall/living_room_1.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/image/living_room/Wall/living_room_2.png" beforeDir="false" afterPath="$PROJECT_DIR$/image/living_room/Wall/living_room_2.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/image/living_room/Wall/living_room_3.png" beforeDir="false" afterPath="$PROJECT_DIR$/image/living_room/Wall/living_room_3.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/image/study/BookShelf/chest_key.png" beforeDir="false" afterPath="$PROJECT_DIR$/image/study/BookShelf/chest_key.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/image/study/BookShelf/left_door_close.png" beforeDir="false" afterPath="$PROJECT_DIR$/image/study/BookShelf/left_door_close.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/image/study/BookShelf/left_door_open.png" beforeDir="false" afterPath="$PROJECT_DIR$/image/study/BookShelf/left_door_open.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/image/study/BookShelf/right_door_close.png" beforeDir="false" afterPath="$PROJECT_DIR$/image/study/BookShelf/right_door_close.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/image/study/BookShelf/right_door_open.png" beforeDir="false" afterPath="$PROJECT_DIR$/image/study/BookShelf/right_door_open.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/image/study/Globe/globe.png" beforeDir="false" afterPath="$PROJECT_DIR$/image/study/Globe/globe.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/image/study/Globe/globe_table.png" beforeDir="false" afterPath="$PROJECT_DIR$/image/study/Globe/globe_table.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/image/study/PhotoFrame/photo_take_0.png" beforeDir="false" afterPath="$PROJECT_DIR$/image/study/PhotoFrame/photo_take_0.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/image/study/PhotoFrame/photo_take_1.png" beforeDir="false" afterPath="$PROJECT_DIR$/image/study/PhotoFrame/photo_take_1.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/object.py" beforeDir="false" afterPath="$PROJECT_DIR$/object.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/room.py" beforeDir="false" afterPath="$PROJECT_DIR$/room.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/show.py" beforeDir="false" afterPath="$PROJECT_DIR$/show.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/text.py" beforeDir="false" afterPath="$PROJECT_DIR$/text.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -65,17 +28,17 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "C:/Users/User/Desktop/github/room-escape-game",
-    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable",
-    "two.files.diff.last.used.file": "C:/Users/User/Desktop/github/對比/room-escape-game-test/room-escape-game-main/game_model.py",
-    "two.files.diff.last.used.folder": "C:/Users/User/Desktop/github/對比/room-escape-game-test/room-escape-game-main"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/User/Desktop/github/room-escape-game&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;,
+    &quot;two.files.diff.last.used.file&quot;: &quot;C:/Users/User/Desktop/github/對比/room-escape-game-test/room-escape-game-main/game_model.py&quot;,
+    &quot;two.files.diff.last.used.folder&quot;: &quot;C:/Users/User/Desktop/github/對比/room-escape-game-test/room-escape-game-main&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\User\Desktop\github\room-escape-game" />
@@ -153,7 +116,8 @@
       <workItem from="1703522901120" duration="277000" />
       <workItem from="1703523503966" duration="1409000" />
       <workItem from="1703561211015" duration="8902000" />
-      <workItem from="1703586424776" duration="18983000" />
+      <workItem from="1703586424776" duration="19666000" />
+      <workItem from="1703608576542" duration="304000" />
     </task>
     <servers />
   </component>
