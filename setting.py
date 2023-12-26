@@ -30,4 +30,3 @@ BASE = pygame.Rect(740, 30, 270, 100)
 BACKGROUND_IMAGE = pygame.transform.scale(pygame.image.load(os.path.join("image", "black.png")), (1024, 600))
 # VIDEO_EVENT = pygame.USEREVENT + 1
 
-# 關卡布局

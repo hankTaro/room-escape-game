@@ -948,6 +948,7 @@ class PhotoFragments:
                     # 鎖住 並切將其對其好
                     self.lock = True
                     self.rect.topleft = (GAME_X,GAME_Y)
+                    return 'lock'
 
     def move(self, rel):
         if self.drag:
@@ -966,14 +967,21 @@ class PhotoFrame:
         self.enter = None
         self.focus = photo_frame_puzzle
         # 這裡的起始位置要手動調整，使得碎片一開始疊在向框的外面
-        self.object = [ExitButton(500, 550)]
+        self.object = [ExitButton(500, 550),PhotoFragments(GAME_X + 400, GAME_Y + 150, 0),PhotoFragments(GAME_X + 450, GAME_Y + 150, 1),
+                       PhotoFragments(GAME_X + 300, GAME_Y + 40, 2),PhotoFragments(GAME_X + 300, GAME_Y - 20, 3)]
         self.fragments = [PhotoFragments(GAME_X + 400, GAME_Y + 150, 0),PhotoFragments(GAME_X + 450, GAME_Y + 150, 1),
                        PhotoFragments(GAME_X + 300, GAME_Y + 40, 2),PhotoFragments(GAME_X + 300, GAME_Y - 20, 3)]
+        # 拚好的碎片數
+        self.fix_num = 0
     def clicked(self, x: int, y: int):
         if self.rect.collidepoint(x, y) and self.mask.get_at((x -  self.rect.x, y -  self.rect.y)) != 0:
             return 'investigation'
     def add_fragments(self,fragment):
         self.object.append(self.fragments[fragment.num])
+    def fix(self):
+        self.fix_num += 1
+        if self.fix_num == 4:
+            return 'done'
 # 相框謎題 ======================================================================
 
 #可互動物件，investigation尚未完成

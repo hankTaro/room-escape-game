@@ -32,6 +32,13 @@ class GameView:
         self.description_x = GAME_X + 0 + GAME_WIDTH//2
         self.description_y = GAME_Y + 100
 
+        # 劇情對話框
+        self.show_dialog_box_image = pygame.transform.scale(pygame.image.load(f"image/對話背景.png"),
+                                                       (WIN_WIDTH, WIN_HEIGHT))
+        # 劇情對話框說話者位置
+        self.speaker_x = GAME_X + 20
+        self.speaker_y = GAME_Y + GAME_HEIGHT - 70 - self.font_dialog.get_linesize()
+
         # 文字置中
         # WIN_WIDTH // 2 - word.get_width() // 2
 
@@ -163,6 +170,24 @@ class GameView:
         # 操作說明
         tip = self.font_tip.render("點擊[F]退出調查", True, (255, 255, 255))  # 渲染文字
         self.win.blit(tip, (GAME_X + (GAME_WIDTH - tip.get_width())//2, GAME_Y + GAME_HEIGHT - tip.get_height() - 10))
+
+    def draw_show(self, show):
+        # 畫背景
+        self.win.blit(show.images[show.check_index],(0,0))
+
+        # 畫出對話框(灰色漸層)
+        self.win.blit(self.show_dialog_box_image, (0, 0))
+
+        # 說話者
+        title = self.font_speaker.render(show.speaker[show.index], True, (255, 255, 255))  # 渲染文字
+        self.win.blit(title, (self.speaker_x, self.speaker_y))
+        # 內容
+        word = self.font_dialog.render(show.cur_text, True, (255, 255, 255))  # 渲染文字
+        self.win.blit(word, (self.dialog_x, self.dialog_y))
+
+        # 操作說明
+        tip = self.font_tip.render("點擊滑鼠以繼續...", True, (255, 255, 255))  # 渲染文字
+        self.win.blit(tip, (GAME_X + GAME_WIDTH - tip.get_width() - 10, GAME_Y + GAME_HEIGHT - tip.get_height() - 10))
 
 
 

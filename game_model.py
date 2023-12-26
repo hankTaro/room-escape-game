@@ -6,6 +6,8 @@ from object import *
 from room import *
 import random
 from bag import *
+from show import *
+from text import *
 
 # from menu import UpgradeMenu, BuildMenu, MainMenu
 # from user_request import RequestSubject, TowerFactory, TowerSeller, TowerDeveloper, EnemyGenerator, Mute, Music, Continue, Pause
@@ -45,9 +47,15 @@ class GameModel:
         self.dialog_index = 0
         # 是否在調查手中物品
         self.observe = False
+        # 在播的動畫
+        self.show = None
 
+        # 第一章的包包
+        self.bag_ch1 = Bag()
+        # 第二章的包包
+        self.bag_ch2 = Bag()
         # 物品欄
-        self.bag = Bag()
+        self.bag = self.bag_ch1
         # 物品欄換頁按鈕
         self.page_bnt = BagPageButton()
 
@@ -135,6 +143,15 @@ class GameModel:
 
         if self.switch:
             # 讓後面部分不執行
+            return
+
+        if self.show is not None:
+            # 在播動畫 後面不執行
+            if events["mouse position"] is not None:
+                common = self.show.next()
+                if common == 'end':
+                    self.show = None
+
             return
 
 
@@ -419,7 +436,12 @@ class GameModel:
             elif not isinstance(item,PhotoFragments):
                 pass
             elif events == 'up':
-                item.release()
+                common = item.release()
+                if common == 'lock':
+                    common = self.investigation_item.fix()
+                    if common == 'done':
+                        print("拚好了 進CH2")
+                        self.start_ch2()
             else:
                 item.move(events)
 
@@ -468,180 +490,6 @@ class GameModel:
             else:
                 pass
 
-    # 棄用函式
-    # def select(self, mouse_x: int, mouse_y: int) -> None:
-    #     """change the state of whether the items are selected"""
-    #
-    #     # TODO : 在調查中就不檢查房間物件是否被點擊 反之在房間中就不檢查物件調查畫面的點擊
-    #     # if the item is clicked, select the item
-    #
-    #     if self.investigation:
-    #         # TODO : 看看要不要對應不同調查物件設立不同判斷式
-    #         if isinstance(self.investigation_item, Tv):
-    #             for item in self.investigation_item.object:
-    #                 # TODO : 若是可互動物件被點到 轉換場景 若是不可互動則說話或是
-    #                 # 回傳是哪個物件被點選 進而做出不同反應
-    #                 common = item.clicked(mouse_x, mouse_y)
-    #                 if common == 0:
-    #                     pass
-    #                 # 退出調查畫面
-    #                 elif common == 'stop_investigation':
-    #                     self.investigation_item = self.investigation_item.enter
-    #                     if not self.investigation_item:
-    #                         self.investigation = False
-    #                     self.switch = True
-    #                 else:
-    #                     pass
-    #         elif isinstance(self.investigation_item, BookShelf):
-    #             for item in reversed(self.investigation_item.object):
-    #                 common = item.clicked(mouse_x, mouse_y)
-    #                 if common == 'stop_investigation':
-    #                     self.investigation_item = self.investigation_item.enter
-    #                     if not self.investigation_item:
-    #                         self.investigation = False
-    #                     self.switch = True
-    #                 elif common == 'door':
-    #                     break
-    #                 elif common == 'close':
-    #                     if isinstance(self.bag.hold, Handle):
-    #                         item.add_handle()
-    #                         self.bag.remove_hold_item()
-    #                     else:
-    #                         self.text = "沒有把手轉不動"
-    #                     break
-    #                 elif common == 'check':
-    #                     if self.investigation_item.unlock:
-    #                         item.open = True
-    #                         item.unlock()
-    #                         self.investigation_item.remove_knob()
-    #                     else:
-    #                         self.text = "咬的緊緊的...轉不開"
-    #                     break
-    #                 elif common == 'take':
-    #                     self.bag.save_item(item)
-    #                     self.investigation_item.object.remove(item)
-    #                 elif common == 'knob':
-    #                     self.investigation_item.input[item.num] = item.index
-    #                     if self.investigation_item.ans == self.investigation_item.input:
-    #                         self.investigation_item.unlock = True
-    #                     else:
-    #                         self.investigation_item.unlock = False
-    #                     break
-    #                 elif common == 'investigation':
-    #                     item.enter = self.investigation_item
-    #                     self.investigation_item = item
-    #
-    #
-    #                 else:
-    #                     pass
-    #         elif isinstance(self.investigation_item, PhotoFrame):
-    #             for item in reversed(self.investigation_item.object):
-    #                 common = item.clicked(mouse_x, mouse_y)
-    #                 if common == 'stop_investigation':
-    #                     self.investigation_item = self.investigation_item.enter
-    #                     if not self.investigation_item:
-    #                         self.investigation = False
-    #                     self.switch = True
-    #                 # 除了被點到 還要確定滑鼠是按住的才能拖動
-    #                 elif common == 'drag':
-    #                     if events["dragging"]:
-    #                         item.drag()
-    #
-    #         elif isinstance(self.investigation_item, Clock):
-    #             for item in reversed(self.investigation_item.object):
-    #                 # 回傳是哪個物件被點選 進而做出不同反應
-    #                 common = item.clicked(mouse_x, mouse_y)
-    #                 # 退出調查畫面
-    #                 if common == 'stop_investigation':
-    #                     self.investigation_item = self.investigation_item.enter
-    #                     if not self.investigation_item:
-    #                         self.investigation = False
-    #                     self.switch = True
-    #                 elif common == 'move':
-    #                     # 檢查指針是否對應到答案
-    #                     if item.index == item.ans:
-    #                         if isinstance(item, Hr):
-    #                             self.investigation_item.hr_right = True
-    #                         else:
-    #                             self.investigation_item.min_right = True
-    #                     else:
-    #                         if isinstance(item, Hr):
-    #                             self.investigation_item.hr_right = False
-    #                         else:
-    #                             self.investigation_item.min_right = False
-    #                     if self.investigation_item.min_right == True and self.investigation_item.hr_right == True:
-    #                         self.investigation_item.open()
-    #                         self.investigation = False
-    #                         self.investigation_item = None
-    #
-    #                     break
-    #                 elif common == 'lock':
-    #                     self.text = "指針好像卡死了..."
-    #                 elif common == 'take':
-    #                     self.bag.save_item(item)
-    #                     self.investigation_item.object.remove(item)
-    #                 else:
-    #                     pass
-    #         elif isinstance(self.investigation_item, Desk):
-    #             for item in reversed(self.investigation_item.object):
-    #                 # TODO : 若是可互動物件被點到 轉換場景 若是不可互動則說話或是
-    #                 # 回傳是哪個物件被點選 進而做出不同反應
-    #                 common = item.clicked(mouse_x, mouse_y)
-    #                 if common == 0:
-    #                     pass
-    #                 # 退出調查畫面
-    #                 elif common == 'stop_investigation':
-    #                     self.investigation_item = self.investigation_item.enter
-    #                     if not self.investigation_item:
-    #                         self.investigation = False
-    #                     self.switch = True
-    #                 else:
-    #                     pass
-    #         else:
-    #             pass
-    #         pass
-    #
-    #
-    #     else:
-    #         for item in self.cur_room.wall[str(self.wall)].object:
-    #             # TODO : 若是可互動物件被點到 轉換場景 若是不可互動則說話或是
-    #             # 回傳是哪個物件被點選 進而做出不同反應
-    #             common = item.clicked(mouse_x, mouse_y)
-    #             if common == 0:
-    #                 pass
-    #             elif common == 'right':
-    #                 # 往右
-    #                 self.switch_r_wall()
-    #             elif common == 'left':
-    #                 self.switch_l_wall()
-    #             elif common == 'bedroom':
-    #                 self.to_bedroom()
-    #             elif common == 'living_room':
-    #                 self.to_living_room()
-    #             elif common == 'study':
-    #                 self.to_study()
-    #
-    #             # 回傳的是可調查物件的 self
-    #             elif common == 'investigation':
-    #                 self.investigation = True
-    #                 self.investigation_item = item
-    #                 pass
-    #             elif common == 'speak':
-    #                 # TODO : 考慮不同文字出現位置
-    #                 # self.text_pos
-    #                 self.text = item.text[item.text_index]
-    #                 item.text_index += 1
-    #                 if item.text_index == item.text_size:
-    #                     item.text_index = 0
-    #             elif common == 'none':
-    #                 pass
-    #             else:
-    #                 pass
-    #
-    #     # menu btn
-    #     self.btn.clicked(mouse_x, mouse_y)
-
-
 
     # TODO : 章節初始化
     # 開始畫面點選開始就先做第一章起始化
@@ -656,10 +504,45 @@ class GameModel:
                       'bedroom': Bedroom()}
         self.cur_room = self.room['living_room']
 
+        # 開場動畫
+        # self.show = Show(CH1_START_TEXT,CH1_START_SPEAKER,CH1_START_IMAGE)
+
         pass
     def start_ch2(self):
         # TODO :　清除上一章的物件(可選)
         # TODO :　建立房間/物品/可互動元素
+        # 當前章節
+        self.chapter = 2
+        # 本章節會用到的所有房間
+        self.room = {'living_room': LivingRoom(),
+                     'study': Study(),
+                     'bedroom': Bedroom()}
+        # 當前房間
+        self.cur_room = self.room['living_room']
+        # 當前牆面
+        self.wall = 1
+        # 是否有在調查物件
+        self.investigation = False
+        # 在調查哪個物件
+        self.investigation_item = None
+        # 是否在轉場
+        self.switch = False
+        # 對話框文字
+        self.text = ""
+        # 文字位置(尚未使用)
+        self.text_pos = (0, 0)
+        # 對話框的說話者
+        self.speaker = ""
+        # 下方對話框文字
+        self.dialog = ""
+        # 下方對話框文字的index
+        self.dialog_index = 0
+        # 是否在調查手中物品
+        self.observe = False
+        # 物品欄
+        self.bag = self.bag_ch2
+
+        self.show = Show(CH2_START_TEXT, CH2_START_SPEAKER, CH2_START_IMAGE)
         pass
     def start_ch3(self):
         # TODO :　清除上一章的物件(可選)

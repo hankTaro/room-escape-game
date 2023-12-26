@@ -80,6 +80,10 @@ class GameController:
         # 畫出選單按鈕
         self.view.draw_menu_button(self.model.btn)
 
+        if self.model.show is not None:
+            self.view.draw_show(self.model.show)
+            return
+
 
         # TODO : 各房間的場景切換
         if not self.model.investigation:

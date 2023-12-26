@@ -90,7 +90,7 @@ class Game:
     def update(self):
         if self.text_lines:
             if len(self.disp_text) < len(self.text_lines[self.dialog_index]):
-                self.disp_text = self.text_lines[self.dialog_index][:len(self.disp_text)+1]
+                self.disp_text = self.text_lines[self.dialog_index][:len(self.disp_text) + 1]
             self.murmur(self.speaker[self.index], self.disp_text, self.images[self.images_index][0])
 
 
