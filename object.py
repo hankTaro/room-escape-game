@@ -43,6 +43,9 @@ chest_image = pygame.transform.scale(pygame.image.load(f"image/living_room/TvShe
 dropped_painting_image = pygame.transform.scale(pygame.image.load(f"image/study/dropped_painting.png"), (GAME_WIDTH, GAME_HEIGHT))
 wife_1_image = pygame.transform.scale(pygame.image.load(f"image/Object/Wife/wife.png"), (GAME_WIDTH, GAME_HEIGHT))
 
+# 繪畫相關 ============================================================
+painting_i_image = pygame.transform.scale(pygame.image.load(f"image/study/painting_1.png"), (GAME_WIDTH, GAME_HEIGHT))
+
 # 電視櫃相關 =================================================================================================
 tv_shelf_image = pygame.transform.scale(pygame.image.load(f"image/living_room/TvShelf/tv_shelf.png"), (GAME_WIDTH, GAME_HEIGHT))
 tv_shelf_investigation_l = pygame.transform.scale(pygame.image.load(f"image/living_room/TvShelf/tv_shelf_investigation_l.png"), (GAME_WIDTH, GAME_HEIGHT))
@@ -83,6 +86,7 @@ locker_setup_sound = pygame.mixer.Sound('music/locker_setup.wav')
 locker_open_sound = pygame.mixer.Sound('music/locker_open.wav')
 little_cabinet_open_sound = pygame.mixer.Sound('music/little_cabinet_open.wav')
 little_cabinet_close_sound = pygame.mixer.Sound('music/little_cabinet_close.wav')
+cheat_code_sound = pygame.mixer.Sound('music/cheat_code.mp3')
 
 # 書架相關 ===================================================
 book_shelf_puzzle = pygame.transform.scale(pygame.image.load(f"image/study/BookShelf/book_shelf_investigation.png"), (GAME_WIDTH, GAME_HEIGHT))
@@ -117,19 +121,23 @@ handle_icon = pygame.transform.scale(pygame.image.load(f"image/Icon/handle_icon.
 chest_key_icon = pygame.transform.scale(pygame.image.load(f"image/Icon/chest_key_icon.png"), (ICON_SIZE, ICON_SIZE))
 tv_decipher_card_detail_icon = pygame.transform.scale(pygame.image.load(f"image/Icon/tv_decipher_card_detail_icon.png"), (ICON_SIZE, ICON_SIZE))
 photo_fragments_icon = [pygame.transform.scale(pygame.image.load(f"image/Icon/photo_{i}_icon.png"), (ICON_SIZE, ICON_SIZE)) for i in range(4)]
+cheat_code_icon = pygame.transform.scale(pygame.image.load(f"image/Icon/cheat_code_icon.png"), (ICON_SIZE, ICON_SIZE))
 # 調查畫面===============================================================
 password_hint_1_observe = pygame.image.load(f"image/Observe/password_hint_1_observe.png")
 handle_observe = pygame.image.load(f"image/Observe/handle_observe.png")
 chest_key_observe = pygame.image.load(f"image/Observe/chest_key_observe.png")
 photo_fragments_observe = [pygame.image.load(f"image/Icon/photo_{i}_icon.png") for i in range(4)]
+cheat_code_observe = pygame.image.load(f"image/Observe/cheat_code_observe.png")
 
+# 彩蛋相關 ===========================================================
+cheat_code_image = pygame.transform.scale(pygame.image.load(f"image/living_room/Tv/cheat_code.png"), (GAME_WIDTH, GAME_HEIGHT))
 # XX相關 ===========================================================
 
 
 # 待繪製物件
 none_image = pygame.transform.scale(BACKGROUND_IMAGE, (100, 100))
 none_icon = pygame.transform.scale(pygame.image.load(f"image/icon.png"), (ICON_SIZE, ICON_SIZE))
-observe_image = pygame.image.load(f"image/Observe/observe.png")
+observe_image = pygame.transform.scale(pygame.image.load(f"image/living_room/Tv/cheat_code.png"), (GAME_WIDTH, GAME_HEIGHT))
 
 # 選單按鈕
 class MenuButton:
@@ -306,6 +314,53 @@ class DoorToKitchen:
         else:
             return 0
 
+
+# 畫作相關
+class DecipherCardPuzzle:
+    def __init__(self, x, y):
+        self.image = tv_decipher_card_detail_image
+        self.x = x
+        self.y = y
+        self.rect = self.image.get_rect()
+        self.rect.topleft = (x, y)
+        self.mask = pygame.mask.from_surface(self.image)
+        self.drag = False
+
+    def clicked(self, x: int, y: int):
+        # 除了被點到 還要確定滑鼠是按住的才能拖動
+        if self.rect.collidepoint(x, y) and self.mask.get_at((x - self.rect.x, y - self.rect.y)) != 0:
+            return 'drag'
+
+    def drag_set(self):
+        self.drag = True
+
+    def release(self):
+        self.drag = False
+
+    def move(self, rel):
+        if self.drag:
+            self.rect.move_ip(rel)
+class Painting:
+    def __init__(self, x, y):
+        self.image = painting_i_image
+        self.x = x
+        self.y = y
+        self.rect = self.image.get_rect()
+        self.rect.topleft = (x, y)
+        self.mask = pygame.mask.from_surface(self.image)
+        # 入口 也就是上一層 離開調查時要回到的地方 None 代表離開調查
+        self.enter = None
+        self.focus = pygame.transform.scale(pygame.image.load(f"image/study/painting_1_investigation.png"),
+                                            (GAME_WIDTH, GAME_HEIGHT))
+        # TODO : 此圖片中可互動的物件
+        self.object = [ExitButton(500, 550)]
+        self.music = None
+
+    def clicked(self, x: int, y: int):
+        # TODO : 連接到 user_request 若是可互動物件被點到 轉換場景 若是不可互動則說話或是
+        if self.rect.collidepoint(x, y) and self.mask.get_at((x - self.rect.x, y - self.rect.y)) != 0:
+            return 'investigation'
+
 # 電視櫃相關 ===============================================================
 class TvShelfRightDoor:
     def __init__(self, x, y):
@@ -413,7 +468,7 @@ class TvSwitch:
             return 'switch'
 
 class TvPower:
-    def __init__(self, x, y):
+    def __init__(self, x, y,lock):
         self.image = tv_power_btn
         self.x = x
         self.y = y
@@ -422,10 +477,18 @@ class TvPower:
         self.mask = pygame.mask.from_surface(self.image)
         self.music = tv_power_sound
 
+        self.speaker = ""
+        self.dialog = "打不開...\n也是，就算電視沒壞，這裡也早就沒電、沒訊號了\n電視下面的這串指令...\n還真是懷念..."
+        # 是否壞掉(第一章不可互動)
+        self.lock = lock
+
     def clicked(self, x: int, y: int):
         if self.rect.collidepoint(x, y) and self.mask.get_at((x -  self.rect.x, y -  self.rect.y)) != 0:
-            self.music.play()
-            return 'shotdown'
+            if self.lock:
+                return 'dialog'
+            else:
+                self.music.play()
+                return 'shotdown'
 
 class TvShow:
     def __init__(self, x, y):
@@ -474,34 +537,11 @@ class TvShow:
                 self.music.stop()
 
 
-class TvDecipherCardPuzzle:
-    def __init__(self, x, y):
-        self.image = tv_decipher_card_detail_image
-        self.x = x
-        self.y = y
-        self.rect = self.image.get_rect()
-        self.rect.topleft = (x, y)
-        self.mask = pygame.mask.from_surface(self.image)
-        self.drag = False
 
-    def clicked(self, x: int, y: int):
-        # 除了被點到 還要確定滑鼠是按住的才能拖動
-        if self.rect.collidepoint(x, y) and self.mask.get_at((x - self.rect.x, y - self.rect.y)) != 0:
-            return 'drag'
-
-    def drag_set(self):
-        self.drag = True
-
-    def release(self):
-        self.drag = False
-
-    def move(self, rel):
-        if self.drag:
-            self.rect.move_ip(rel)
 
 # 可互動物件本身 ===========================================
 class Tv:
-    def __init__(self, x, y):
+    def __init__(self, x, y ,lock):
         self.image = tv_image
         self.x = x
         self.y = y
@@ -510,26 +550,39 @@ class Tv:
         self.tvshow = TvShow(GAME_X, GAME_Y)
         self.mask = pygame.mask.from_surface(self.image)
 
+        # 是否壞掉(第一章不可互動)
+        self.lock = lock
+
+        self.target_command = [pygame.K_UP, pygame.K_UP, pygame.K_DOWN, pygame.K_DOWN,
+                               pygame.K_LEFT, pygame.K_RIGHT, pygame.K_LEFT, pygame.K_RIGHT,
+                               pygame.K_b, pygame.K_a]
+        self.current_sequence = []
+        # 玩家是否找到彩蛋
+        self.easter_eggs = False
+
         # 入口 也就是上一層 離開調查時要回到的地方 None 代表離開調查
         self.enter = None
 
-        # 是否放上了膠片
-        self.card = False
-
         # 下方要有儲存解謎進度的data
-        # TODO : 點擊放大後的圖片
+        # 點擊放大後的圖片
         self.focus = pygame.transform.scale(pygame.image.load(f"image/living_room/Tv/tv_investigation.png"), (GAME_WIDTH, GAME_HEIGHT))
-        # TODO : 此圖片中可互動的物件
-        self.object = [ExitButton(500,550),TvSwitch(GAME_X, GAME_Y),TvPower(GAME_X, GAME_Y),self.tvshow]
+        # 此圖片中可互動的物件
+        self.object = [ExitButton(500,550),TvSwitch(GAME_X, GAME_Y),TvPower(GAME_X, GAME_Y,self.lock),self.tvshow]
+
 
     def clicked(self, x: int, y: int):
-        # TODO : 連接到 user_request 若是可互動物件被點到 轉換場景 若是不可互動則說話或是
         if self.rect.collidepoint(x, y) and self.mask.get_at((x -  self.rect.x, y -  self.rect.y)) != 0:
+            self.current_sequence = []
             return 'investigation'
+    def input(self, input):
+        self.current_sequence.append(input)
+        if self.current_sequence[-len(self.target_command):] == self.target_command:
+            self.cheat_code()
+    def cheat_code(self):
+        cheat_code_sound.play()
+        self.object.append(CheatCode(GAME_X, GAME_Y))
 
-    # TODO : 用於改變在解謎中改動到的資料
-    def puzzle(self):
-        pass
+
 
 
 # Clock 會用到的物件 ===========================================
@@ -997,24 +1050,24 @@ class Chest:
             return 'none'
 
 # 對話物件 ===========================================
-class Wife_Ch1:
-    def __init__(self, x, y):
-        self.image = wife_1_image
-        self.x = x
-        self.y = y
-        self.rect = self.image.get_rect()
-        self.rect.topleft = (x, y)
-        self.mask = pygame.mask.from_surface(self.image)
-        # 對話內容
-        self.text = ["要是能回到過去該有多好⋯","你找到遺產了嗎?"]
-        self.text_index = 0
-        self.text_size = 2
-
-
-    def clicked(self, x: int, y: int):
-        # TODO : 連接到 user_request 若是可互動物件被點到 轉換場景 若是不可互動則說話或是
-        if self.rect.collidepoint(x, y) and self.mask.get_at((x -  self.rect.x, y -  self.rect.y)) != 0:
-            return 'speak'
+# class Wife_Ch1:
+#     def __init__(self, x, y):
+#         self.image = wife_1_image
+#         self.x = x
+#         self.y = y
+#         self.rect = self.image.get_rect()
+#         self.rect.topleft = (x, y)
+#         self.mask = pygame.mask.from_surface(self.image)
+#         # 對話內容
+#         self.text = ["要是能回到過去該有多好⋯","你找到遺產了嗎?"]
+#         self.text_index = 0
+#         self.text_size = 2
+#
+#
+#     def clicked(self, x: int, y: int):
+#         # TODO : 連接到 user_request 若是可互動物件被點到 轉換場景 若是不可互動則說話或是
+#         if self.rect.collidepoint(x, y) and self.mask.get_at((x -  self.rect.x, y -  self.rect.y)) != 0:
+#             return 'speak'
 
 
 # 物品欄物件(可放入物品欄的東西)
@@ -1090,7 +1143,7 @@ class ChestKey:
             return 'take'
 
 
-class TvDecipherCard:
+class DecipherCard:
     def __init__(self, x, y):
         self.name = "佈滿洞的膠片"
         self.image = none_image
@@ -1127,6 +1180,31 @@ class PhotoFragmentsTake:
 
         self.num = num
         self.image = photo_fragments_take_image[num]
+        self.x = x
+        self.y = y
+        self.rect = self.image.get_rect()
+        self.rect.topleft = (x, y)
+        self.mask = pygame.mask.from_surface(self.image)
+
+    def clicked(self, x: int, y: int):
+        if self.rect.collidepoint(x, y) and self.mask.get_at((x - self.rect.x, y - self.rect.y)) != 0:
+            # 被撿起放入物品欄
+            return 'take'
+
+# 彩蛋物件類 =====================================
+class CheatCode:
+    def __init__(self, x, y):
+        self.name = "魂斗羅卡帶"
+        self.icon = cheat_code_icon
+        # 調查中此物品的樣貌
+        self.observe = cheat_code_observe
+        # 調查中此物品的敘述
+        self.description = "經典FC遊戲魂斗羅的卡帶\n" \
+                           "輸入這串作弊碼即可獲得30條命\n" \
+                           "讓你快快樂樂的闖蕩關卡\n" \
+                           "不必擔心任何生命問題"
+
+        self.image = cheat_code_image
         self.x = x
         self.y = y
         self.rect = self.image.get_rect()

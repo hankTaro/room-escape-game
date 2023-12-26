@@ -76,6 +76,7 @@ class GameView:
                         frame = pygame.surfarray.make_surface((np.rot90(frame)))  # 轉90度 畫在畫面上
                         self.win.blit(frame, (item.x, item.y)) #設定化的位置
                         pygame.time.delay(int(200 / (item.image.get(cv2.CAP_PROP_FPS)))) # 延遲畫面更新
+
         # 讓電視框可以遮住超出範圍的節目畫面
         self.win.blit(investigation_item.focus, (GAME_X, GAME_Y))
         for item in investigation_item.object:

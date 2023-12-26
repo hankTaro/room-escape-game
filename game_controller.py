@@ -44,12 +44,14 @@ class GameController:
                 self.events["game quit"] = True
             # player press action
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
-                    # 叫出選單
-                    self.events["keyboard key"] = pygame.K_ESCAPE
-                elif event.key == pygame.K_f:
-                    # 調查手中物件
-                    self.events["keyboard key"] = pygame.K_f
+                if event.key is not None:
+                    self.events["keyboard key"] = event.key
+                # if event.key == pygame.K_ESCAPE:
+                #     # 叫出選單
+                #     self.events["keyboard key"] = pygame.K_ESCAPE
+                # elif event.key == pygame.K_f:
+                #     # 調查手中物件
+                #     self.events["keyboard key"] = pygame.K_f
             # player click action
             if event.type == pygame.MOUSEBUTTONDOWN:
                 x, y = pygame.mouse.get_pos()
