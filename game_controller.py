@@ -40,8 +40,13 @@ class GameController:
                        }
 
         #在第二章關閉
-        if self.model.chapter == 2 and self.model.show == None:
-            self.events["game quit"] = True
+        # if self.model.chapter == 2 and self.model.show == None:
+        #     self.events["game quit"] = True
+
+        # 當你進入第二章 並且還沒播放過 self.model.cur_room.show_1 時播放
+        if self.model.chapter == 2 and self.model.show == None and self.model.cur_room.show_1 is not None:
+            self.model.show = self.model.cur_room.show_1
+            self.model.cur_room.show_1 = None
 
         # update event
         for event in pygame.event.get():

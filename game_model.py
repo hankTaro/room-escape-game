@@ -4,6 +4,7 @@ import os
 
 from object import *
 from room import *
+from room_ch2 import *
 import random
 from bag import *
 from show import *
@@ -139,14 +140,19 @@ class GameModel:
             pass
             return
 
-        # 在開場
-        if self.opening is not None:
-            if self.to_dark == True:
-                self.value += 3
-            # 當亮度降到0
+        # 任何需要畫面變黑時
+        if self.to_dark == True:
+
+            self.value += 3
             if self.value >= 255:
                 self.to_dark = False
                 self.value = 0
+            return
+
+        # 在開場
+        if self.opening is not None:
+            # 變暗過程結束
+            if not self.to_dark:
                 self.opening = None
                 self.start_ch1()
 
@@ -156,6 +162,24 @@ class GameModel:
                 if common == 'start':
                     self.to_dark = True
             return
+
+        # # 在開場
+        # if self.opening is not None:
+        #     if self.to_dark == True:
+        #         self.value += 3
+        #     # 當亮度降到0
+        #     if self.value >= 255:
+        #         self.to_dark = False
+        #         self.value = 0
+        #         self.opening = None
+        #         self.start_ch1()
+        #
+        #     if events["mouse position"] is not None:
+        #         x, y = events["mouse position"]
+        #         common = self.opening.clicked(x, y)
+        #         if common == 'start':
+        #             self.to_dark = True
+        #     return
 
         # 檢查 menu btn
         if events["mouse position"] is not None:
@@ -514,6 +538,9 @@ class GameModel:
                 item.dialog = item.dialog_2
                 self.bag.save_item(item.give)
                 item.lock = True
+            elif common == 'done':
+                if self.chapter == 2:
+                    self.start_ch3()
 
             elif common == 'none':
                 pass
@@ -547,17 +574,17 @@ class GameModel:
         # 當前章節
         self.chapter = 2
         # 本章節會用到的所有房間
-        self.room = {'living_room': LivingRoom(),
+        self.room = {'living_room': LivingRoomCh2(),
                      'study': Study(),
                      'bedroom': Bedroom()}
         # 當前房間
         self.cur_room = self.room['living_room']
         # 當前牆面
-        self.wall = 1
+        self.wall = 4
         # 是否有在調查物件
-        self.investigation = False
+        self.investigation = True
         # 在調查哪個物件
-        self.investigation_item = None
+        self.investigation_item = self.cur_room.desk
         # 是否在轉場
         self.switch = False
         # 對話框文字
@@ -575,13 +602,18 @@ class GameModel:
         # 物品欄
         self.bag = self.bag_ch2
 
-        self.show = Show(CH2_START_TEXT, CH2_START_SPEAKER, CH2_START_IMAGE)
+
+        # 撥放章節1結束劇情
+        self.show = Show(CH1_END_TEXT, CH1_END_SPEAKER, CH1_END_IMAGE)
+        # 延遲一小段時間
         for i in range(5000):
             a = i
         pass
+
+
     def start_ch3(self):
-        # TODO :　清除上一章的物件(可選)
-        # TODO :　建立房間/物品/可互動元素
+        # 開場動畫
+        self.show = Show(CH3_START_TEXT, CH3_START_SPEAKER, CH3_START_IMAGE)
         pass
     def start_ch4(self):
         # TODO :　清除上一章的物件(可選)

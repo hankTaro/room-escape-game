@@ -188,7 +188,7 @@ class GameView:
 
         # 操作說明
         tip = self.font_tip.render("點擊滑鼠以繼續...", True, (255, 255, 255))  # 渲染文字
-        self.win.blit(tip, (GAME_X + GAME_WIDTH - tip.get_width() - 10, GAME_Y + GAME_HEIGHT - tip.get_height() - 10))
+        self.win.blit(tip, (WIN_WIDTH - tip.get_width() - 30, WIN_HEIGHT - tip.get_height() - 30))
 
 
 

@@ -25,17 +25,21 @@ class LivingRoom:
         # 房間牆面數
         self.wall_size = 3
 
+        # 切換畫面鍵
+        self.right_button = RightButton(WIN_WIDTH - 50,WIN_HEIGHT/2)
+        self.left_button = LeftButton(20,WIN_HEIGHT/2)
+
         # 此房間在不同牆面有的物品/座標 (包括移動鍵)
         # 牆面1有這些東西
-        self.__object_1 = [RightButton(WIN_WIDTH - 50,WIN_HEIGHT/2),LeftButton(20,WIN_HEIGHT/2),DoorToExit(GAME_X, GAME_Y)
-            ,LivingRoomWindow(GAME_X, GAME_Y)]
+        self.__object_1 = [self.right_button,self.left_button,
+                           DoorToExit(GAME_X, GAME_Y),LivingRoomWindow(GAME_X, GAME_Y)]
         # 牆面2有這些東西
-        self.__object_2 = [RightButton(WIN_WIDTH - 50,WIN_HEIGHT/2),LeftButton(20,WIN_HEIGHT/2),
+        self.__object_2 = [self.right_button,self.left_button,
                            DoorToBedRoom(GAME_X, GAME_Y),Clock(GAME_X, GAME_Y),BookShelf(GAME_X, GAME_Y)]
         # 牆面3有這些東西
-        self.__object_3 = [RightButton(WIN_WIDTH - 50,WIN_HEIGHT/2),LeftButton(20,WIN_HEIGHT/2),DoorToKitchen(GAME_X, GAME_Y),
+        self.__object_3 = [self.right_button,self.left_button,DoorToKitchen(GAME_X, GAME_Y),
                            Tv(GAME_X, GAME_Y,True),TvShelf(GAME_X, GAME_Y), Painting(GAME_X, GAME_Y),Globe(GAME_X, GAME_Y),GlobeTable(GAME_X, GAME_Y)]
-        self.__object_4 = [RightButton(WIN_WIDTH - 50, WIN_HEIGHT / 2), LeftButton(20, WIN_HEIGHT / 2)]
+        self.__object_4 = [self.right_button, self.left_button]
 
         # 當前牆面/建立此房間的牆面
         # 不同房間的牆面數會不一樣 要注意
@@ -52,13 +56,17 @@ class Study:
         # 房間牆面數
         self.wall_size = 3
 
+        # 切換畫面鍵
+        self.right_button = RightButton(WIN_WIDTH - 50, WIN_HEIGHT / 2)
+        self.left_button = LeftButton(20, WIN_HEIGHT / 2)
+
         # 此房間在不同牆面有的物品/座標
         # 牆面1有這些東西
-        self.__object_1 = [RightButton(WIN_WIDTH - 50,WIN_HEIGHT/2),LeftButton(20,WIN_HEIGHT/2),Desk(GAME_X, GAME_Y),Book(GAME_X, GAME_Y), Painting(GAME_X, GAME_Y)]
+        self.__object_1 = [self.right_button,self.left_button,Desk(GAME_X, GAME_Y),Book(GAME_X, GAME_Y), Painting(GAME_X, GAME_Y)]
         # 牆面2有這些東西
-        self.__object_2 = [RightButton(WIN_WIDTH - 50,WIN_HEIGHT/2),LeftButton(20,WIN_HEIGHT/2),BookShelf(GAME_X, GAME_Y),Globe(GAME_X, GAME_Y),GlobeTable(GAME_X, GAME_Y),Window(GAME_X, GAME_Y)]
+        self.__object_2 = [self.right_button,self.left_button,BookShelf(GAME_X, GAME_Y),Globe(GAME_X, GAME_Y),GlobeTable(GAME_X, GAME_Y),Window(GAME_X, GAME_Y)]
         # 牆面3有這些東西
-        self.__object_3 = [RightButton(WIN_WIDTH - 50,WIN_HEIGHT/2),LeftButton(20,WIN_HEIGHT/2),DoorToLivingRoom(GAME_X, GAME_Y, 0),DroppedPainting(GAME_X, GAME_Y)]
+        self.__object_3 = [self.right_button,self.left_button,DoorToLivingRoom(GAME_X, GAME_Y, 0),DroppedPainting(GAME_X, GAME_Y)]
         # 當前牆面/建立此房間的牆面
         # 不同房間的牆面數會不一樣 要注意
         self.wall = {'1': Wall(self.bg_image, self.__object_1),
@@ -74,13 +82,17 @@ class Kitchen:
         # 房間牆面數
         self.wall_size = 3
 
+        # 切換畫面鍵
+        self.right_button = RightButton(WIN_WIDTH - 50, WIN_HEIGHT / 2)
+        self.left_button = LeftButton(20, WIN_HEIGHT / 2)
+
         # 此房間在不同牆面有的物品/座標
         # 牆面1有這些東西
-        self.__object_1 = [RightButton(WIN_WIDTH - 50,WIN_HEIGHT/2),LeftButton(20,WIN_HEIGHT/2)]
+        self.__object_1 = [self.right_button,self.left_button]
         # 牆面2有這些東西
-        self.__object_2 = [RightButton(WIN_WIDTH - 50,WIN_HEIGHT/2),LeftButton(20,WIN_HEIGHT/2)]
+        self.__object_2 = [self.right_button,self.left_button]
         # 牆面3有這些東西
-        self.__object_3 = [RightButton(WIN_WIDTH - 50,WIN_HEIGHT/2),LeftButton(20,WIN_HEIGHT/2)]
+        self.__object_3 = [self.right_button,self.left_button]
 
         # 當前牆面/建立此房間的牆面
         # 不同房間的牆面數會不一樣 要注意
@@ -97,15 +109,19 @@ class Bedroom:
         # 房間牆面數
         self.wall_size = 4
 
+        # 切換畫面鍵
+        self.right_button = RightButton(WIN_WIDTH - 50, WIN_HEIGHT / 2)
+        self.left_button = LeftButton(20, WIN_HEIGHT / 2)
+
         # 此房間在不同牆面有的物品/座標
         # 牆面1有這些東西
-        self.__object_1 = [RightButton(WIN_WIDTH - 50,WIN_HEIGHT/2),LeftButton(20,WIN_HEIGHT/2)]
+        self.__object_1 = [self.right_button,self.left_button]
         # 牆面2有這些東西
-        self.__object_2 = [RightButton(WIN_WIDTH - 50,WIN_HEIGHT/2),LeftButton(20,WIN_HEIGHT/2)]
+        self.__object_2 = [self.right_button,self.left_button]
         # 牆面3有這些東西
-        self.__object_3 = [RightButton(WIN_WIDTH - 50,WIN_HEIGHT/2),LeftButton(20,WIN_HEIGHT/2),DoorToLivingRoom(GAME_X, GAME_Y, 0)]
+        self.__object_3 = [self.right_button,self.left_button,DoorToLivingRoom(GAME_X, GAME_Y, 0)]
         # 牆面4有這些東西
-        self.__object_4 = [RightButton(WIN_WIDTH - 50,WIN_HEIGHT/2),LeftButton(20,WIN_HEIGHT/2)]
+        self.__object_4 = [self.right_button,self.left_button]
 
         # 當前牆面/建立此房間的牆面
         # 不同房間的牆面數會不一樣 要注意
