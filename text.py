@@ -44,7 +44,7 @@ CH1_END_SHOW = (CH1_END_TEXT,CH1_END_SPEAKER,CH1_END_IMAGE,CH1_END_SOUND,CH1_END
 # 章節2開場 (男人自言自語到小孩寫作業鉛筆斷掉)
 CH2_START_TEXT = ["15 X 24 = ...\n(啪)\n阿!糟糕鉛筆斷掉了\n不知道削鉛筆機在哪裡...\n去找找吧!"]
 CH2_START_SPEAKER = ["小男孩"]
-CH2_START_IMAGE = [(image_1,0)]
+CH2_START_IMAGE = None
 CH2_START_SOUND = [(clicked_sound,0)]
 CH2_START_BGM = None
 
