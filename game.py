@@ -17,7 +17,7 @@ class Game:
         quit_game = False
         pause = False
 
-        game_model.start_ch2()
+        game_model.start_ch1()
         # game_model.test_init()
 
         while not quit_game:

@@ -214,6 +214,7 @@ class GameModel:
                     self.dialog_index = 0
                     self.dialog = ""
 
+
             # 讓後面部分不執行
             return
 
@@ -303,9 +304,11 @@ class GameModel:
                     break
                 # 點擊畫作 如果手上有膠片 就放上去
                 elif  self.investigation_item.rect.collidepoint(mouse_x, mouse_y) and isinstance(self.bag.hold, DecipherCard):
+                    self.bag.hold.music.play()
                     self.bag.remove_hold_item()
                     # 故意不讓他是對準好的
                     self.investigation_item.object.append(DecipherCardPuzzle(GAME_X + 190, GAME_Y + 90))
+
 
 
                 else:
@@ -465,6 +468,7 @@ class GameModel:
         for item in reversed(self.investigation_item.object):
             if events == 'down':
                 if isinstance(self.bag.hold, PhotoFragmentsTake) and self.investigation_item.rect.collidepoint(mouse_x, mouse_y):
+                    self.bag.hold.music.play()
                     self.investigation_item.add_fragments(self.bag.hold)
                     self.bag.remove_hold_item()
                     return

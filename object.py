@@ -374,7 +374,7 @@ class DecipherCardPuzzle:
         self.rect.topleft = (x, y)
         self.mask = pygame.mask.from_surface(self.image)
         self.drag = False
-        self.music = card_collide_sound 
+
 
     def clicked(self, x: int, y: int):
         # 除了被點到 還要確定滑鼠是按住的才能拖動
@@ -385,7 +385,6 @@ class DecipherCardPuzzle:
         self.drag = True
 
     def release(self):
-        self.music.play()
         self.drag = False
 
     def move(self, rel):
@@ -405,7 +404,7 @@ class Painting:
                                             (GAME_WIDTH, GAME_HEIGHT))
         # TODO : 此圖片中可互動的物件
         self.object = [ExitButton(500, 550)]
-        self.music = None
+
 
     def clicked(self, x: int, y: int):
         # TODO : 連接到 user_request 若是可互動物件被點到 轉換場景 若是不可互動則說話或是
@@ -1257,6 +1256,8 @@ class DecipherCard:
         self.rect = self.image.get_rect()
         self.rect.topleft = (x, y)
         self.mask = pygame.mask.from_surface(self.image)
+        # 物件使用後發出的聲音
+        self.music = card_collide_sound
 
 
     def clicked(self, x: int, y: int):
@@ -1284,6 +1285,8 @@ class PhotoFragmentsTake:
         self.rect.topleft = (x, y)
         self.mask = pygame.mask.from_surface(self.image)
         self.music = clicked_sound
+        # 物件使用後發出的聲音
+        self.music = paper_sound
 
     def clicked(self, x: int, y: int):
         if self.rect.collidepoint(x, y) and self.mask.get_at((x - self.rect.x, y - self.rect.y)) != 0:
