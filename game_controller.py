@@ -16,6 +16,9 @@ class GameController:
 
         self.request = None  # response of user input
 
+        # 檢查BGM是否被暫停
+        self.bgm_paused = False
+
     def update_model(self):
         """update the model and the view here"""
         self.model.get_request(self.events)
@@ -44,9 +47,9 @@ class GameController:
         #     self.events["game quit"] = True
 
         # 當你進入第二章 並且還沒播放過 self.model.cur_room.show_1 時播放
-        if self.model.chapter == 2 and self.model.show == None and self.model.cur_room.show_1 is not None:
-            self.model.show = self.model.cur_room.show_1
-            self.model.cur_room.show_1 = None
+        # if self.model.chapter == 2 and self.model.show == None and self.model.cur_room.show_1 is not None:
+        #     self.model.show = self.model.cur_room.show_1
+        #     self.model.cur_room.show_1 = None
 
         # update event
         for event in pygame.event.get():
@@ -91,13 +94,23 @@ class GameController:
             self.view.draw_opening(self.model.opening,self.model.value)
             return
 
-        # 畫出選單按鈕
-        self.view.draw_menu_button(self.model.btn)
+        # # 畫出選單按鈕
+        # self.view.draw_menu_button(self.model.btn)
 
+        # 在播動畫
         if self.model.show is not None:
+            # 動畫時暫停BGM
+            if not self.bgm_paused:
+                pygame.mixer.music.pause()
+                self.bgm_paused = True
             self.view.draw_show(self.model.show)
+            # 畫出選單按鈕
+            self.view.draw_menu_button(self.model.btn)
+            # 如果在播動畫 不執行下面
             return
 
+        # 畫出選單按鈕
+        self.view.draw_menu_button(self.model.btn)
 
         # TODO : 各房間的場景切換
         if not self.model.investigation:
@@ -122,17 +135,27 @@ class GameController:
         # 劃出物品頁面切換鍵
         self.view.draw_bag_page(self.model.page_bnt)
 
-        # 劃出對話框 (依照位置)
-        if self.model.text != "":
-            self.view.speak(self.model.text, self.model.text_pos)
+        # 劃出對話文字 (依照位置) 目前沒再用
+        # if self.model.text != "":
+        #     self.view.speak(self.model.text, self.model.text_pos)
 
         # 劃出對話框(下方固定位置)
-        if self.model.dialog != "":
-            self.view.murmur(self.model.speaker, self.model.dialog.splitlines()[self.model.dialog_index], self.model.dialog_index)
+        if self.model.dialog is not None:
+            # 對話時暫停BGM
+            if not self.bgm_paused:
+                pygame.mixer.music.pause()
+                self.bgm_paused = True
+            self.view.murmur(self.model.dialog)
 
         # 畫出手中物品調查頁面
         if self.model.observe:
             self.view.draw_observe(self.model.bag.hold)
+
+        #如果當前沒有對話 沒有動畫則繼續播放BGM
+        if  self.model.dialog is None and self.model.show is None:
+            if self.bgm_paused:
+                pygame.mixer.music.unpause()
+                self.bgm_paused = False
 
 
 

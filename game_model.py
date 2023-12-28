@@ -40,12 +40,8 @@ class GameModel:
         self.text = ""
         #文字位置(尚未使用)
         self.text_pos = (0,0)
-        # 對話框的說話者
-        self.speaker = ""
         # 下方對話框文字
-        self.dialog = ""
-        # 下方對話框文字的index
-        self.dialog_index = 0
+        self.dialog = None
         # 是否在調查手中物品
         self.observe = False
         # 在播的動畫
@@ -65,6 +61,11 @@ class GameModel:
         self.bag = self.bag_ch1
         # 物品欄換頁按鈕
         self.page_bnt = BagPageButton()
+        # 暫存對話完要給予的物品
+        self.give_item = None
+
+        # BGM
+        self.bgm = None
 
 
 
@@ -195,6 +196,8 @@ class GameModel:
 
         if self.show is not None:
             # 在播動畫 後面不執行
+            # 檢測是否是動畫剛開始
+            self.show.start()
             if events["mouse position"] is not None:
                 common = self.show.next()
                 if common == 'end':
@@ -202,17 +205,25 @@ class GameModel:
 
             return
 
-
         # 如果在對話 執行對話功能 並讓後面部分不執行
-        if self.dialog != "":
+        if self.dialog is not None:
+            # 檢測是否是動畫剛開始
+            self.dialog.start()
             if events["mouse position"] is not None:
-                # 點擊以下一句
-                self.dialog_index += 1
-
-                # 代表話說完了 對話結束 做初始化
-                if len(self.dialog.splitlines()) == self.dialog_index:
-                    self.dialog_index = 0
-                    self.dialog = ""
+                common = self.dialog.next()
+                if common == 'end':
+                    if self.give_item is not None:
+                        # 給玩家物品
+                        self.bag.save_item(self.give_item)
+                        self.give_item = None
+                    self.dialog = None
+                # # 點擊以下一句
+                # self.dialog_index += 1
+                #
+                # # 代表話說完了 對話結束 做初始化
+                # if len(self.dialog.splitlines()) == self.dialog_index:
+                #     self.dialog_index = 0
+                #     self.dialog = ""
 
 
             # 讓後面部分不執行
@@ -358,8 +369,7 @@ class GameModel:
             elif common == 'shotdown':
                 self.investigation_item.tvshow.power()
             elif common == 'dialog':
-                self.dialog = item.dialog
-                self.speaker = item.speaker
+                self.dialog = item.show
             elif common == 'take':
                 self.bag.save_item(item)
                 self.investigation_item.object.remove(item)
@@ -382,7 +392,7 @@ class GameModel:
                     item.add_handle()
                     self.bag.remove_hold_item()
                 else:
-                    self.dialog = "沒有把手轉不動"
+                    self.dialog = Show(["沒有把手轉不動"],[""],None,None,None)
                     # self.text = "沒有把手轉不動"
                 break
             elif common == 'check':
@@ -391,7 +401,7 @@ class GameModel:
                     item.unlock()
                     self.investigation_item.remove_knob()
                 else:
-                    self.dialog = "咬的緊緊的...轉不開"
+                    self.dialog = Show(["咬的緊緊的...轉不開"],[""],None,None,None)
                     # self.text = "咬的緊緊的...轉不開"
                 break
             elif common == 'take':
@@ -439,8 +449,7 @@ class GameModel:
 
                 break
             elif common == 'lock':
-                self.dialog = "指針好像卡死了..."
-                # self.text = "指針好像卡死了..."
+                pass
             elif common == 'take':
                 self.bag.save_item(item)
                 self.investigation_item.object.remove(item)
@@ -534,13 +543,12 @@ class GameModel:
                 if item.text_index == item.text_size:
                     item.text_index = 0
             elif common == 'dialog':
-                self.dialog = item.dialog
-                self.speaker = item.speaker
+                self.dialog = item.show
             elif common == 'dialog_sp':
-                self.dialog = item.dialog
-                self.speaker = item.speaker
-                item.dialog = item.dialog_2
-                self.bag.save_item(item.give)
+                self.dialog = item.show
+                item.show = item.show_2
+                # 相要給的物品先存起來 對話完再給
+                self.give_item = item.give
                 item.lock = True
             elif common == 'done':
                 if self.chapter == 2:
@@ -567,9 +575,13 @@ class GameModel:
                       'bedroom': Bedroom()}
         self.cur_room = self.room['living_room']
 
+        # 第一章的BMG
+        pygame.mixer.music.load('music/ch1_background.mp3')
+        pygame.mixer.music.play(-1)  # 無限播放
+
 
         # 開場動畫
-        self.show = Show(CH1_START_TEXT,CH1_START_SPEAKER,CH1_START_IMAGE)
+        self.show = Show(*CH1_START_SHOW)
 
         pass
     def start_ch2(self):
@@ -595,12 +607,8 @@ class GameModel:
         self.text = ""
         # 文字位置(尚未使用)
         self.text_pos = (0, 0)
-        # 對話框的說話者
-        self.speaker = ""
-        # 下方對話框文字
-        self.dialog = ""
-        # 下方對話框文字的index
-        self.dialog_index = 0
+        # 下方對話框
+        self.dialog = Show(*CH2_START_SHOW)
         # 是否在調查手中物品
         self.observe = False
         # 物品欄
@@ -608,7 +616,7 @@ class GameModel:
 
 
         # 撥放章節1結束劇情
-        self.show = Show(CH1_END_TEXT, CH1_END_SPEAKER, CH1_END_IMAGE)
+        self.show = Show(*CH1_END_SHOW)
         # 延遲一小段時間
         for i in range(5000):
             a = i
@@ -617,7 +625,7 @@ class GameModel:
 
     def start_ch3(self):
         # 開場動畫
-        self.show = Show(CH3_START_TEXT, CH3_START_SPEAKER, CH3_START_IMAGE)
+        self.show = Show(*CH3_START_SHOW)
         pass
     def start_ch4(self):
         # TODO :　清除上一章的物件(可選)

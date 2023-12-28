@@ -34,9 +34,6 @@ class LivingRoomCh2:
         # 起始畫面的書桌
         self.desk = Desk(GAME_X, GAME_Y)
 
-        # 要播放的動畫
-        self.show_1 = Show(CH2_START_TEXT, CH2_START_SPEAKER, CH2_START_IMAGE)
-
         # 此房間在不同牆面有的物品/座標 (包括移動鍵)
         # 牆面1有這些東西
         self.__object_1 = [self.right_button,self.left_button,

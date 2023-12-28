@@ -4,6 +4,10 @@ from object import *
 import cv2
 import numpy as np
 
+# pygame.mixer.init()
+# pygame.mixer.music.set_volume(0.2)
+
+
 
 class GameView:
     def __init__(self):
@@ -100,20 +104,38 @@ class GameView:
         word = self.font.render(text, True, (255, 255, 255))  # 渲染文字
         self.win.blit(word, (WIN_WIDTH // 2 - word.get_width() // 2, WIN_HEIGHT // 2 - word.get_height() // 2))
 
-    def murmur(self, speaker, text, index):
+    def murmur(self, show):
+        # 畫背景
+        if show.display is not None:
+            self.win.blit(show.display, (GAME_X, GAME_Y))
+
         # 畫出對話框(灰色漸層)
         self.win.blit(self.dialog_box_image, (GAME_X, GAME_Y))
 
         # 說話者
-        title = self.font_speaker.render(speaker, True, (255, 255, 255))  # 渲染文字
+        title = self.font_speaker.render(show.speaker[show.index], True, (255, 255, 255))  # 渲染文字
         self.win.blit(title, (self.speaker_x, self.speaker_y))
         # 內容
-        word = self.font_dialog.render(text, True, (255, 255, 255))  # 渲染文字
+        word = self.font_dialog.render(show.cur_text, True, (255, 255, 255))  # 渲染文字
         self.win.blit(word, (self.dialog_x, self.dialog_y))
 
         # 操作說明
         tip = self.font_tip.render("點擊滑鼠以繼續...", True, (255, 255, 255))  # 渲染文字
         self.win.blit(tip, (GAME_X + GAME_WIDTH - tip.get_width() - 10, GAME_Y + GAME_HEIGHT - tip.get_height() - 10))
+
+        # # 畫出對話框(灰色漸層)
+        # self.win.blit(self.dialog_box_image, (GAME_X, GAME_Y))
+        #
+        # # 說話者
+        # title = self.font_speaker.render(speaker, True, (255, 255, 255))  # 渲染文字
+        # self.win.blit(title, (self.speaker_x, self.speaker_y))
+        # # 內容
+        # word = self.font_dialog.render(text, True, (255, 255, 255))  # 渲染文字
+        # self.win.blit(word, (self.dialog_x, self.dialog_y))
+        #
+        # # 操作說明
+        # tip = self.font_tip.render("點擊滑鼠以繼續...", True, (255, 255, 255))  # 渲染文字
+        # self.win.blit(tip, (GAME_X + GAME_WIDTH - tip.get_width() - 10, GAME_Y + GAME_HEIGHT - tip.get_height() - 10))
 
     def draw_bag(self, bag):
         # 依照頁數輸出此頁的物品格
@@ -174,7 +196,9 @@ class GameView:
 
     def draw_show(self, show):
         # 畫背景
-        self.win.blit(show.images[show.check_index],(0,0))
+        if show.display is not None:
+            self.win.blit(show.display,(0,0))
+
 
         # 畫出對話框(灰色漸層)
         self.win.blit(self.show_dialog_box_image, (0, 0))
@@ -217,6 +241,15 @@ class GameView:
         black_surface = self.black_b
         black_surface.set_alpha(value)
         self.win.blit(black_surface, (0, 0))
+
+    # 聲音部分
+    # 背景聲音
+    def pause_bg(self):
+        if pygame.mixer.music.get_busy():
+            pygame.mixer.music.pause()
+    def unpause_bg(self):
+        if not pygame.mixer.music.get_busy():
+            pygame.mixer.music.unpause()
 
 
 

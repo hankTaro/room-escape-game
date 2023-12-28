@@ -4,10 +4,11 @@ import cv2
 import numpy as np
 from user_request import *
 from setting import *
+from show import *
+
 
 # TODO : 將所有物件的圖片匯入 並調整至合適大小
-# 同個物件 不同狀況(像是開啟/關閉)可以用相同名字，後面用tv-1 tv-2 做區分
-# tv_image = [pygame.transform.scale(pygame.image.load(f"image/Object/Tv/tv-{i}.png"), (int(201), int(211))) for i in range(1)]
+
 pygame.mixer.init()
 pygame.mixer.music.set_volume(0.2)
 
@@ -93,6 +94,7 @@ door_locked_sound = pygame.mixer.Sound('music/door_locked.wav')
 rock_sound = pygame.mixer.Sound('music/rock.wav')
 rust_sound = pygame.mixer.Sound('music/rust.wav')
 clicked_sound = pygame.mixer.Sound('music/clicked.wav')
+pick_up_items_sound = pygame.mixer.Sound('music/物品拾取聲.mp3')
 
 # 書架相關 ===================================================
 book_shelf_image = pygame.transform.scale(pygame.image.load(f"image/living_room/book_shelf.png"), (GAME_WIDTH, GAME_HEIGHT))
@@ -260,15 +262,17 @@ class DoorToBedRoom:
         self.rect.topleft = (x, y)
         self.mask = pygame.mask.from_surface(self.image)
         self.lock = True
-        self.speaker = "旁白"
-        self.dialog = "你嘗試打開這個扭曲變形的門\n...\n你使勁全力依然打不開他"
-        self.locked_music = door_locked_sound
-        self.music = door_open_sound
+        self.speaker = ["旁白","","旁白"]
+        self.dialog = ["你嘗試打開這個扭曲變形的門,","...","你使勁全力依然打不開他"]
+        # self.locked_music = [(door_locked_sound,1)]
+        self.music = [(door_locked_sound,1)]
+
+        self.show = Show(self.dialog, self.speaker, None, self.music, None)
 
     def clicked(self, x: int, y: int):
         if self.rect.collidepoint(x, y) and self.mask.get_at((x -  self.rect.x, y -  self.rect.y)) != 0:
             if self.lock:
-                self.locked_music.play()
+                # self.locked_music.play()
                 return 'dialog'
             else:
                 self.music.play()
@@ -305,10 +309,12 @@ class DoorToExit:
         self.rect.topleft = (x, y)
         self.mask = pygame.mask.from_surface(self.image)
 
-        self.speaker = "旁白"
-        self.dialog = "離開房屋的門\n手把上充滿著鏽蝕與歲月痕跡\n" \
-                      "在你進屋開門時，他發出了吵雜的摩擦噪音" #\n千里迢迢來到這裡可不只是為了進來撇一眼的\n你使勁全力依然打不開他
-        self.music = door_open_sound
+        self.speaker = ["旁白"]
+        self.dialog = ["離開房屋的門\n手把上充滿著鏽蝕與歲月痕跡\n" 
+                      "在你進屋開門時，他發出了吵雜的摩擦噪音"] #\n千里迢迢來到這裡可不只是為了進來撇一眼的\n你使勁全力依然打不開他
+        self.music = None#[(door_open_sound,0)]
+
+        self.show = Show(self.dialog, self.speaker, None, self.music, None)
 
     def clicked(self, x: int, y: int):
         if self.rect.collidepoint(x, y) and self.mask.get_at((x -  self.rect.x, y -  self.rect.y)) != 0:
@@ -344,19 +350,23 @@ class DoorToKitchen:
         self.rect.topleft = (x, y)
         self.mask = pygame.mask.from_surface(self.image)
 
-        self.speaker = "旁白"
-        self.dialog = "這條通往廚房的通道已經被碎石瓦礫掩埋了\n你靠近嘗試挖掘...\n...\n...\n" \
-                      "挖掘的好一陣子，碎石瓦礫依舊阻擋著通道\n但是你在瓦礫堆中找到了一張...膠片?"
-        self.dialog_2 = "你看著自己紅腫刺痛的手，想想還是別再挖了好了"
+        self.speaker = ["旁白","","旁白"]
+        self.speaker_2 = ["旁白"]
+        self.dialog = ["這條通往廚房的通道已經被碎石瓦礫掩埋了\n你靠近嘗試挖掘...","..." ,
+                      "挖掘的好一陣子，碎石瓦礫依舊阻擋著通道\n但是你在瓦礫堆中找到了一張...膠片?"]
+        self.dialog_2 = ["你看著自己紅腫刺痛的手，想想還是別再挖了好了"]
         # 是否互動過(獲得膠片
         self.lock = False
         self.give = DecipherCard(GAME_X, GAME_Y)
-        self.music = rock_sound
+        self.music = [(rock_sound,1)]
+
+        self.show = Show(self.dialog, self.speaker, None, self.music, None)
+        self.show_2 = Show(self.dialog_2, self.speaker_2, None, None, None)
 
     def clicked(self, x: int, y: int):
         if self.rect.collidepoint(x, y) and self.mask.get_at((x -  self.rect.x, y -  self.rect.y)) != 0:
             if self.lock == False:
-                self.music.play()
+                # self.music.play()
                 return 'dialog_sp'
             else:
                 return 'dialog'
@@ -527,10 +537,13 @@ class TvPower:
         self.mask = pygame.mask.from_surface(self.image)
         self.music = tv_power_sound
 
-        self.speaker = ""
-        self.dialog = "打不開...\n也是，就算電視沒壞，這裡也早就沒電、沒訊號了\n電視下面的這串指令...\n還真是懷念..."
+        self.speaker = [""]
+        self.dialog = ["打不開...\n也是，就算電視沒壞，這裡也早就沒電、沒訊號了\n電視下面的這串指令...\n還真是懷念..."]
         # 是否壞掉(第一章不可互動)
         self.lock = lock
+        self.music = None # TODO : 電視按鈕聲音(機械)
+
+        self.show = Show(self.dialog, self.speaker, None, self.music, None)
 
     def clicked(self, x: int, y: int):
         if self.rect.collidepoint(x, y) and self.mask.get_at((x -  self.rect.x, y -  self.rect.y)) != 0:
@@ -1045,18 +1058,22 @@ class Globe:
         self.rect.topleft = (x, y)
         self.mask = pygame.mask.from_surface(self.image)
 
-        self.speaker = "旁白"
-        self.dialog = "你轉動這個生鏽的地球儀\n鏽化的輪軸發出刺耳的摩擦聲\n在你因刺耳的聲音想抵住耳朵時\n看見地球儀的轉軸上纏繞著一塊碎片"
-        self.dialog_2 = "你不想在製造出那種恐怖的聲音"
+        self.speaker = ["旁白","","旁白"]
+        self.speaker_2 = ["旁白"]
+        self.dialog = ["你轉動這個生鏽的地球儀..."," ","鏽化的輪軸發出刺耳的摩擦聲\n在你因刺耳的聲音想抵住耳朵時\n看見地球儀的轉軸上纏繞著一塊碎片"]
+        self.dialog_2 = ["你不想在製造出那種恐怖的聲音"]
         # 是否互動過(獲得相片碎片
         self.lock = False
         self.give = PhotoFragmentsTake(GAME_X, GAME_Y, 2)
-        self.music = rust_sound
+        self.music = [(rust_sound,1)]
+
+        self.show = Show(self.dialog, self.speaker, None, self.music, None)
+        self.show_2 = Show(self.dialog_2, self.speaker_2, None, None, None)
 
     def clicked(self, x: int, y: int):
         if self.rect.collidepoint(x, y) and self.mask.get_at((x - self.rect.x, y - self.rect.y)) != 0:
-            if self.lock == False:
-                self.music.play()
+            if not self.lock:
+                # self.music.play()
                 return 'dialog_sp'
             else:
                 return 'dialog'
@@ -1087,15 +1104,16 @@ class LivingRoomWindow:
         self.rect.topleft = (x, y)
         self.mask = pygame.mask.from_surface(self.image)
 
-        self.music = glass_sound
+        self.music = [(glass_sound,0)]
 
-        self.speaker = "旁白"
-        self.dialog = "寒冷的空氣從破碎的窗戶灌入\n破碎的玻璃映出你疲憊的臉\n" \
-                      "前往這裡的過程顯然耗費了你許多心神..."
+        self.speaker = ["旁白"]
+        self.dialog = ["寒冷的空氣從破碎的窗戶灌入\n破碎的玻璃映出你疲憊的臉\n" 
+                      "前往這裡的過程顯然耗費了你許多心神..."]
+        self.show = Show(self.dialog,self.speaker,None,self.music,None)
 
     def clicked(self, x: int, y: int):
         if self.rect.collidepoint(x, y) and self.mask.get_at((x - self.rect.x, y - self.rect.y)) != 0:
-            self.music.play()
+            # self.music.play()
             return 'dialog'
 # 非可互動物件
 class Window:
@@ -1179,7 +1197,7 @@ class Handle:
         self.rect = self.image.get_rect()
         self.rect.topleft = (x, y)
         self.mask = pygame.mask.from_surface(self.image)
-        self.music = clicked_sound
+        self.music = pick_up_items_sound
     # TODO : 一些交互用函式
     def clicked(self, x: int, y: int):
         if self.rect.collidepoint(x, y) and self.mask.get_at((x -  self.rect.x, y -  self.rect.y)) != 0:
@@ -1207,7 +1225,7 @@ class Password_Hint_1:
         self.rect = self.image.get_rect()
         self.rect.topleft = (x, y)
         self.mask = pygame.mask.from_surface(self.image)
-        self.music = clicked_sound
+        self.music = pick_up_items_sound
     # TODO : 一些交互用函式
 
     def clicked(self, x: int, y: int):
@@ -1231,7 +1249,7 @@ class ChestKey:
         self.rect = self.image.get_rect()
         self.rect.topleft = (x, y)
         self.mask = pygame.mask.from_surface(self.image)
-        self.music = clicked_sound
+        self.music = pick_up_items_sound
 
     def clicked(self, x: int, y: int):
         if self.rect.collidepoint(x, y) and self.mask.get_at((x -  self.rect.x, y -  self.rect.y)) != 0:
@@ -1284,7 +1302,7 @@ class PhotoFragmentsTake:
         self.rect = self.image.get_rect()
         self.rect.topleft = (x, y)
         self.mask = pygame.mask.from_surface(self.image)
-        self.music = clicked_sound
+        self.music = pick_up_items_sound
         # 物件使用後發出的聲音
         self.music = paper_sound
 
@@ -1313,8 +1331,10 @@ class CheatCode:
         self.rect = self.image.get_rect()
         self.rect.topleft = (x, y)
         self.mask = pygame.mask.from_surface(self.image)
+        self.music = pick_up_items_sound
 
     def clicked(self, x: int, y: int):
         if self.rect.collidepoint(x, y) and self.mask.get_at((x - self.rect.x, y - self.rect.y)) != 0:
+            self.music.play()
             # 被撿起放入物品欄
             return 'take'
