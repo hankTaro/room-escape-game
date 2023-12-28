@@ -18,6 +18,15 @@ clicked_sound = pygame.mixer.Sound('music/clicked.wav')
 rock_sound = pygame.mixer.Sound('music/rock.wav')
 step_on_grass =  pygame.mixer.Sound('music/踏草地聲.mp3')
 door_open_sound = pygame.mixer.Sound('music/door_open.wav')
+wind_blow_leaf_sound = pygame.mixer.Sound('music/wind_blow_leaf.mp3')
+fall_down_sound = pygame.mixer.Sound('music/fall_down.mp3')
+screaming_sound = pygame.mixer.Sound('music/screaming.mp3')
+earthquake_sound = pygame.mixer.Sound('music/earthquake.mp3')
+kid_breath_sound = pygame.mixer.Sound('music/kid_breath.mp3')
+announcement_sound = pygame.mixer.Sound('music/announcement.mp3')
+electrocardiogram_sound = pygame.mixer.Sound('music/electrocardiogram.mp3')
+time_travel_sound = pygame.mixer.Sound('music/time_travel.mp3')
+hey_sound = pygame.mixer.Sound('music/hey.mp3')
 
 # bgm
 bird_and_bug = pygame.mixer.Sound('music/ch1_background.mp3')
@@ -67,7 +76,18 @@ CH3_START_TEXT = ["媽媽我回來了","阿你去爺爺家寫作業喔","對阿�
                   "哇阿阿!!我的腿...我的腿!!!",".\n..\n...\n",
                   "我的小孩還在裡面阿阿!!!",".\n..\n...\n",
                   "救救我...\n我...在\n我...在這...這裡", # index = 19
-                  "你嘗試大聲呼救，但光是呼吸就讓你用盡全力\n那份沉重剝奪了你發聲的能力，每一次的嘗試都只能得到微弱而短促的迴響\n隨著時間的流逝，你的意識也越來越模糊..."]
+                  "你嘗試大聲呼救，但光是呼吸就讓你用盡全力\n那份沉重剝奪了你發聲的能力，每一次的嘗試都只能得到微弱而短促的迴響\n隨著時間的流逝，你的意識也越來越模糊...",
+                  ".\n..\n...\n",
+                  "你還好嗎?\n嘿!這裡還有生還者，快過來幫忙!!", # index = 22
+                  ".\n..\n...\n","嘿 你會沒事的，撐下去", # index = 24
+                  ".\n..\n...\n.\n..\n...\n.\n..\n...",
+                  "此次地震造成嚴重破壞及大規模傷亡\n"
+                  "災區範圍涵蓋多個城市和鄉村，其中以南投周邊地區災情最為嚴重，許多路段已無法通行\n"
+                  "救援隊伍已進入災區展開搜救工作\n"
+                  "消防隊、軍隊、救護隊伍和志願者正在積極的尋找被困人員以及救助傷者，並撤離災區居民\n"
+                  "搜救行動仍在進行中，請各自發救援隊加入救災頻道，FM 144.28 ...", # index = 26
+                  " " # index = 27
+                  ]
 
 CH3_START_SPEAKER = ["小男孩","媽媽","小男孩","媽媽","小男孩","旁白","",
                      "","","", # index = 7 8 9 播放音效
@@ -76,9 +96,15 @@ CH3_START_SPEAKER = ["小男孩","媽媽","小男孩","媽媽","小男孩","旁�
                      "老人的聲音","",
                      "女人的聲音","",
                      "小男孩", # index = 19
-                     "旁白"]
+                     "旁白","",
+                     "年輕男人的聲音",# index = 22
+                     "","年輕男人的聲音",# index = 24
+                     "","廣播",
+                     "" #index = 27
+                     ]
 CH3_START_IMAGE = [(image_1,0)]
-CH3_START_SOUND = [(clicked_sound,0)]
+CH3_START_SOUND = [(clicked_sound,0),(wind_blow_leaf_sound,6),(earthquake_sound,7),(screaming_sound,8),(fall_down_sound,9),(announcement_sound,11),
+                   (screaming_sound,19),(hey_sound,22),(electrocardiogram_sound,24),(announcement_sound,26),(time_travel_sound,27)]
 CH3_START_BGM = None
 
 CH3_START_SHOW = (CH3_START_TEXT,CH3_START_SPEAKER,CH3_START_IMAGE,CH3_START_SOUND,CH3_START_BGM)
