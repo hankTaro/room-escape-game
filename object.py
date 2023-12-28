@@ -86,6 +86,13 @@ locker_open_sound = pygame.mixer.Sound('music/locker_open.wav')
 little_cabinet_open_sound = pygame.mixer.Sound('music/little_cabinet_open.wav')
 little_cabinet_close_sound = pygame.mixer.Sound('music/little_cabinet_close.wav')
 cheat_code_sound = pygame.mixer.Sound('music/cheat_code.mp3')
+glass_sound = pygame.mixer.Sound('music/glass.wav')
+card_collide_sound = pygame.mixer.Sound('music/card_collide.wav')
+paper_sound = pygame.mixer.Sound('music/paper.wav')
+door_locked_sound = pygame.mixer.Sound('music/door_locked.wav')
+rock_sound = pygame.mixer.Sound('music/rock.wav')
+rust_sound = pygame.mixer.Sound('music/rust.wav')
+clicked_sound = pygame.mixer.Sound('music/clicked.wav')
 
 # 書架相關 ===================================================
 book_shelf_image = pygame.transform.scale(pygame.image.load(f"image/living_room/book_shelf.png"), (GAME_WIDTH, GAME_HEIGHT))
@@ -255,11 +262,13 @@ class DoorToBedRoom:
         self.lock = True
         self.speaker = "旁白"
         self.dialog = "你嘗試打開這個扭曲變形的門\n...\n你使勁全力依然打不開他"
+        self.locked_music = door_locked_sound
         self.music = door_open_sound
 
     def clicked(self, x: int, y: int):
         if self.rect.collidepoint(x, y) and self.mask.get_at((x -  self.rect.x, y -  self.rect.y)) != 0:
             if self.lock:
+                self.locked_music.play()
                 return 'dialog'
             else:
                 self.music.play()
@@ -342,10 +351,12 @@ class DoorToKitchen:
         # 是否互動過(獲得膠片
         self.lock = False
         self.give = DecipherCard(GAME_X, GAME_Y)
+        self.music = rock_sound
 
     def clicked(self, x: int, y: int):
         if self.rect.collidepoint(x, y) and self.mask.get_at((x -  self.rect.x, y -  self.rect.y)) != 0:
             if self.lock == False:
+                self.music.play()
                 return 'dialog_sp'
             else:
                 return 'dialog'
@@ -363,6 +374,7 @@ class DecipherCardPuzzle:
         self.rect.topleft = (x, y)
         self.mask = pygame.mask.from_surface(self.image)
         self.drag = False
+        self.music = card_collide_sound 
 
     def clicked(self, x: int, y: int):
         # 除了被點到 還要確定滑鼠是按住的才能拖動
@@ -373,6 +385,7 @@ class DecipherCardPuzzle:
         self.drag = True
 
     def release(self):
+        self.music.play()
         self.drag = False
 
     def move(self, rel):
@@ -1010,12 +1023,14 @@ class PhotoFrame:
                        PhotoFragments(GAME_X + 300, GAME_Y + 40, 2),PhotoFragments(GAME_X + 300, GAME_Y - 20, 3)]
         # 拚好的碎片數
         self.fix_num = 0
+        self.music = paper_sound
     def clicked(self, x: int, y: int):
         if self.rect.collidepoint(x, y) and self.mask.get_at((x -  self.rect.x, y -  self.rect.y)) != 0:
             return 'investigation'
     def add_fragments(self,fragment):
         self.object.append(self.fragments[fragment.num])
     def fix(self):
+        self.music.play()
         self.fix_num += 1
         if self.fix_num == 4:
             return 'done'
@@ -1037,10 +1052,12 @@ class Globe:
         # 是否互動過(獲得相片碎片
         self.lock = False
         self.give = PhotoFragmentsTake(GAME_X, GAME_Y, 2)
+        self.music = rust_sound
 
     def clicked(self, x: int, y: int):
         if self.rect.collidepoint(x, y) and self.mask.get_at((x - self.rect.x, y - self.rect.y)) != 0:
             if self.lock == False:
+                self.music.play()
                 return 'dialog_sp'
             else:
                 return 'dialog'
@@ -1071,7 +1088,7 @@ class LivingRoomWindow:
         self.rect.topleft = (x, y)
         self.mask = pygame.mask.from_surface(self.image)
 
-        self.music = tv_power_sound
+        self.music = glass_sound
 
         self.speaker = "旁白"
         self.dialog = "寒冷的空氣從破碎的窗戶灌入\n破碎的玻璃映出你疲憊的臉\n" \
@@ -1079,6 +1096,7 @@ class LivingRoomWindow:
 
     def clicked(self, x: int, y: int):
         if self.rect.collidepoint(x, y) and self.mask.get_at((x - self.rect.x, y - self.rect.y)) != 0:
+            self.music.play()
             return 'dialog'
 # 非可互動物件
 class Window:
@@ -1162,9 +1180,11 @@ class Handle:
         self.rect = self.image.get_rect()
         self.rect.topleft = (x, y)
         self.mask = pygame.mask.from_surface(self.image)
+        self.music = clicked_sound
     # TODO : 一些交互用函式
     def clicked(self, x: int, y: int):
         if self.rect.collidepoint(x, y) and self.mask.get_at((x -  self.rect.x, y -  self.rect.y)) != 0:
+            self.music.play()
             # 被撿起放入物品欄
             return 'take'
 
@@ -1188,10 +1208,12 @@ class Password_Hint_1:
         self.rect = self.image.get_rect()
         self.rect.topleft = (x, y)
         self.mask = pygame.mask.from_surface(self.image)
+        self.music = clicked_sound
     # TODO : 一些交互用函式
 
     def clicked(self, x: int, y: int):
         if self.rect.collidepoint(x, y) and self.mask.get_at((x -  self.rect.x, y -  self.rect.y)) != 0:
+            self.music.play()
             # 被撿起放入物品欄
             return 'take'
 
@@ -1210,10 +1232,11 @@ class ChestKey:
         self.rect = self.image.get_rect()
         self.rect.topleft = (x, y)
         self.mask = pygame.mask.from_surface(self.image)
-
+        self.music = clicked_sound
 
     def clicked(self, x: int, y: int):
         if self.rect.collidepoint(x, y) and self.mask.get_at((x -  self.rect.x, y -  self.rect.y)) != 0:
+            self.music.play()
             # 被撿起放入物品欄
             return 'take'
 
@@ -1260,9 +1283,11 @@ class PhotoFragmentsTake:
         self.rect = self.image.get_rect()
         self.rect.topleft = (x, y)
         self.mask = pygame.mask.from_surface(self.image)
+        self.music = clicked_sound
 
     def clicked(self, x: int, y: int):
         if self.rect.collidepoint(x, y) and self.mask.get_at((x - self.rect.x, y - self.rect.y)) != 0:
+            self.music.play()
             # 被撿起放入物品欄
             return 'take'
 
