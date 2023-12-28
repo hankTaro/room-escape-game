@@ -37,13 +37,13 @@ class LivingRoomCh2:
         # 此房間在不同牆面有的物品/座標 (包括移動鍵)
         # 牆面1有這些東西
         self.__object_1 = [self.right_button,self.left_button,
-                           DoorToExitCh2(GAME_X, GAME_Y),LivingRoomWindow(GAME_X, GAME_Y)]
+                           DoorToExitCh2(GAME_X, GAME_Y),LivingRoomWindowCh2(GAME_X, GAME_Y)]
         # 牆面2有這些東西
         self.__object_2 = [self.right_button,self.left_button,
-                           DoorToBedRoom(GAME_X, GAME_Y),Clock(GAME_X, GAME_Y),BookShelf(GAME_X, GAME_Y)]
+                           DoorToBedRoomCh2(GAME_X, GAME_Y),ClockCh2(GAME_X, GAME_Y),BookShelfCh2(GAME_X, GAME_Y)]
         # 牆面3有這些東西
-        self.__object_3 = [self.right_button,self.left_button,DoorToKitchen(GAME_X, GAME_Y),
-                           Tv(GAME_X, GAME_Y,True),TvShelf(GAME_X, GAME_Y), Painting(GAME_X, GAME_Y),Globe(GAME_X, GAME_Y),GlobeTable(GAME_X, GAME_Y)]
+        self.__object_3 = [self.right_button,self.left_button,DoorToKitchenCh2(GAME_X, GAME_Y),
+                           Tv(GAME_X, GAME_Y,True),TvShelfCh2(GAME_X, GAME_Y), Painting(GAME_X, GAME_Y),GlobeCh2(GAME_X, GAME_Y),GlobeTableCh2(GAME_X, GAME_Y)]
         self.__object_4 = [self.right_button, self.left_button,
                            self.desk]
 
