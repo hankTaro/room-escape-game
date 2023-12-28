@@ -14,6 +14,7 @@ from text import *
 # from user_request import RequestSubject, TowerFactory, TowerSeller, TowerDeveloper, EnemyGenerator, Mute, Music, Continue, Pause
 from setting import *
 
+pick_up_items_sound = pygame.mixer.Sound('music/物品拾取聲.mp3')
 
 class GameModel:
     def __init__(self):
@@ -214,6 +215,7 @@ class GameModel:
                 if common == 'end':
                     if self.give_item is not None:
                         # 給玩家物品
+                        pick_up_items_sound.play()
                         self.bag.save_item(self.give_item)
                         self.give_item = None
                     self.dialog = None
@@ -263,11 +265,11 @@ class GameModel:
                         self.tv_select(x, y)
                     elif isinstance(self.investigation_item, Painting):
                         self.painting_select(x, y, 'down')
-                    elif isinstance(self.investigation_item, TvShelf):
+                    elif isinstance(self.investigation_item, TvShelf) or isinstance(self.investigation_item, TvShelfCh2):
                         self.tv_shelf_select(x, y)
-                    elif isinstance(self.investigation_item, BookShelf):
+                    elif isinstance(self.investigation_item, BookShelf) or isinstance(self.investigation_item, BookShelfCh2):
                         self.book_shelf_select(x, y)
-                    elif isinstance(self.investigation_item, Clock):
+                    elif isinstance(self.investigation_item, Clock) or isinstance(self.investigation_item, BookShelfCh2):
                         self.clock_select(x, y)
                     elif isinstance(self.investigation_item, Desk):
                         self.desk_select(x, y)
@@ -417,6 +419,13 @@ class GameModel:
             elif common == 'investigation':
                 item.enter = self.investigation_item
                 self.investigation_item = item
+            elif common == 'dialog':
+                self.dialog = item.show
+            elif common == 'dialog_sp':
+                self.dialog = item.show
+                item.show = item.show_2
+                # 相要給的物品先存起來 對話完再給
+                self.give_item = item.give
             else:
                 pass
 
@@ -453,6 +462,13 @@ class GameModel:
             elif common == 'take':
                 self.bag.save_item(item)
                 self.investigation_item.object.remove(item)
+            elif common == 'dialog':
+                self.dialog = item.show
+            elif common == 'dialog_sp':
+                self.dialog = item.show
+                item.show = item.show_2
+                # 相要給的物品先存起來 對話完再給
+                self.give_item = item.give
             else:
                 pass
 
@@ -549,7 +565,6 @@ class GameModel:
                 item.show = item.show_2
                 # 相要給的物品先存起來 對話完再給
                 self.give_item = item.give
-                item.lock = True
             elif common == 'done':
                 if self.chapter == 2:
                     self.start_ch3()

@@ -365,8 +365,9 @@ class DoorToKitchen:
 
     def clicked(self, x: int, y: int):
         if self.rect.collidepoint(x, y) and self.mask.get_at((x -  self.rect.x, y -  self.rect.y)) != 0:
-            if self.lock == False:
+            if not self.lock:
                 # self.music.play()
+                self.lock = True
                 return 'dialog_sp'
             else:
                 return 'dialog'
@@ -508,8 +509,7 @@ class TvShelf:
                 self.focus = self.focus_l
                 self.object = self.object_l
             return 'investigation'
-    def remove_knob(self):
-        self.object = [item for item in self.object if not isinstance(item, Knob)]
+
 # 可互動物件大概會是這個架構
 
 # TV 會用到的原件 ===========================================
@@ -1060,7 +1060,7 @@ class Globe:
 
         self.speaker = ["旁白","","旁白"]
         self.speaker_2 = ["旁白"]
-        self.dialog = ["你轉動這個生鏽的地球儀..."," ","鏽化的輪軸發出刺耳的摩擦聲\n在你因刺耳的聲音想抵住耳朵時\n看見地球儀的轉軸上纏繞著一塊碎片"]
+        self.dialog = ["你轉動這個生鏽的地球儀..."," ","鏽化的輪軸發出刺耳的摩擦聲\n在你因刺耳的聲音想抵住耳朵時，看見地球儀的轉軸上纏繞著一塊碎片"]
         self.dialog_2 = ["你不想在製造出那種恐怖的聲音"]
         # 是否互動過(獲得相片碎片
         self.lock = False
@@ -1073,7 +1073,7 @@ class Globe:
     def clicked(self, x: int, y: int):
         if self.rect.collidepoint(x, y) and self.mask.get_at((x - self.rect.x, y - self.rect.y)) != 0:
             if not self.lock:
-                # self.music.play()
+                self.lock = True
                 return 'dialog_sp'
             else:
                 return 'dialog'

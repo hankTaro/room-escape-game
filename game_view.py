@@ -14,9 +14,10 @@ class GameView:
         self.win = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT))
         self.font_size = 30
         self.font = pygame.font.Font("文鼎中特標準宋體.TTF", self.font_size)
-        self.font_item = pygame.font.Font("金梅書法豆豆字體.ttf", 24)
-        self.font_description = pygame.font.Font("文鼎中特毛楷.TTF", 20)
-        self.font_dialog = pygame.font.Font("文鼎中特毛楷.TTF", 24)
+        self.font_item = pygame.font.Font("文鼎中特毛楷.ttf", 24)
+        self.font_name = pygame.font.Font("文鼎中特毛楷.ttf", 32)
+        self.font_description = pygame.font.Font("文鼎中特毛楷.TTF", 19)
+        self.font_dialog = pygame.font.Font("文鼎中特毛楷.TTF", 20)
         self.font_speaker = pygame.font.Font("文鼎中特毛楷.TTF", 24)
         self.font_tip = pygame.font.Font("文鼎中特毛楷.TTF", 16)
         self.bg = None
@@ -27,10 +28,10 @@ class GameView:
         self.dialog_box_image = pygame.transform.scale(pygame.image.load(f"image/對話背景.png"), (GAME_WIDTH, GAME_HEIGHT))
         # 對話框說話者位置
         self.speaker_x = GAME_X + 20
-        self.speaker_y = GAME_Y + GAME_HEIGHT - 70 - self.font_dialog.get_linesize()
+        self.speaker_y = GAME_Y + GAME_HEIGHT - 70 - self.font_dialog.get_linesize() - 10
         # 對話框文字位置
         self.dialog_x = GAME_X + 50
-        self.dialog_y = GAME_Y + GAME_HEIGHT - 25 - self.font_dialog.get_linesize()
+        self.dialog_y = GAME_Y + GAME_HEIGHT - 25 - self.font_dialog.get_linesize() - 10
         # 調查畫面圖片框
         self.observe_rect = pygame.Rect(GAME_X + 25, GAME_Y + 25, GAME_WIDTH//2 - 50 , GAME_HEIGHT - 50)
         # 調查畫面文字起始點
@@ -41,8 +42,8 @@ class GameView:
         self.show_dialog_box_image = pygame.transform.scale(pygame.image.load(f"image/對話背景.png"),
                                                        (WIN_WIDTH, WIN_HEIGHT))
         # 劇情對話框說話者位置
-        self.speaker_x = GAME_X + 20
-        self.speaker_y = GAME_Y + GAME_HEIGHT - 70 - self.font_dialog.get_linesize()
+        self.speaker_show_x = GAME_X + 20
+        self.speaker_show_y = GAME_Y + GAME_HEIGHT - 70 - self.font_dialog.get_linesize()
 
         # 文字置中
         # WIN_WIDTH // 2 - word.get_width() // 2
@@ -178,6 +179,10 @@ class GameView:
         # 顯示文字
         text = item.description
         lines = text.splitlines()
+
+        # 顯示物品名字
+        name = self.font_name.render(item.name, True, (255, 255, 255))  # 渲染文字
+        self.win.blit(name, (GAME_X + GAME_WIDTH//2 - name.get_width()//2, GAME_Y + 40))
 
         # 用於使文字框置中
         # y = WIN_HEIGHT // 2 - sum(self.font.get_linesize() for _ in lines) // 2

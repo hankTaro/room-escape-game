@@ -3,10 +3,10 @@ from object_ch2 import *
 from show import *
 from text import *
 
-living_room_1_image = pygame.transform.scale(pygame.image.load(f"image/living_room/Wall/living_room_1.png"), (GAME_WIDTH, GAME_HEIGHT))
-living_room_2_image = pygame.transform.scale(pygame.image.load(f"image/living_room/Wall/living_room_2.png"), (GAME_WIDTH, GAME_HEIGHT))
-living_room_3_image = pygame.transform.scale(pygame.image.load(f"image/living_room/Wall/living_room_3.png"), (GAME_WIDTH, GAME_HEIGHT))
-living_room_4_image = pygame.transform.scale(pygame.image.load(f"image/living_room/Wall/living_room_3.png"), (GAME_WIDTH, GAME_HEIGHT))
+living_room_1_image = pygame.transform.scale(pygame.image.load(f"image/Ch2/Wall/wall_1.png"), (GAME_WIDTH, GAME_HEIGHT))
+living_room_2_image = pygame.transform.scale(pygame.image.load(f"image/Ch2/Wall/wall_2.png"), (GAME_WIDTH, GAME_HEIGHT))
+living_room_3_image = pygame.transform.scale(pygame.image.load(f"image/Ch2/Wall/wall_3.png"), (GAME_WIDTH, GAME_HEIGHT))
+living_room_4_image = pygame.transform.scale(pygame.image.load(f"image/Ch2/Wall/wall_4.png"), (GAME_WIDTH, GAME_HEIGHT))
 bedroom_1_image = pygame.transform.scale(pygame.image.load(f"image/black.png"), (GAME_WIDTH, GAME_HEIGHT))
 bedroom_2_image = pygame.transform.scale(pygame.image.load(f"image/black.png"), (GAME_WIDTH, GAME_HEIGHT))
 bedroom_3_image = pygame.transform.scale(pygame.image.load(f"image/black.png"), (GAME_WIDTH, GAME_HEIGHT))
@@ -43,9 +43,9 @@ class LivingRoomCh2:
                            DoorToBedRoomCh2(GAME_X, GAME_Y),ClockCh2(GAME_X, GAME_Y),BookShelfCh2(GAME_X, GAME_Y)]
         # 牆面3有這些東西
         self.__object_3 = [self.right_button,self.left_button,DoorToKitchenCh2(GAME_X, GAME_Y),
-                           Tv(GAME_X, GAME_Y,True),TvShelfCh2(GAME_X, GAME_Y), Painting(GAME_X, GAME_Y),GlobeCh2(GAME_X, GAME_Y),GlobeTableCh2(GAME_X, GAME_Y)]
+                           Tv(GAME_X, GAME_Y,True),TvShelfCh2(GAME_X, GAME_Y), PaintingCh2(GAME_X, GAME_Y),GlobeCh2(GAME_X, GAME_Y),GlobeTableCh2(GAME_X, GAME_Y)]
         self.__object_4 = [self.right_button, self.left_button,
-                           self.desk]
+                           self.desk,TrashCanCh2(GAME_X, GAME_Y)]
 
         # 當前牆面/建立此房間的牆面
         # 不同房間的牆面數會不一樣 要注意
