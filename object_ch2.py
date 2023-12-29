@@ -12,6 +12,7 @@ pygame.mixer.init()
 pygame.mixer.music.set_volume(0.2)
 
 # 圖片
+black_image = pygame.transform.scale(pygame.image.load(os.path.join("image", "black.png")), (GAME_WIDTH,GAME_HEIGHT))
 
 # 時鐘 ======================================================================================================
 clock_image = pygame.transform.scale(pygame.image.load(f"image/Ch2/Clock/clock.png"), (GAME_WIDTH, GAME_HEIGHT))
@@ -24,6 +25,9 @@ door_image_3  = pygame.transform.scale(pygame.image.load(f"image/Ch2/Door/door_3
 door_image_4  = pygame.transform.scale(pygame.image.load(f"image/Ch2/Door/door_4.png"), (GAME_WIDTH, GAME_HEIGHT))
 # 書桌 ======================================================================================================
 desk_image = pygame.transform.scale(pygame.image.load(f"image/Ch2/Desk/desk.png"), (GAME_WIDTH, GAME_HEIGHT))
+homework_image = [pygame.transform.scale(pygame.image.load(f"image/Ch2/Desk/homework_{i}.png"), (GAME_WIDTH, GAME_HEIGHT)) for i in range(2)]
+# 日曆 ======================================================================================================
+calendar_image = pygame.transform.scale(pygame.image.load(f"image/Ch2/calendar/calendar.png"), (GAME_WIDTH, GAME_HEIGHT))
 # 垃圾桶 ======================================================================================================
 trashcan_image = pygame.transform.scale(pygame.image.load(f"image/Ch2/Trashcan/trashcan.png"), (GAME_WIDTH, GAME_HEIGHT))
 # 電視櫃相關 =================================================================================================
@@ -34,6 +38,8 @@ tv_shelf_left_door_close_image = pygame.transform.scale(pygame.image.load(f"imag
 tv_shelf_right_door_close_image = pygame.transform.scale(pygame.image.load(f"image/Ch2/TvShelf/tv_shelf_door_close_r.png"), (GAME_WIDTH, GAME_HEIGHT))
 tv_shelf_left_door_open_image = pygame.transform.scale(pygame.image.load(f"image/Ch2/TvShelf/tv_shelf_door_open_l.png"), (GAME_WIDTH, GAME_HEIGHT))
 tv_shelf_right_door_open_image = pygame.transform.scale(pygame.image.load(f"image/Ch2/TvShelf/tv_shelf_door_open_r.png"), (GAME_WIDTH, GAME_HEIGHT))
+# 削鉛筆機 ==================================================================================================
+pencil_sharper_image = pygame.transform.scale(pygame.image.load(f"image/Ch2/TvShelf/Pencil sharpener.png"), (GAME_WIDTH, GAME_HEIGHT))
 # 電視相關 ==================================================================================================
 tv_image = pygame.transform.scale(pygame.image.load(f"image/Ch2/Tv/tv.png"), (GAME_WIDTH, GAME_HEIGHT))
 tv_power_off_image = pygame.transform.scale(pygame.image.load(f"image/Ch2/Tv/power_off.png"), (GAME_WIDTH, GAME_HEIGHT))
@@ -59,17 +65,22 @@ book_shelf_left_door_close_image = pygame.transform.scale(pygame.image.load(f"im
 book_shelf_right_door_close_image = pygame.transform.scale(pygame.image.load(f"image/Ch2/BookShelf/right_door_close.png"), (GAME_WIDTH, GAME_HEIGHT))
 book_shelf_left_door_open_image = pygame.transform.scale(pygame.image.load(f"image/Ch2/BookShelf/left_door_open.png"), (GAME_WIDTH, GAME_HEIGHT))
 book_shelf_right_door_open_image = pygame.transform.scale(pygame.image.load(f"image/Ch2/BookShelf/right_door_open.png"), (GAME_WIDTH, GAME_HEIGHT))
+# 書
+book_image = pygame.transform.scale(pygame.image.load(f"image/Ch2/BookShelf/books.png"), (GAME_WIDTH, GAME_HEIGHT))
 
 # 書櫃鑰匙 ================================================================================================
 chest_key_image = pygame.transform.scale(pygame.image.load(f"image/Ch2/BookShelf/chest_key.png"), (GAME_WIDTH, GAME_HEIGHT))
 # icon ===================================================================================================
 chest_key_icon = pygame.transform.scale(pygame.image.load(f"image/Icon/chest_key_icon.png"), (ICON_SIZE, ICON_SIZE))
 shit_icon = pygame.transform.scale(pygame.image.load(f"image/Icon/shit.png"), (ICON_SIZE, ICON_SIZE))
+pencil_icon = [pygame.transform.scale(pygame.image.load(f"image/Icon/penceil_{i}.png"), (ICON_SIZE, ICON_SIZE)) for i in range(3)]
 # 調查畫面===============================================================
 chest_key_observe = pygame.image.load(f"image/Observe/chest_key_observe.png")
 shit_observe = pygame.image.load(f"image/Observe/shit.png")
+pencil_observe = [pygame.image.load(f"image/Icon/penceil_{i}.png") for i in range(3)]
 
 # 聲音
+mute = None
 tv_show_1_sound = pygame.mixer.Sound('music/meme_1.wav')
 tv_show_2_sound = pygame.mixer.Sound('music/tyler1 scream meme.wav')
 tv_show_4_sound = pygame.mixer.Sound('music/Pornhub Video intro.wav')
@@ -95,6 +106,11 @@ rock_sound = pygame.mixer.Sound('music/rock.wav')
 rust_sound = pygame.mixer.Sound('music/rust.wav')
 clicked_sound = pygame.mixer.Sound('music/clicked.wav')
 pick_up_items_sound = pygame.mixer.Sound('music/物品拾取聲.mp3')
+pencil_writing_sound = pygame.mixer.Sound('music/鉛筆寫字聲.mp3')
+sharping_sound = pygame.mixer.Sound('music/削鉛筆聲_削鉛筆機.mp3')
+item_found_rarest_sound = pygame.mixer.Sound('music/MH - Item Found (rarest).mp3')
+Knock_door_sound = pygame.mixer.Sound('music/敲門聲.mp3')
+
 
 # 門 ===========================================================================
 class DoorToExitCh2:
@@ -148,18 +164,36 @@ class DoorToBedRoomCh2:
         self.rect.topleft = (x, y)
         self.mask = pygame.mask.from_surface(self.image)
         self.lock = False
-        self.speaker = ["","小男孩","爺爺"]
-        self.dialog = [" ","阿公，削鉛筆機在哪裡?","削鉛筆機喔...，我好像放在...\n你去電視櫃那邊找找看吧"]
-        self.music = None #[(door_locked_sound,1)]
+        self.speaker = ["旁白","","小男孩","爺爺","小男孩"]
+        self.dialog = ["你站在門前，你聽到裏頭傳來在削東西的聲音"," ","阿公，削鉛筆機在哪裡?","削鉛筆機喔...，我好像放在...\n你去電視櫃那邊找找看吧",
+                       "奇怪，阿公在房間裡幹嘛阿，平常這時候他不都會在客廳看電視嗎?\n算了 趕快去把筆削一削吧"]
+
+        self.speaker_1 = ["", "小男孩", "爺爺"]
+        self.dialog_1 = [" ", "阿公，我削好鉛筆了", "很好啊，那趕快去寫作業吧，等等阿公就出來陪你玩"]
+
+        self.speaker_2 = ["", "小男孩", "爺爺"]
+        self.dialog_2 = [" ", "阿公，我削好鉛筆了", "很好啊，那趕快去寫作業吧\n不過你剛剛真的是在削鉛筆嗎?\n"
+                        "為什麼我剛剛好像聽到氣刃兜割的聲音?"]
+
+        self.music = [(Knock_door_sound,1)]
+        self.music_1 = [(Knock_door_sound,0)]
 
         self.show = Show(self.dialog, self.speaker, None, self.music, None)
+        self.show_1 = Show(self.dialog_1, self.speaker_1, None, self.music_1, None)
+        self.show_2 = Show(self.dialog_2, self.speaker_2, None, self.music_1, None)
+
 
     def clicked(self, x: int, y: int):
         if self.rect.collidepoint(x, y) and self.mask.get_at((x -  self.rect.x, y -  self.rect.y)) != 0:
             return 'dialog'
         else:
             return 0
-        
+    def pencil_sharp(self,level):
+        if level == 10:
+            self.show = self.show_2
+        else:
+            self.show = self.show_1
+
 class DoorToKitchenCh2:
     def __init__(self, x, y):
         self.image = door_image_4
@@ -349,7 +383,27 @@ class LeftDoorCh2:
 
 
 
+# 書  ===================================================================================================
+class Books:
+    def __init__(self, x, y):
+        self.image = book_image
+        self.x = x
+        self.y = y
+        self.rect = self.image.get_rect()
+        self.rect.topleft = (x, y)
+        self.mask = pygame.mask.from_surface(self.image)
 
+        self.speaker = ["旁白"]
+        self.dialog = ["上頭擺滿木工相關的書籍，許多書籍都被翻到十分破舊了"]
+        self.music = None
+
+        self.show = Show(self.dialog, self.speaker, None, self.music, None)
+
+    def clicked(self, x: int, y: int):
+        if self.rect.collidepoint(x, y) and self.mask.get_at((x - self.rect.x, y - self.rect.y)) != 0:
+            return 'dialog'
+        else:
+            return 0
 
 # 書架 ===================================================================================================
 class BookShelfCh2:
@@ -426,22 +480,22 @@ class TvPowerCh2:
         self.rect = self.image.get_rect()
         self.rect.topleft = (x, y)
         self.mask = pygame.mask.from_surface(self.image)
-        self.music = tv_power_sound
+        self.music = [(tv_power_sound,0)]
 
-        self.speaker = [""]
-        self.dialog = ["打不開...\n也是，就算電視沒壞，這裡也早就沒電、沒訊號了\n電視下面的這串指令...\n還真是懷念..."]
+        self.speaker = ["小男孩"]
+        self.dialog = ["爺爺說作業寫完後才可以看電視"]
         # 是否壞掉(第一章不可互動)
         self.lock = lock
-        self.music = None # TODO : 電視按鈕聲音(機械)
+        self.music_dialog = tv_power_sound
 
-        self.show = Show(self.dialog, self.speaker, None, self.music, None)
+        self.show = Show(self.dialog, self.speaker, None, None, None)
 
     def clicked(self, x: int, y: int):
         if self.rect.collidepoint(x, y) and self.mask.get_at((x -  self.rect.x, y -  self.rect.y)) != 0:
             if self.lock:
                 return 'dialog'
             else:
-                self.music.play()
+                self.music_dialog.play()
                 return 'shotdown'
 
 class TvShowCh2:
@@ -489,6 +543,51 @@ class TvShowCh2:
         else:
             if self.music:
                 self.music.stop()
+
+# 可互動物件本身 ===========================================
+class TvCh2:
+    def __init__(self, x, y):
+        self.image = tv_image
+        self.x = x
+        self.y = y
+        self.rect = self.image.get_rect()
+        self.rect.topleft = (x, y)
+        self.tvshow = TvShowCh2(GAME_X, GAME_Y)
+        self.mask = pygame.mask.from_surface(self.image)
+
+        # 是否壞掉(第一章不可互動)
+        self.lock = True
+
+        self.target_command = [pygame.K_UP, pygame.K_UP, pygame.K_DOWN, pygame.K_DOWN,
+                               pygame.K_LEFT, pygame.K_RIGHT, pygame.K_LEFT, pygame.K_RIGHT,
+                               pygame.K_b, pygame.K_a]
+        self.current_sequence = []
+        # 玩家是否找到彩蛋
+        self.easter_eggs = False
+
+        # 入口 也就是上一層 離開調查時要回到的地方 None 代表離開調查
+        self.enter = None
+
+        self.power_button = TvPowerCh2(GAME_X, GAME_Y, self.lock)
+
+        # 下方要有儲存解謎進度的data
+        # 點擊放大後的圖片
+        self.focus = pygame.transform.scale(pygame.image.load(f"image/living_room/Tv/tv_investigation.png"), (GAME_WIDTH, GAME_HEIGHT))
+        # 此圖片中可互動的物件
+        self.object = [ExitButton(500,550),TvSwitchCh2(GAME_X, GAME_Y),self.power_button,self.tvshow]
+
+    def clicked(self, x: int, y: int):
+        if self.rect.collidepoint(x, y) and self.mask.get_at((x -  self.rect.x, y -  self.rect.y)) != 0:
+            self.current_sequence = []
+            return 'investigation'
+    def input(self, input):
+        self.current_sequence.append(input)
+        if self.current_sequence[-len(self.target_command):] == self.target_command:
+            self.cheat_code()
+    def cheat_code(self):
+        pass
+    def unlock(self):
+        self.power_button.lock = False
 
 # 電視櫃相關 ===============================================================
 class TvShelfRightDoorCh2:
@@ -560,7 +659,7 @@ class TvShelfCh2:
         self.focus_l = tv_shelf_investigation_l
         self.object = None
         self.object_r = [ExitButton(500, 550), TvShelfRightDoorCh2(GAME_X, GAME_Y)]
-        self.object_l = [ExitButton(500, 550), TvShelfLeftDoorCh2(GAME_X, GAME_Y)]
+        self.object_l = [ExitButton(500, 550), PencilSharpener(GAME_X, GAME_Y),TvShelfLeftDoorCh2(GAME_X, GAME_Y)]
 
 
     def clicked(self, x: int, y: int):
@@ -576,47 +675,38 @@ class TvShelfCh2:
                 self.object = self.object_l
             return 'investigation'
 
-
-# 可互動物件本身 ===========================================
-class TvCh2:
-    def __init__(self, x, y ,lock):
-        self.image = tv_image
+class PencilSharpener:
+    def __init__(self, x, y):
+        self.image = pencil_sharper_image
         self.x = x
         self.y = y
         self.rect = self.image.get_rect()
         self.rect.topleft = (x, y)
-        self.tvshow = TvShowCh2(GAME_X, GAME_Y)
         self.mask = pygame.mask.from_surface(self.image)
 
-        # 是否壞掉(第一章不可互動)
-        self.lock = lock
+        self.speaker = ["旁白","小男孩"]
+        self.speaker_1 = ["旁白"]
+        self.dialog = ["你把鉛筆削尖了","這樣就行了，會去把作業寫完吧"]
+        self.dialog_1 = ["鉛筆被你越削越尖..."]
+        self.dialog_2 = ["鉛筆已經削到尖到不能再尖了\n他現在的銳利度彷彿能屠龍"]
+        self.music = None  # [(clock_sound, 0)]
+        self.level = 0
 
-        self.target_command = [pygame.K_UP, pygame.K_UP, pygame.K_DOWN, pygame.K_DOWN,
-                               pygame.K_LEFT, pygame.K_RIGHT, pygame.K_LEFT, pygame.K_RIGHT,
-                               pygame.K_b, pygame.K_a]
-        self.current_sequence = []
-        # 玩家是否找到彩蛋
-        self.easter_eggs = False
-
-        # 入口 也就是上一層 離開調查時要回到的地方 None 代表離開調查
-        self.enter = None
-
-        # 下方要有儲存解謎進度的data
-        # 點擊放大後的圖片
-        self.focus = pygame.transform.scale(pygame.image.load(f"image/living_room/Tv/tv_investigation.png"), (GAME_WIDTH, GAME_HEIGHT))
-        # 此圖片中可互動的物件
-        self.object = [ExitButton(500,550),TvSwitchCh2(GAME_X, GAME_Y),TvPowerCh2(GAME_X, GAME_Y,self.lock),self.tvshow]
+        self.show = Show(self.dialog, self.speaker, None, self.music, None)
 
     def clicked(self, x: int, y: int):
-        if self.rect.collidepoint(x, y) and self.mask.get_at((x -  self.rect.x, y -  self.rect.y)) != 0:
-            self.current_sequence = []
-            return 'investigation'
-    def input(self, input):
-        self.current_sequence.append(input)
-        if self.current_sequence[-len(self.target_command):] == self.target_command:
-            self.cheat_code()
-    def cheat_code(self):
-        pass
+        if self.rect.collidepoint(x, y) and self.mask.get_at((x - self.rect.x, y - self.rect.y)) != 0:
+            return 'sharp'
+        else:
+            return 0
+    def sharp(self):
+        self.level += 1
+        if self.level == 1:
+            self.show = Show(self.dialog_1, self.speaker_1, None, self.music, None)
+        elif self.level == 10:
+            self.show = Show(self.dialog_2, self.speaker, None, self.music, None)
+
+
 
 class NewPaperCh2:
     def __init__(self, x, y):
@@ -658,20 +748,66 @@ class DeskCh2:
         # 入口 也就是上一層 離開調查時要回到的地方 None 代表離開調查
         self.enter = None
 
-        # 下方要有儲存解謎進度的data
-        # TODO : 點擊放大後的圖片
-        self.focus = pygame.transform.scale(pygame.image.load(f"image/living_room/Tv/tv_investigation.png"), (GAME_WIDTH, GAME_HEIGHT))
-        # TODO : 此圖片中可互動的物件
-        self.object = [ExitButton(500,550)]
+        self.homework = Homework(GAME_X,GAME_Y)
+
+
+        self.focus = pygame.transform.scale(pygame.image.load(f"image/Ch2/Desk/desk_investigation.png"), (GAME_WIDTH, GAME_HEIGHT))
+
+        self.object = [ExitButton(500,550),self.homework]
 
     def clicked(self, x: int, y: int):
         # TODO : 連接到 user_request 若是可互動物件被點到 轉換場景 若是不可互動則說話或是
         if self.rect.collidepoint(x, y) and self.mask.get_at((x -  self.rect.x, y -  self.rect.y)) != 0:
             return 'investigation'
 
-    # TODO : 用於改變在解謎中改動到的資料
-    def puzzle(self):
-        pass
+class Homework:
+    def __init__(self, x, y):
+        self.image = homework_image[0]
+        self.x = x
+        self.y = y
+        self.rect = self.image.get_rect()
+        self.rect.topleft = (x, y)
+        self.mask = pygame.mask.from_surface(self.image)
+
+        self.speaker_undone = ["小男孩"]
+        self.dialog_undone = ["鉛筆斷掉了沒辦法寫，要先去找削鉛筆機才行\n問問阿公鉛筆機在哪好了，阿公應該在臥室裡面"]
+
+        self.speaker_doing = ["","小男孩"]
+        self.dialog_doing = [" ","總算寫完了，來去看電視摟~"]
+
+        self.music = [(pencil_writing_sound,0),(mute,1)]
+        self.show_image = [(black_image,0)]
+
+        self.show_doing = Show(self.dialog_doing, self.speaker_doing, self.show_image, self.music, None)
+        self.show_undone = Show(self.dialog_undone, self.speaker_undone, None, None, None)
+
+        self.is_done = False
+
+    def clicked(self, x: int, y: int):
+        if self.rect.collidepoint(x, y) and self.mask.get_at((x -  self.rect.x, y -  self.rect.y)) != 0:
+            if not self.is_done:
+                return 'homework'
+    def done(self):
+        self.is_done = True
+        self.image = homework_image[1]
+class CalendarCh2:
+    def __init__(self, x, y):
+        self.image = calendar_image
+        self.x = x
+        self.y = y
+        self.rect = self.image.get_rect()
+        self.rect.topleft = (x, y)
+        self.mask = pygame.mask.from_surface(self.image)
+
+        self.speaker = ["小男孩"]
+        self.dialog = ["我最喜歡每天撕日曆，在日曆後面畫畫了"]
+        self.music = None
+
+        self.show = Show(self.dialog, self.speaker, None, self.music, None)
+
+    def clicked(self, x: int, y: int):
+        if self.rect.collidepoint(x, y) and self.mask.get_at((x -  self.rect.x, y -  self.rect.y)) != 0:
+            return 'dialog'
 
 # globe =====================================================================
 class GlobeCh2:
@@ -738,28 +874,47 @@ class ChestCh2:
         if self.rect.collidepoint(x, y) and self.mask.get_at((x - self.rect.x, y - self.rect.y)) != 0:
             return 'none'
         
-class ChestKeyCh2:
+class Pencil:
     def __init__(self, x, y):
-        self.name = "黃色鑰匙"
-        self.image = chest_key_image
-        self.icon = chest_key_icon
+        self.name = "筆芯斷掉的鉛筆"
+        self.icon = pencil_icon[1]
         # 調查中此物品的樣貌
-        self.observe = chest_key_observe
+        self.observe = pencil_observe[1]
         # 調查中此物品的敘述
-        self.description = "有著些許鏽斑的黃色鑰匙\n" \
-                           "不知道能打開哪道索"
-        self.x = x
-        self.y = y
-        self.rect = self.image.get_rect()
-        self.rect.topleft = (x, y)
-        self.mask = pygame.mask.from_surface(self.image)
-        self.music = pick_up_items_sound
+        self.description = "一定是掉到地上，又或者是受潮後寫的太用力\n才會讓筆芯斷掉"
 
-    def clicked(self, x: int, y: int):
-        if self.rect.collidepoint(x, y) and self.mask.get_at((x -  self.rect.x, y -  self.rect.y)) != 0:
+        self.is_sharp = False
+        self.level = 0
+        self.music = sharping_sound
+
+    def sharp(self):
+        self.music.stop()
+        if not self.is_sharp:
             self.music.play()
-            # 被撿起放入物品欄
-            return 'take'
+            self.is_sharp = True
+            self.name = "削尖的鉛筆"
+            self.icon = pencil_icon[0]
+            # 調查中此物品的樣貌
+            self.observe = pencil_observe[0]
+            # 調查中此物品的敘述
+            self.description = "千萬不要拿削好的鉛筆戳自己的大腿\n有時候筆芯會斷在肉裡，超級痛\n也不要拿上面的橡皮擦來用\n" \
+                               "用了你的紙張會直接毀滅"
+        elif self.level < 10:
+            self.music.play()
+            self.level += 1
+            self.name = "削尖的鉛筆 +"  + str(self.level)
+            if self.level == 10:
+                self.music.stop()
+                item_found_rarest_sound.play()
+                # self.icon = pencil_icon[2]
+                self.observe = pencil_observe[2]
+                self.name = "天上天下天地無雙筆"
+                self.description = "追求最強之名而生的豪傑之筆。\n強者皆敗，彼亦神隱。\n" \
+                                   "他擁有最高的白色斬味\n可以輕易刺穿世界上的一切物質\n" \
+                                   "將魔物斷尾、破角、大卸八塊更是不在話下\n" \
+                                   "當然也包括你的作業本...\n\n\n\n\n\n\n\n\n                      BGM:英雄之証"
+
+
 
 # 彩蛋物件類 =====================================
 class AbandonedProject:

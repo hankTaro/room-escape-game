@@ -16,6 +16,12 @@ from setting import *
 
 pick_up_items_sound = pygame.mixer.Sound('music/物品拾取聲.mp3')
 
+# pygame.mixer.init()
+# pygame.mixer.music.set_volume(0.2)
+
+proof_of_hero = pygame.mixer.Sound('music/MH4　BGM　英雄の証.mp3')
+proof_of_hero.set_volume(0.5)
+
 class GameModel:
     def __init__(self):
         # data
@@ -67,6 +73,9 @@ class GameModel:
 
         # BGM
         self.bgm = None
+
+        #動畫結束後要執行的指令(要存入這個不能有變數)(不然就是執行時要判別是那種函式)
+        self.continue_function = None
 
 
 
@@ -165,24 +174,6 @@ class GameModel:
                     self.to_dark = True
             return
 
-        # # 在開場
-        # if self.opening is not None:
-        #     if self.to_dark == True:
-        #         self.value += 3
-        #     # 當亮度降到0
-        #     if self.value >= 255:
-        #         self.to_dark = False
-        #         self.value = 0
-        #         self.opening = None
-        #         self.start_ch1()
-        #
-        #     if events["mouse position"] is not None:
-        #         x, y = events["mouse position"]
-        #         common = self.opening.clicked(x, y)
-        #         if common == 'start':
-        #             self.to_dark = True
-        #     return
-
         # 檢查 menu btn
         if events["mouse position"] is not None:
             x, y = events["mouse position"]
@@ -218,15 +209,11 @@ class GameModel:
                         pick_up_items_sound.play()
                         self.bag.save_item(self.give_item)
                         self.give_item = None
-                    self.dialog = None
-                # # 點擊以下一句
-                # self.dialog_index += 1
-                #
-                # # 代表話說完了 對話結束 做初始化
-                # if len(self.dialog.splitlines()) == self.dialog_index:
-                #     self.dialog_index = 0
-                #     self.dialog = ""
+                    # 動畫播完要連續執行的指令
+                    if self.continue_function is not None:
+                        self.continue_function()
 
+                    self.dialog = None
 
             # 讓後面部分不執行
             return
@@ -261,7 +248,7 @@ class GameModel:
                     self.bag.page -= 1
 
                 if self.investigation:
-                    if isinstance(self.investigation_item, Tv):
+                    if isinstance(self.investigation_item, Tv) or isinstance(self.investigation_item, TvCh2):
                         self.tv_select(x, y)
                     elif isinstance(self.investigation_item, Painting):
                         self.painting_select(x, y, 'down')
@@ -271,7 +258,7 @@ class GameModel:
                         self.book_shelf_select(x, y)
                     elif isinstance(self.investigation_item, Clock) or isinstance(self.investigation_item, BookShelfCh2):
                         self.clock_select(x, y)
-                    elif isinstance(self.investigation_item, Desk):
+                    elif isinstance(self.investigation_item, Desk) or isinstance(self.investigation_item, DeskCh2):
                         self.desk_select(x, y)
                     elif isinstance(self.investigation_item, PhotoFrame):
                         self.photo_frame_select(x, y, 'down')
@@ -300,8 +287,15 @@ class GameModel:
 
     def start_observe(self):
         self.observe = True
+        # BGM 檢測
+        if self.bag.hold.name == "天上天下天地無雙筆":
+            proof_of_hero.play()
     def end_observe(self):
         self.observe = False
+        if self.bag.hold.name == "天上天下天地無雙筆":
+            proof_of_hero.stop()
+
+
 
     def painting_select(self, mouse_x: int, mouse_y: int, events):
         for item in reversed(self.investigation_item.object):
@@ -349,6 +343,18 @@ class GameModel:
             elif common == 'investigation':
                 item.enter = self.investigation_item
                 self.investigation_item = item
+            elif common == 'sharp':
+                if isinstance(self.bag.hold,Pencil):
+                    self.dialog = item.show
+                    if self.bag.hold.level < 10:
+                        self.bag.hold.sharp()
+                        if self.bag.hold.is_sharp:
+                            item.sharp()
+                    # 設定爺爺對話的改變
+                    self.cur_room.bedroom_door.pencil_sharp(self.bag.hold.level)
+
+
+
             else:
                 pass
 
@@ -478,14 +484,25 @@ class GameModel:
             # TODO : 若是可互動物件被點到 轉換場景 若是不可互動則說話或是
             # 回傳是哪個物件被點選 進而做出不同反應
             common = item.clicked(mouse_x, mouse_y)
-            if common == 0:
-                pass
             # 退出調查畫面
-            elif common == 'stop_investigation':
+            if common == 'stop_investigation':
                 self.investigation_item = self.investigation_item.enter
                 if not self.investigation_item:
                     self.investigation = False
                 self.switch = True
+            elif common == 'dialog':
+                self.dialog = item.show
+            elif common == 'homework':
+                if isinstance(self.bag.hold,Pencil):
+                    if  self.bag.hold.is_sharp:
+                        # 解鎖電視
+                        self.cur_room.tv.unlock()
+                        # 進入對話框
+                        self.dialog = item.show_doing
+                        # 將代辦函式存起來 對話完再執行
+                        self.continue_function = item.done
+                    else:
+                        self.dialog = item.show_undone
             else:
                 pass
 
@@ -524,7 +541,7 @@ class GameModel:
 
 
     def basic_function(self, mouse_x: int, mouse_y: int):
-        for item in self.cur_room.wall[str(self.wall)].object:
+        for item in reversed(self.cur_room.wall[str(self.wall)].object):
             # TODO : 若是可互動物件被點到 轉換場景 若是不可互動則說話或是
             # 回傳是哪個物件被點選 進而做出不同反應
             common = item.clicked(mouse_x, mouse_y)
@@ -560,6 +577,7 @@ class GameModel:
                     item.text_index = 0
             elif common == 'dialog':
                 self.dialog = item.show
+                break
             elif common == 'dialog_sp':
                 self.dialog = item.show
                 item.show = item.show_2
@@ -594,6 +612,8 @@ class GameModel:
         pygame.mixer.music.load('music/ch1_background.mp3')
         pygame.mixer.music.play(-1)  # 無限播放
 
+        # 起始物品
+        self.bag.save_item(ChestKey(GAME_X,GAME_Y))
 
         # 開場動畫
         self.show = Show(*CH1_START_SHOW)
@@ -628,6 +648,9 @@ class GameModel:
         self.observe = False
         # 物品欄
         self.bag = self.bag_ch2
+
+        # 起始物品
+        self.bag.save_item(Pencil(GAME_X, GAME_Y))
 
 
         # 撥放章節1結束劇情

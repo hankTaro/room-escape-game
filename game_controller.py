@@ -1,5 +1,6 @@
 import pygame
 from object import *
+from object_ch2 import *
 
 # controller
 class GameController:
@@ -116,7 +117,7 @@ class GameController:
         if not self.model.investigation:
             self.view.draw_room(self.model.cur_room, self.model.wall)
         else:
-            if isinstance(self.model.investigation_item, Tv):
+            if isinstance(self.model.investigation_item, Tv) or isinstance(self.model.investigation_item, TvCh2):
                 self.view.draw_tv_item(self.model.investigation_item)
             else:
                 self.view.draw_item(self.model.investigation_item)

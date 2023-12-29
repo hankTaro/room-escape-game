@@ -76,6 +76,7 @@ class Show:
         #     self.playing = None
 
         # 檢查一段台詞是否已經到了最後一句
+
         if self.dialog_index == len(self.text_lines) - 1:
             self.index += 1
             # 檢查self.index 是否超過現有台詞的數量 為Ture 就結束動畫
@@ -91,6 +92,7 @@ class Show:
                 self.dialog_index = 0
                 self.image_check_index = 0
                 self.sound_check_index = 0
+                self.text_lines = self.text[self.index].splitlines()
                 # 目前人物說的話
                 self.cur_text = self.text_lines[self.dialog_index]
                 # 當前在播放的音效

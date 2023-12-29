@@ -34,7 +34,10 @@ door_image_3  = pygame.transform.scale(pygame.image.load(f"image/living_room/Doo
 door_image_4  = pygame.transform.scale(pygame.image.load(f"image/living_room/Door/door_4.png"), (GAME_WIDTH, GAME_HEIGHT))
 door_image_2_reverse  = pygame.transform.scale(pygame.image.load(f"image/study/door_2.png"), (GAME_WIDTH, GAME_HEIGHT))
 
-desk_image = pygame.transform.scale(pygame.image.load(f"image/study/desk.png"), (GAME_WIDTH, GAME_HEIGHT))
+desk_image = pygame.transform.scale(pygame.image.load(f"image/living_room/Desk.png"), (GAME_WIDTH, GAME_HEIGHT))
+calendar_image = pygame.transform.scale(pygame.image.load(f"image/living_room/calendar.png"), (GAME_WIDTH, GAME_HEIGHT))
+trashcan_image = pygame.transform.scale(pygame.image.load(f"image/living_room/trashcan.png"), (GAME_WIDTH, GAME_HEIGHT))
+
 book_image = pygame.transform.scale(pygame.image.load(f"image/study/book2.png"), (GAME_WIDTH, GAME_HEIGHT))
 globe_image = pygame.transform.scale(pygame.image.load(f"image/study/Globe/globe.png"), (GAME_WIDTH, GAME_HEIGHT))
 globe_table_image = pygame.transform.scale(pygame.image.load(f"image/study/Globe/globe_table.png"), (GAME_WIDTH, GAME_HEIGHT))
@@ -774,23 +777,33 @@ class NewPaper:
         pass
 
 # Desk 會用到的物件 ===========================================
-class Letter:
-    def __init__(self, x, y, num):
-        self.image = None
+class TrashCan:
+    def __init__(self, x, y):
+        self.image = trashcan_image
         self.x = x
         self.y = y
         self.rect = self.image.get_rect()
-        self.rect.center = (x, y)
+        self.rect.topleft = (x, y)
+        self.mask = pygame.mask.from_surface(self.image)
+
+        self.counter = 0
+        self.give = None
+        self.lock = False
+
+        self.speaker = ["旁白"]
+        self.speaker_2 = ["旁白"]
+        self.dialog = ["你翻找著垃圾桶...\n除了垃圾你甚麼都沒找到..."]
+        self.dialog_2 = ["裡頭真的只剩垃圾了..."]
+        self.music = None#[(clock_sound, 0)]
+
+        self.show = Show(self.dialog, self.speaker, None, self.music, None)
+        self.show_2 = Show(self.dialog_2, self.speaker_2, None, self.music, None)
 
     def clicked(self, x: int, y: int):
-        # TODO : 再看看要回傳甚麼 以及怎麼監測
-        if self.rect.collidepoint(x, y):
-            # 測試
-            print(self.number)
+        if self.rect.collidepoint(x, y) and self.mask.get_at((x - self.rect.x, y - self.rect.y)) != 0:
+            return 'dialog'
 
-            return self.number
-        else:
-            return 0
+
 
 # 可互動物件本身 ===========================================
 class Desk:
@@ -802,23 +815,34 @@ class Desk:
         self.rect.topleft = (x, y)
         self.mask = pygame.mask.from_surface(self.image)
 
-        # 入口 也就是上一層 離開調查時要回到的地方 None 代表離開調查
-        self.enter = None
+        self.speaker = ["旁白"]
+        self.dialog = ["許多部份都已經腐朽，變得破破爛爛的桌子\n上頭布滿了刮痕，還有鉛筆寫下的字跡\n但是都早已模糊不清了..."]
+        self.music = None
 
-        # 下方要有儲存解謎進度的data
-        # TODO : 點擊放大後的圖片
-        self.focus = pygame.transform.scale(pygame.image.load(f"image/living_room/Tv/tv_investigation.png"), (GAME_WIDTH, GAME_HEIGHT))
-        # TODO : 此圖片中可互動的物件
-        self.object = [ExitButton(500,550)]
+        self.show = Show(self.dialog, self.speaker, None, self.music, None)
 
     def clicked(self, x: int, y: int):
-        # TODO : 連接到 user_request 若是可互動物件被點到 轉換場景 若是不可互動則說話或是
         if self.rect.collidepoint(x, y) and self.mask.get_at((x -  self.rect.x, y -  self.rect.y)) != 0:
-            return 'investigation'
+            return 'dialog'
 
-    # TODO : 用於改變在解謎中改動到的資料
-    def puzzle(self):
-        pass
+class Calendar:
+    def __init__(self, x, y):
+        self.image = calendar_image
+        self.x = x
+        self.y = y
+        self.rect = self.image.get_rect()
+        self.rect.topleft = (x, y)
+        self.mask = pygame.mask.from_surface(self.image)
+
+        self.speaker = ["旁白"]
+        self.dialog = ["已經受潮發霉的日曆，上頭時間停留在88年9月20號"]
+        self.music = None
+
+        self.show = Show(self.dialog, self.speaker, None, self.music, None)
+
+    def clicked(self, x: int, y: int):
+        if self.rect.collidepoint(x, y) and self.mask.get_at((x -  self.rect.x, y -  self.rect.y)) != 0:
+            return 'dialog'
 
 
 
@@ -962,7 +986,7 @@ class BookShelf:
         self.enter = None
 
         self.focus = book_shelf_puzzle
-        self.object = [ExitButton(500, 550), PhotoFrame(GAME_X, GAME_Y), ChestKey(GAME_X, GAME_Y), PhotoFragmentsTake(GAME_X, GAME_Y, 0),
+        self.object = [ExitButton(500, 550), PhotoFrame(GAME_X, GAME_Y), PhotoFragmentsTake(GAME_X, GAME_Y, 0),
                        Knob(GAME_X, GAME_Y, 0), Knob(GAME_X, GAME_Y, 1), Knob(GAME_X, GAME_Y, 2), Knob(GAME_X, GAME_Y, 3),
                        Locker(GAME_X, GAME_Y), RightDoor(GAME_X, GAME_Y), LeftDoor(GAME_X, GAME_Y)]
         # locker 的密碼相關

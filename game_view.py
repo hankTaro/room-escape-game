@@ -1,11 +1,9 @@
 import pygame
 from setting import *
 from object import *
+from object_ch2 import *
 import cv2
 import numpy as np
-
-# pygame.mixer.init()
-# pygame.mixer.music.set_volume(0.2)
 
 
 
@@ -45,6 +43,8 @@ class GameView:
         self.speaker_show_x = GAME_X + 20
         self.speaker_show_y = GAME_Y + GAME_HEIGHT - 70 - self.font_dialog.get_linesize()
 
+        self.play_bgm = False
+
         # 文字置中
         # WIN_WIDTH // 2 - word.get_width() // 2
 
@@ -68,7 +68,7 @@ class GameView:
 
     def draw_tv_item(self, investigation_item):
         for item in investigation_item.object:
-            if isinstance(item, TvShow):
+            if isinstance(item, TvShow) or isinstance(item, TvShowCh2):
                 if item.ispower:
                     # 檢測是相片還是MP4
                     if isinstance(item.image, pygame.Surface):
@@ -93,7 +93,7 @@ class GameView:
         # 讓電視框可以遮住超出範圍的節目畫面
         self.win.blit(investigation_item.focus, (GAME_X, GAME_Y))
         for item in investigation_item.object:
-            if isinstance(item, TvShow):
+            if isinstance(item, TvShow) or isinstance(item, TvShowCh2):
                 if not item.ispower:
                     self.win.blit(item.power_off, item.rect)
             else:
@@ -144,8 +144,13 @@ class GameView:
             if blank.item == bag.hold and blank.item != None:
                 # 高亮物品格背景
                 self.win.blit(blank.selected_image, blank.rect)
+
+
                 # 顯示物品名稱
-                word = self.font_item.render(blank.item.name, True, (255, 255, 255))
+                if blank.item.name == "天上天下天地無雙筆":
+                    word = self.font_item.render(blank.item.name, True, (255, 0, 0))
+                else:
+                    word = self.font_item.render(blank.item.name, True, (255, 255, 255))
                 rect = word.get_rect()
                 rect.topright = (860, 80)
                 self.win.blit(word, rect)
@@ -181,7 +186,10 @@ class GameView:
         lines = text.splitlines()
 
         # 顯示物品名字
-        name = self.font_name.render(item.name, True, (255, 255, 255))  # 渲染文字
+        if item.name == "天上天下天地無雙筆":
+            name = self.font_name.render(item.name, True, (255, 0, 0))  # 渲染文字
+        else:
+            name = self.font_name.render(item.name, True, (255, 255, 255))  # 渲染文字
         self.win.blit(name, (GAME_X + GAME_WIDTH//2 - name.get_width()//2, GAME_Y + 40))
 
         # 用於使文字框置中

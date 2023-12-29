@@ -6,6 +6,7 @@ from wall import *
 living_room_1_image = pygame.transform.scale(pygame.image.load(f"image/living_room/Wall/living_room_1.png"), (GAME_WIDTH, GAME_HEIGHT))
 living_room_2_image = pygame.transform.scale(pygame.image.load(f"image/living_room/Wall/living_room_2.png"), (GAME_WIDTH, GAME_HEIGHT))
 living_room_3_image = pygame.transform.scale(pygame.image.load(f"image/living_room/Wall/living_room_3.png"), (GAME_WIDTH, GAME_HEIGHT))
+living_room_4_image = pygame.transform.scale(pygame.image.load(f"image/living_room/Wall/living_room_4.png"), (GAME_WIDTH, GAME_HEIGHT))
 bedroom_1_image = pygame.transform.scale(pygame.image.load(f"image/black.png"), (GAME_WIDTH, GAME_HEIGHT))
 bedroom_2_image = pygame.transform.scale(pygame.image.load(f"image/black.png"), (GAME_WIDTH, GAME_HEIGHT))
 bedroom_3_image = pygame.transform.scale(pygame.image.load(f"image/black.png"), (GAME_WIDTH, GAME_HEIGHT))
@@ -20,10 +21,10 @@ class LivingRoom:
     def __init__(self):
         # data
         # 房間背景
-        self.bg_image = [living_room_1_image, living_room_2_image, living_room_3_image]
+        self.bg_image = [living_room_1_image, living_room_2_image, living_room_3_image,living_room_4_image]
 
         # 房間牆面數
-        self.wall_size = 3
+        self.wall_size = 4
 
         # 切換畫面鍵
         self.right_button = RightButton(WIN_WIDTH - 50,WIN_HEIGHT/2)
@@ -39,13 +40,14 @@ class LivingRoom:
         # 牆面3有這些東西
         self.__object_3 = [self.right_button,self.left_button,DoorToKitchen(GAME_X, GAME_Y),
                            Tv(GAME_X, GAME_Y,True),TvShelf(GAME_X, GAME_Y), Painting(GAME_X, GAME_Y),Globe(GAME_X, GAME_Y),GlobeTable(GAME_X, GAME_Y)]
-        self.__object_4 = [self.right_button, self.left_button]
+        self.__object_4 = [self.right_button, self.left_button,Desk(GAME_X, GAME_Y),Calendar(GAME_X, GAME_Y),TrashCan(GAME_X, GAME_Y)]
 
         # 當前牆面/建立此房間的牆面
         # 不同房間的牆面數會不一樣 要注意
         self.wall = {'1': Wall(self.bg_image,self.__object_1),
                      '2': Wall(self.bg_image,self.__object_2),
-                     '3': Wall(self.bg_image,self.__object_3)}
+                     '3': Wall(self.bg_image,self.__object_3),
+                     '4': Wall(self.bg_image,self.__object_4)}
 
 class Study:
     def __init__(self):

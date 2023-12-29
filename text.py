@@ -42,7 +42,7 @@ CH1_START_BGM = bird_and_bug
 CH1_START_SHOW = (CH1_START_TEXT,CH1_START_SPEAKER,CH1_START_IMAGE,CH1_START_SOUND,CH1_START_BGM)
 
 # 章節1結尾 (當你拚完照片)
-CH1_END_TEXT = ["Demo版本到此結束\nDemo版本到此結束\n感謝您的遊玩\n在遊戲過程如果遇到bug或是問題\n歡迎聯絡/通知我\ngithub:https://github.com/hankTaro/room-escape-game"]
+CH1_END_TEXT = ["...\n這個是...\n感謝您的遊玩\n在遊戲過程如果遇到bug或是問題\n歡迎聯絡/通知我\ngithub:https://github.com/hankTaro/room-escape-game"]
 CH1_END_SPEAKER = ["開發者"]
 CH1_END_IMAGE = [(image_1,0)]
 CH1_END_SOUND = [(clicked_sound,0)]
