@@ -90,7 +90,7 @@ clock_hand_sound = pygame.mixer.Sound('music/clock_hand.wav')
 walking_sound = pygame.mixer.Sound('music/walking.wav')
 door_open_sound = pygame.mixer.Sound('music/door_open.wav')
 tv_change_channel_sound = pygame.mixer.Sound('music/tv_change_channel.wav')
-tv_power_sound = pygame.mixer.Sound('music/tv_change_channel.wav')
+tv_power_sound = pygame.mixer.Sound('music/clicked.wav')
 knob_twist_sound = pygame.mixer.Sound('music/knob_twist.wav')
 knob_open_sound = pygame.mixer.Sound('music/knob_open.wav')
 locker_setup_sound = pygame.mixer.Sound('music/locker_setup.wav')
@@ -136,24 +136,10 @@ class DoorToExitCh2:
                 return 'done'
             else:
                 return 'dialog'
+    def unlock(self):
+        self.can_exit = True
 
 
-class DoorToStudyCh2:
-    def __init__(self, x, y):
-        self.image = door_image_2
-        self.x = x
-        self.y = y
-        self.rect = self.image.get_rect()
-        self.rect.topleft = (x, y)
-        self.mask = pygame.mask.from_surface(self.image)
-        self.music = door_open_sound
-
-    def clicked(self, x: int, y: int):
-        if self.rect.collidepoint(x, y) and self.mask.get_at((x -  self.rect.x, y -  self.rect.y)) != 0:
-            self.music.play()
-            return 'study'
-        else:
-            return 0
 
 class DoorToBedRoomCh2:
     def __init__(self, x, y):
@@ -175,12 +161,20 @@ class DoorToBedRoomCh2:
         self.dialog_2 = [" ", "阿公，我削好鉛筆了", "很好啊，那趕快去寫作業吧\n不過你剛剛真的是在削鉛筆嗎?\n"
                         "為什麼我剛剛好像聽到氣刃兜割的聲音?"]
 
+        self.speaker_3 = ["", "小男孩", "爺爺"]
+        self.dialog_3 = [" ", "阿公，我功課寫完了，我要去看電視了喔", "真乖，去看吧，抱歉阿公還在忙，不能陪你玩..."]
+
+        self.speaker_4 = ["", "小男孩", "旁白"]
+        self.dialog_4 = [" ", "阿公，我要回家了喔", "...\n沒有回應，應該是睡著了"]
+
         self.music = [(Knock_door_sound,1)]
         self.music_1 = [(Knock_door_sound,0)]
 
         self.show = Show(self.dialog, self.speaker, None, self.music, None)
         self.show_1 = Show(self.dialog_1, self.speaker_1, None, self.music_1, None)
         self.show_2 = Show(self.dialog_2, self.speaker_2, None, self.music_1, None)
+        self.show_3 = Show(self.dialog_3, self.speaker_3, None, self.music_1, None)
+        self.show_4 = Show(self.dialog_4, self.speaker_4, None, self.music_1, None)
 
 
     def clicked(self, x: int, y: int):
@@ -193,6 +187,10 @@ class DoorToBedRoomCh2:
             self.show = self.show_2
         else:
             self.show = self.show_1
+    def finsh_homework(self):
+        self.show = self.show_3
+    def finsh_tv(self):
+        self.show = self.show_4
 
 class DoorToKitchenCh2:
     def __init__(self, x, y):
@@ -467,10 +465,26 @@ class TvSwitchCh2:
         self.rect.topleft = (x, y)
         self.mask = pygame.mask.from_surface(self.image)
         self.music = tv_change_channel_sound
+        self.is_power = False
+        self.index = 0
+
+        self.speaker = ["小男孩"]
+        self.dialog = ["好耶，剛好趕上新世紀福音戰士\n我也好想駕駛初號機喔..."]
+
+        self.show = Show(self.dialog, self.speaker, None, None, None)
 
     def clicked(self, x: int, y: int):
         if self.rect.collidepoint(x, y) and self.mask.get_at((x -  self.rect.x, y -  self.rect.y)) != 0:
-            return 'switch'
+            if self.is_power:
+                self.music.play()
+                self.index += 1
+            # 當轉到要看的台時 回傳訊號觸發劇情 先假設要看的台是5號(index==4)
+            if self.index == 4:
+                return 'watch'
+            else:
+                return 'switch'
+    def power(self):
+        self.is_power = not self.is_power
 
 class TvPowerCh2:
     def __init__(self, x, y,lock):
@@ -496,7 +510,7 @@ class TvPowerCh2:
                 return 'dialog'
             else:
                 self.music_dialog.play()
-                return 'shotdown'
+                return 'shutdown'
 
 class TvShowCh2:
     def __init__(self, x, y):
@@ -534,6 +548,7 @@ class TvShowCh2:
             self.music = self.all_music[self.index]
             if self.music:
                 self.music.play()
+
     
     def power(self):
         self.ispower = not self.ispower
@@ -555,8 +570,10 @@ class TvCh2:
         self.tvshow = TvShowCh2(GAME_X, GAME_Y)
         self.mask = pygame.mask.from_surface(self.image)
 
-        # 是否壞掉(第一章不可互動)
+        # 是否鎖起來不給用(寫完作業前不可互動)
         self.lock = True
+        # 看完電視就鎖起來不可再互動
+        self.lock_2 = False
 
         self.target_command = [pygame.K_UP, pygame.K_UP, pygame.K_DOWN, pygame.K_DOWN,
                                pygame.K_LEFT, pygame.K_RIGHT, pygame.K_LEFT, pygame.K_RIGHT,
@@ -569,25 +586,40 @@ class TvCh2:
         self.enter = None
 
         self.power_button = TvPowerCh2(GAME_X, GAME_Y, self.lock)
+        self.switch_button = TvSwitchCh2(GAME_X, GAME_Y)
 
         # 下方要有儲存解謎進度的data
         # 點擊放大後的圖片
         self.focus = pygame.transform.scale(pygame.image.load(f"image/living_room/Tv/tv_investigation.png"), (GAME_WIDTH, GAME_HEIGHT))
         # 此圖片中可互動的物件
-        self.object = [ExitButton(500,550),TvSwitchCh2(GAME_X, GAME_Y),self.power_button,self.tvshow]
+        self.object = [ExitButton(500,550),self.switch_button,self.power_button,self.tvshow]
+
+        self.speaker = ["旁白", "小男孩"]
+        self.dialog = ["你把鉛筆削尖了", "這樣就行了，快回去把作業寫完吧"]
+        self.music = None  # [(clock_sound, 0)]
+
+        self.show = Show(self.dialog, self.speaker, None, self.music, None)
 
     def clicked(self, x: int, y: int):
         if self.rect.collidepoint(x, y) and self.mask.get_at((x -  self.rect.x, y -  self.rect.y)) != 0:
-            self.current_sequence = []
-            return 'investigation'
+            if self.lock_2:
+                return 'dialog'
+            else:
+                self.current_sequence = []
+                return 'investigation'
     def input(self, input):
         self.current_sequence.append(input)
         if self.current_sequence[-len(self.target_command):] == self.target_command:
             self.cheat_code()
+    def power_switch(self):
+        self.tvshow.power()
+        self.switch_button.power()
     def cheat_code(self):
         pass
     def unlock(self):
         self.power_button.lock = False
+    def lock_on(self):
+        self.lock_2 = True
 
 # 電視櫃相關 ===============================================================
 class TvShelfRightDoorCh2:
@@ -686,7 +718,7 @@ class PencilSharpener:
 
         self.speaker = ["旁白","小男孩"]
         self.speaker_1 = ["旁白"]
-        self.dialog = ["你把鉛筆削尖了","這樣就行了，會去把作業寫完吧"]
+        self.dialog = ["你把鉛筆削尖了","這樣就行了，快回去把作業寫完吧"]
         self.dialog_1 = ["鉛筆被你越削越尖..."]
         self.dialog_2 = ["鉛筆已經削到尖到不能再尖了\n他現在的銳利度彷彿能屠龍"]
         self.music = None  # [(clock_sound, 0)]

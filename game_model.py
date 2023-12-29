@@ -1,6 +1,6 @@
 import pygame
 import os
-
+from functools import partial
 
 from object import *
 from room import *
@@ -74,8 +74,14 @@ class GameModel:
         # BGM
         self.bgm = None
 
-        #動畫結束後要執行的指令(要存入這個不能有變數)(不然就是執行時要判別是那種函式)
+        #動畫結束後要執行的指令
         self.continue_function = None
+
+        # 變黑完要執行的指令
+        self.continue_function_d = None
+
+        # show 撥完後要執行的指令
+        self.continue_show = None
 
 
 
@@ -152,12 +158,15 @@ class GameModel:
             return
 
         # 任何需要畫面變黑時
-        if self.to_dark == True:
-
-            self.value += 3
+        if self.to_dark:
+            self.value += 5
             if self.value >= 255:
                 self.to_dark = False
                 self.value = 0
+                if self.continue_function_d is not None:
+                    for func in self.continue_function_d:
+                        func()
+                    self.continue_function_d = None
             return
 
         # 在開場
@@ -171,7 +180,7 @@ class GameModel:
                 x, y = events["mouse position"]
                 common = self.opening.clicked(x, y)
                 if common == 'start':
-                    self.to_dark = True
+                    self.start_darking()
             return
 
         # 檢查 menu btn
@@ -194,6 +203,11 @@ class GameModel:
                 common = self.show.next()
                 if common == 'end':
                     self.show = None
+                    if self.continue_show is not None:
+                        self.show = self.continue_show.pop()
+                        if not self.continue_show:
+                            self.continue_show = None
+
 
             return
 
@@ -211,7 +225,9 @@ class GameModel:
                         self.give_item = None
                     # 動畫播完要連續執行的指令
                     if self.continue_function is not None:
-                        self.continue_function()
+                        for func in self.continue_function:
+                            func()
+                        self.continue_function = None
 
                     self.dialog = None
 
@@ -302,10 +318,7 @@ class GameModel:
             if events == 'down':
                 common = item.clicked(mouse_x, mouse_y)
                 if common == 'stop_investigation':
-                    self.investigation_item = self.investigation_item.enter
-                    if not self.investigation_item:
-                        self.investigation = False
-                    self.switch = True
+                    self.stop_investigation()
                 elif common == 'drag':
                     item.drag_set()
                     break
@@ -331,10 +344,7 @@ class GameModel:
         for item in reversed(self.investigation_item.object):
             common = item.clicked(mouse_x, mouse_y)
             if common == 'stop_investigation':
-                self.investigation_item = self.investigation_item.enter
-                if not self.investigation_item:
-                    self.investigation = False
-                self.switch = True
+                self.stop_investigation()
             elif common == 'door':
                 break
             elif common == 'take':
@@ -364,23 +374,33 @@ class GameModel:
             if common == 'stop_investigation':
                 if self.investigation_item.tvshow.music:
                     self.investigation_item.tvshow.music.stop()
-                self.investigation_item = self.investigation_item.enter
-                if not self.investigation_item:
-                    self.investigation = False
-                self.switch = True
+                self.stop_investigation()
 
             elif common == 'switch':
                 self.investigation_item.tvshow.switch()
-                if self.investigation_item.tvshow.ispower:
-                    item.music.play()
+            elif common == 'watch':
+                self.investigation_item.tvshow.switch()
+                #播放男孩的講話
+                self.dialog = item.show
+                # 將漸暗的函式保存起來 講完話再漸暗
+                self.continue_function = [partial(self.start_darking),partial(self.investigation_item.tvshow.music.fadeout,3000)]
+                # 將漸暗完後要執行的函式保存起來
+                self.continue_function_d = [partial(self.investigation_item.power_switch),
+                                          partial(self.investigation_item.lock_on),
+                                          partial(self.stop_investigation)]
+                # 解鎖大門
+                self.cur_room.exit_door.unlock()
+                # 改變和阿公的對話
+                self.cur_room.bedroom_door.finsh_tv()
 
-            elif common == 'shotdown':
-                self.investigation_item.tvshow.power()
+            elif common == 'shutdown':
+                self.investigation_item.power_switch()
             elif common == 'dialog':
                 self.dialog = item.show
             elif common == 'take':
                 self.bag.save_item(item)
                 self.investigation_item.object.remove(item)
+
             else:
                 pass
 
@@ -389,10 +409,7 @@ class GameModel:
         for item in reversed(self.investigation_item.object):
             common = item.clicked(mouse_x, mouse_y)
             if common == 'stop_investigation':
-                self.investigation_item = self.investigation_item.enter
-                if not self.investigation_item:
-                    self.investigation = False
-                self.switch = True
+                self.stop_investigation()
             elif common == 'door':
                 break
             elif common == 'close':
@@ -441,10 +458,7 @@ class GameModel:
             common = item.clicked(mouse_x, mouse_y)
             # 退出調查畫面
             if common == 'stop_investigation':
-                self.investigation_item = self.investigation_item.enter
-                if not self.investigation_item:
-                    self.investigation = False
-                self.switch = True
+                self.stop_investigation()
             elif common == 'move':
                 # 檢查指針是否對應到答案
                 if item.index == item.ans:
@@ -486,10 +500,7 @@ class GameModel:
             common = item.clicked(mouse_x, mouse_y)
             # 退出調查畫面
             if common == 'stop_investigation':
-                self.investigation_item = self.investigation_item.enter
-                if not self.investigation_item:
-                    self.investigation = False
-                self.switch = True
+                self.stop_investigation()
             elif common == 'dialog':
                 self.dialog = item.show
             elif common == 'homework':
@@ -497,10 +508,12 @@ class GameModel:
                     if  self.bag.hold.is_sharp:
                         # 解鎖電視
                         self.cur_room.tv.unlock()
+                        # 和爺爺對話的改變
+                        self.cur_room.bedroom_door.finsh_homework()
                         # 進入對話框
                         self.dialog = item.show_doing
                         # 將代辦函式存起來 對話完再執行
-                        self.continue_function = item.done
+                        self.continue_function = [partial(item.done)]
                     else:
                         self.dialog = item.show_undone
             else:
@@ -516,10 +529,7 @@ class GameModel:
                     return
                 common = item.clicked(mouse_x, mouse_y)
                 if common == 'stop_investigation':
-                    self.investigation_item = self.investigation_item.enter
-                    if not self.investigation_item:
-                        self.investigation = False
-                    self.switch = True
+                    self.stop_investigation()
                 # 除了被點到 還要確定滑鼠是按住的才能拖動
                 elif common == 'drag':
                     item.drag_set()
@@ -663,7 +673,8 @@ class GameModel:
 
     def start_ch3(self):
         # 開場動畫
-        self.show = Show(*CH3_START_SHOW)
+        self.show = Show(*CH2_END_SHOW)
+        self.continue_show = [Show(*CH3_START_SHOW)]
         pass
     def start_ch4(self):
         # TODO :　清除上一章的物件(可選)
@@ -677,6 +688,15 @@ class GameModel:
         self.investigation = True
         self.investigation_item = PhotoFrame(GAME_X, GAME_Y)
 
+    def start_switching(self):
+        self.switch = True
+    def start_darking(self):
+        self.to_dark = True
+    def stop_investigation(self):
+        self.investigation_item = self.investigation_item.enter
+        if not self.investigation_item:
+            self.investigation = False
+        self.switch = True
 
 
     @property

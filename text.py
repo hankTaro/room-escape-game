@@ -59,6 +59,16 @@ CH2_START_BGM = None
 
 CH2_START_SHOW = (CH2_START_TEXT,CH2_START_SPEAKER,CH2_START_IMAGE,CH2_START_SOUND,CH2_START_BGM)
 
+
+# 章節2結尾 (男孩要離開爺爺家)
+CH2_END_TEXT = ["15 X 24 = ...\n(啪)\n阿!糟糕鉛筆斷掉了\n不知道削鉛筆機在哪裡...\n去找找吧!"]
+CH2_END_SPEAKER = ["小男孩"]
+CH2_END_IMAGE = None
+CH2_END_SOUND = [(clicked_sound,0)]
+CH2_END_BGM = None
+
+CH2_END_SHOW = (CH2_END_TEXT,CH2_END_SPEAKER,CH2_END_IMAGE,CH2_END_SOUND,CH2_END_BGM)
+
 # 章節3開場 (結局連續動畫)
 CH3_START_TEXT = ["媽媽我回來了","阿你去爺爺家寫作業喔","對阿，我寫完了","阿你明天上學的東西準備好了嗎，不要明天又要我送東西過去",
                   "我準備好了啦，我好累喔，我要去睡覺了","外頭風吹動樹葉的沙沙聲和家中母親走動的腳步聲使你慢慢進入夢鄉",

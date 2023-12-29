@@ -251,9 +251,14 @@ class GameView:
     def draw_opening(self,opening,value):
         # 畫背景
         self.win.blit(opening.image, (0, 0))
+        # black_surface = self.black_b
+        # black_surface.set_alpha(value)
+        # self.win.blit(black_surface, (0, 0))
+    def draw_dark(self,value):
         black_surface = self.black_b
         black_surface.set_alpha(value)
         self.win.blit(black_surface, (0, 0))
+
 
     # 聲音部分
     # 背景聲音

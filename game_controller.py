@@ -157,6 +157,9 @@ class GameController:
             if self.bgm_paused:
                 pygame.mixer.music.unpause()
                 self.bgm_paused = False
+        # 畫漸暗
+        if self.model.to_dark:
+            self.view.draw_dark(self.model.value)
 
 
 
