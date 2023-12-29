@@ -46,11 +46,11 @@ tv_power_off_image = pygame.transform.scale(pygame.image.load(f"image/Ch2/Tv/pow
 tv_power_btn = pygame.transform.scale(pygame.image.load(f"image/Ch2/Tv/power.png"), (GAME_WIDTH, GAME_HEIGHT))
 tv_switch_btn = pygame.transform.scale(pygame.image.load(f"image/Ch2/Tv/switch.png"), (GAME_WIDTH, GAME_HEIGHT))
 tv_decipher_card_detail_image = pygame.transform.scale(pygame.image.load(f"image/Ch2/Tv/tv_decipher_card.png"), (GAME_WIDTH, GAME_HEIGHT))
-tv_channel_1 = cv2.VideoCapture("image/Ch2/Tv/TV_show/meme_1.mp4")
+tv_channel_1 = cv2.VideoCapture("image/Ch2/Tv/TV_show/Sequence30.mp4")
 tv_channel_2 = cv2.VideoCapture("image/Ch2/Tv/TV_show/tyler1 scream meme.mp4")
-tv_channel_3 = pygame.transform.scale(pygame.image.load(f"image/Ch2/Tv/TV_show/channel_1.png"), (GAME_WIDTH, GAME_HEIGHT))
-tv_channel_4 = cv2.VideoCapture("image/Ch2/Tv/TV_show/Pornhub Video intro.mp4")
-tv_channel_5 = cv2.VideoCapture("image/Ch2/Tv/TV_show/KFC Chickendales Mother’s Day Performance.mp4")
+tv_channel_3 = cv2.VideoCapture("image/Ch2/Tv/TV_show/Pornhub Video intro.mp4")
+tv_channel_4 = cv2.VideoCapture("image/Ch2/Tv/TV_show/KFC Chickendales Mother’s Day Performance.mp4")
+tv_channel_5 = cv2.VideoCapture("image/Ch2/Tv/TV_show/EVA.mp4")
 # 寶箱 =====================================================================================================
 chest_image = pygame.transform.scale(pygame.image.load(f"image/Ch2/TvShelf/chest.png"), (GAME_WIDTH, GAME_HEIGHT))
 # 地球儀 ===================================================================================================
@@ -81,10 +81,11 @@ pencil_observe = [pygame.image.load(f"image/Icon/penceil_{i}.png") for i in rang
 
 # 聲音
 mute = None
-tv_show_1_sound = pygame.mixer.Sound('music/meme_1.wav')
+tv_show_1_sound = pygame.mixer.Sound('music/Sequence.mp3')
 tv_show_2_sound = pygame.mixer.Sound('music/tyler1 scream meme.wav')
-tv_show_4_sound = pygame.mixer.Sound('music/Pornhub Video intro.wav')
-tv_show_5_sound = pygame.mixer.Sound('music/KFC Chickendales Mother’s Day Performance.wav')
+tv_show_3_sound = pygame.mixer.Sound('music/Pornhub Video intro.wav')
+tv_show_4_sound = pygame.mixer.Sound('music/KFC Chickendales Mother’s Day Performance.wav')
+tv_show_5_sound = pygame.mixer.Sound('music/EVA.mp3')
 clock_sound = pygame.mixer.Sound('music/clock.wav')
 clock_hand_sound = pygame.mixer.Sound('music/clock_hand.wav')
 walking_sound = pygame.mixer.Sound('music/walking.wav')
@@ -515,7 +516,7 @@ class TvPowerCh2:
 class TvShowCh2:
     def __init__(self, x, y):
         self.all_show = [tv_channel_1,tv_channel_2,tv_channel_3,tv_channel_4,tv_channel_5]
-        self.all_music = [tv_show_1_sound,tv_show_2_sound,0,tv_show_4_sound,tv_show_5_sound]
+        self.all_music = [tv_show_1_sound,tv_show_2_sound,tv_show_3_sound,tv_show_4_sound,tv_show_5_sound]
         self.index = 0
         self.size = len(self.all_show)
         self.image = self.all_show[self.index]
@@ -556,6 +557,7 @@ class TvShowCh2:
             if self.music:
                 self.music.play()
         else:
+            self.image.set(cv2.CAP_PROP_POS_FRAMES, 0) # 關電視後將影片重製
             if self.music:
                 self.music.stop()
 

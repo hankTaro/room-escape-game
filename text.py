@@ -27,6 +27,10 @@ announcement_sound = pygame.mixer.Sound('music/announcement.mp3')
 electrocardiogram_sound = pygame.mixer.Sound('music/electrocardiogram.mp3')
 time_travel_sound = pygame.mixer.Sound('music/time_travel.mp3')
 hey_sound = pygame.mixer.Sound('music/hey.mp3')
+kid_haha_sound = pygame.mixer.Sound('music/kid_haha.mp3')
+cabinet_moving_sound = pygame.mixer.Sound('music/cabinet_moving.mp3')
+key_unlock_sound = pygame.mixer.Sound('music/key_unlock.mp3')
+kid_crying_sound = pygame.mixer.Sound('music/kid_crying2.mp3')
 
 # bgm
 bird_and_bug = pygame.mixer.Sound('music/ch1_background.mp3')
@@ -87,7 +91,7 @@ CH3_START_TEXT = ["媽媽我回來了","阿你去爺爺家寫作業喔","對阿�
                   "我的小孩還在裡面阿阿!!!",".\n..\n...\n",
                   "救救我...\n我...在\n我...在這...這裡", # index = 19
                   "你嘗試大聲呼救，但光是呼吸就讓你用盡全力\n那份沉重剝奪了你發聲的能力，每一次的嘗試都只能得到微弱而短促的迴響\n隨著時間的流逝，你的意識也越來越模糊...",
-                  ".\n..\n...\n",
+                  ".\n..\n...\n", #index = 21
                   "你還好嗎?\n嘿!這裡還有生還者，快過來幫忙!!", # index = 22
                   ".\n..\n...\n","嘿 你會沒事的，撐下去", # index = 24
                   ".\n..\n...\n.\n..\n...\n.\n..\n...",
@@ -114,7 +118,34 @@ CH3_START_SPEAKER = ["小男孩","媽媽","小男孩","媽媽","小男孩","旁�
                      ]
 CH3_START_IMAGE = [(image_1,0)]
 CH3_START_SOUND = [(clicked_sound,0),(wind_blow_leaf_sound,6),(earthquake_sound,7),(screaming_sound,8),(fall_down_sound,9),(announcement_sound,11),
-                   (screaming_sound,19),(hey_sound,22),(electrocardiogram_sound,24),(announcement_sound,26),(time_travel_sound,27)]
+                   (screaming_sound,19),(kid_haha_sound,21),(hey_sound,22),(electrocardiogram_sound,24),(announcement_sound,26),(time_travel_sound,27)]
 CH3_START_BGM = None
 
 CH3_START_SHOW = (CH3_START_TEXT,CH3_START_SPEAKER,CH3_START_IMAGE,CH3_START_SOUND,CH3_START_BGM)
+
+# 章節3結尾
+CH3_END_TEXT = ["那真是如同煉獄般的一天...",
+                "你將拚好的相片翻面\n上頭寫著寶物就在我們一起做的櫃子後面\n永遠愛你的爺爺",
+                "一起做的櫃子...",
+                "你慢慢的走向地球儀下方的櫃子\n你將櫃子移開...",
+                "這櫃子後面竟然有個空間...", # index = 4
+                "你往裡頭探去\n"
+                "裡頭放了個上鎖的箱子\n"
+                "你將箱子拿出來後，將你帶來的鑰匙插進鎖孔，大小十分契合\n"
+                "你旋轉鑰匙....", # index = 5
+                "盒子裡頭放著整套木工工具、一個獅子木雕以及一張卡片，卡片上寫著:",
+                "恭喜你破解了重重謎題，這套木工工具是送給你的生日禮物\n"
+                "這樣你以後就可以和我一同做工而不必搶工具了\n"
+                "另外這個木雕獅子，是作為保護和祈福的象徵，祝福你能平平安安的長大",
+                "在閱讀卡片的時候，你發覺你的視線逐漸模糊，卡片上的字也被滴落的水珠緩緩暈開...",
+                ".\n..\n...\n"
+                "謝謝你...爺爺\n我很喜歡...\n然後...\n雖然已經過了10年...\n但是...我來探望你了"
+                ]
+CH3_END_SPEAKER = ["小男孩","旁白","小男孩","旁白","旁白","小男孩", # index = 4
+                   "旁白" # index = 5
+                   ,"卡片","旁白","小男孩"# index = 8
+                   ]
+CH3_END_IMAGE = [(image_1,0)]
+CH3_END_SOUND = [(cabinet_moving_sound,4),(key_unlock_sound,6),(kid_crying_sound,8)]
+CH3_END_BGM = None
+CH3_END_SHOW = (CH3_END_TEXT,CH3_END_SPEAKER,CH3_END_IMAGE,CH3_END_SOUND,CH3_END_BGM)
