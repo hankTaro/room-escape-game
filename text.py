@@ -141,7 +141,7 @@ CH3_START_IMAGE = [(image_1,0)]
 CH3_START_SOUND = [(door_open_sound,0),(wind_blow_leaf_sound,5),(earthquake_sound,7),(announcement_sound,9),
                    (screaming_sound,11),(kid_breath_long_sound,17),(hey_sound,20),(rock_sound,21),(electrocardiogram_sound,22),(radio_sound,24),(time_travel_sound,25)]
 # 那些音效要播完
-CH3_START_SOUND_WAIT = None #[0,7]
+CH3_START_SOUND_WAIT = [0,7,21,25]
 CH3_START_BGM = None
 
 CH3_START_SHOW = (CH3_START_TEXT,CH3_START_SPEAKER,CH3_START_IMAGE,CH3_START_SOUND,CH3_START_BGM,CH3_START_SOUND_WAIT)
