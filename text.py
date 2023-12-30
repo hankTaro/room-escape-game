@@ -65,8 +65,12 @@ CH2_START_SHOW = (CH2_START_TEXT,CH2_START_SPEAKER,CH2_START_IMAGE,CH2_START_SOU
 
 
 # 章節2結尾 (男孩要離開爺爺家)
-CH2_END_TEXT = ["15 X 24 = ...\n(啪)\n阿!糟糕鉛筆斷掉了\n不知道削鉛筆機在哪裡...\n去找找吧!"]
-CH2_END_SPEAKER = ["小男孩"]
+CH2_END_TEXT = ["等等","怎麼了","明天你生日記得過來爺爺這邊\n我準備了一連串的解謎來給你玩，看你能不能破關找到爺爺要給你了寶藏",
+                " 寶藏是甚麼啊?","哈哈哈，現在說的話就不好玩了\n"
+                "你明天來就知道了\n"
+                "然後這個鑰匙給你，收好別用丟了\n"
+                "明天解謎你會用上這個鑰匙的，好了快回家吧"]
+CH2_END_SPEAKER = ["爺爺","小男孩","爺爺","小男孩","爺爺"]
 CH2_END_IMAGE = None
 CH2_END_SOUND = [(clicked_sound,0)]
 CH2_END_BGM = None
