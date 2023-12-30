@@ -26,7 +26,6 @@ exit_image = pygame.transform.scale(pygame.image.load(f"image/Icon/exit.png"), (
 
 living_room_window_image = pygame.transform.scale(pygame.image.load(f"image/living_room/window.png"), (GAME_WIDTH, GAME_HEIGHT))
 
-door_image = pygame.transform.scale(pygame.image.load(f"image/Object/door.png"), (int(200), int(400)))
 #yj
 door_image_1  = pygame.transform.scale(pygame.image.load(f"image/living_room/Door/door_1.png"), (GAME_WIDTH, GAME_HEIGHT))
 door_image_2  = pygame.transform.scale(pygame.image.load(f"image/living_room/Door/door_2.png"), (GAME_WIDTH, GAME_HEIGHT))
@@ -44,7 +43,7 @@ globe_table_image = pygame.transform.scale(pygame.image.load(f"image/study/Globe
 window_image = pygame.transform.scale(pygame.image.load(f"image/study/window.png"), (GAME_WIDTH, GAME_HEIGHT))
 chest_image = pygame.transform.scale(pygame.image.load(f"image/living_room/TvShelf/chest.png"), (GAME_WIDTH, GAME_HEIGHT))
 dropped_painting_image = pygame.transform.scale(pygame.image.load(f"image/study/dropped_painting.png"), (GAME_WIDTH, GAME_HEIGHT))
-wife_1_image = pygame.transform.scale(pygame.image.load(f"image/Object/Wife/wife.png"), (GAME_WIDTH, GAME_HEIGHT))
+
 
 # 繪畫相關 ============================================================
 painting_i_image = pygame.transform.scale(pygame.image.load(f"image/study/painting.png"), (GAME_WIDTH, GAME_HEIGHT))
@@ -122,6 +121,7 @@ photo_frame_image = pygame.transform.scale(pygame.image.load(f"image/study/Photo
 photo_fragments_image = [pygame.transform.scale(pygame.image.load(f"image/study/PhotoFrame/photo_{i}.png"), (GAME_WIDTH, GAME_HEIGHT)) for i in range(4)]
 photo_fragments_take_image = [pygame.transform.scale(pygame.image.load(f"image/study/PhotoFrame/photo_take_{i}.png"), (GAME_WIDTH, GAME_HEIGHT)) for i in range(4)]
 photo_frame_puzzle = pygame.transform.scale(pygame.image.load(f"image/study/PhotoFrame/photo_frame_puzzle.png"), (GAME_WIDTH, GAME_HEIGHT))
+photo_frame_clear = pygame.transform.scale(pygame.image.load(f"image/study/PhotoFrame/photo_frame_clear.png"), (GAME_WIDTH, GAME_HEIGHT))
 
 # 可拾取物件 ===========================================================
 handle_image = pygame.transform.scale(pygame.image.load(f"image/living_room/Clock/Handle.png"), (GAME_WIDTH, GAME_HEIGHT))
@@ -134,12 +134,14 @@ chest_key_icon = pygame.transform.scale(pygame.image.load(f"image/Icon/chest_key
 tv_decipher_card_detail_icon = pygame.transform.scale(pygame.image.load(f"image/Icon/tv_decipher_card_detail_icon.png"), (ICON_SIZE, ICON_SIZE))
 photo_fragments_icon = [pygame.transform.scale(pygame.image.load(f"image/Icon/photo_{i}_icon.png"), (ICON_SIZE, ICON_SIZE)) for i in range(4)]
 cheat_code_icon = pygame.transform.scale(pygame.image.load(f"image/Icon/cheat_code_icon.png"), (ICON_SIZE, ICON_SIZE))
+photo_complete_icon = pygame.transform.scale(pygame.image.load(f"image/Icon/photo_complete_icon.png"), (ICON_SIZE, ICON_SIZE))
 # 調查畫面===============================================================
 password_hint_1_observe = pygame.image.load(f"image/Observe/password_hint_1_observe.png")
 handle_observe = pygame.image.load(f"image/Observe/handle_observe.png")
 chest_key_observe = pygame.image.load(f"image/Observe/chest_key_observe.png")
 photo_fragments_observe = [pygame.image.load(f"image/Icon/photo_{i}_icon.png") for i in range(4)]
 cheat_code_observe = pygame.image.load(f"image/Observe/cheat_code_observe.png")
+photo_complete_observe = pygame.image.load(f"image/Icon/photo_complete_icon.png")
 
 # 彩蛋相關 ===========================================================
 cheat_code_image = pygame.transform.scale(pygame.image.load(f"image/living_room/Tv/cheat_code.png"), (GAME_WIDTH, GAME_HEIGHT))
@@ -285,7 +287,7 @@ class DoorToBedRoom:
 
 #把所有doors存成class attribute，用room id來決定要用哪一個圖片
 class DoorToLivingRoom:
-    doors = [door_image_2_reverse, door_image]
+    doors = [door_image_2_reverse, door_image_1]
     def __init__(self, x, y, room):
         self.image = self.doors[room]
         self.x = x
@@ -985,8 +987,10 @@ class BookShelf:
         # 入口 也就是上一層 離開調查時要回到的地方 None 代表離開調查
         self.enter = None
 
+        self.photo_frame = PhotoFrame(GAME_X, GAME_Y)
+
         self.focus = book_shelf_puzzle
-        self.object = [ExitButton(500, 550), PhotoFrame(GAME_X, GAME_Y), PhotoFragmentsTake(GAME_X, GAME_Y, 0),
+        self.object = [ExitButton(500, 550), self.photo_frame, PhotoFragmentsTake(GAME_X, GAME_Y, 0),
                        Knob(GAME_X, GAME_Y, 0), Knob(GAME_X, GAME_Y, 1), Knob(GAME_X, GAME_Y, 2), Knob(GAME_X, GAME_Y, 3),
                        Locker(GAME_X, GAME_Y), RightDoor(GAME_X, GAME_Y), LeftDoor(GAME_X, GAME_Y)]
         # locker 的密碼相關
@@ -1049,12 +1053,13 @@ class PhotoFrame:
         self.rect = self.image.get_rect()
         self.rect.topleft = (x, y)
         self.mask = pygame.mask.from_surface(self.image)
+        self.exit_button = ExitButton(500, 550)
 
         # 入口 也就是上一層 離開調查時要回到的地方 None 代表離開調查
         self.enter = None
         self.focus = photo_frame_puzzle
         # 這裡的起始位置要手動調整，使得碎片一開始疊在向框的外面
-        self.object = [ExitButton(500, 550)]
+        self.object = [self.exit_button]
         self.fragments = [PhotoFragments(GAME_X + 400, GAME_Y + 150, 0),PhotoFragments(GAME_X + 450, GAME_Y + 150, 1),
                        PhotoFragments(GAME_X + 300, GAME_Y + 40, 2),PhotoFragments(GAME_X + 300, GAME_Y - 20, 3)]
         # 拚好的碎片數
@@ -1070,6 +1075,10 @@ class PhotoFrame:
         self.fix_num += 1
         if self.fix_num == 4:
             return 'done'
+
+    def clear(self):
+        self.object = [self.exit_button]
+        self.focus = photo_frame_clear
 # 相框謎題 ======================================================================
 
 #可互動物件，investigation尚未完成
@@ -1164,9 +1173,26 @@ class GlobeTable:
         self.rect.topleft = (x, y)
         self.mask = pygame.mask.from_surface(self.image)
 
+        # 在第三章才可互動 點擊後進入 CH3_2_END_SHOW
+        self.lock = True
+
+
+
+        self.music = [(glass_sound, 0)]
+
+        self.speaker = ["旁白"]
+        self.dialog = ["一個做工略為粗糙的櫃子，在周圍的家具中顯得有點突兀"]
+        self.show = Show(self.dialog, self.speaker, None, None, None)
+
     def clicked(self, x: int, y: int):
         if self.rect.collidepoint(x, y) and self.mask.get_at((x - self.rect.x, y - self.rect.y)) != 0:
-            return 'none'
+            # 在第三章才可互動 點擊後進入 CH3_2_END_SHOW
+            if self.lock:
+                return 'dialog'
+            else:
+                return 'find treasure'
+    def unlock(self):
+        self.lock = False
 
 
 # 非可互動物件
@@ -1316,7 +1342,7 @@ class PhotoFragmentsTake:
         # 調查中此物品的敘述
         self.description = "一張因時間而泛黃的相片碎片\n" \
                            "裡頭似乎描繪著某個你無比熟悉的事物\n" \
-                           "相片的背面有一些數字與符號\n" \
+                           "相片的背面有寫著一些文字\n" \
                            "但是太片段了，無法理解其含義..."
 
         self.num = num
@@ -1335,6 +1361,19 @@ class PhotoFragmentsTake:
             self.music.play()
             # 被撿起放入物品欄
             return 'take'
+
+class AssembledPhoto:
+    def __init__(self, x, y):
+        self.name = "與爺爺的合照"
+        self.icon = photo_complete_icon
+        # 調查中此物品的樣貌
+        self.observe = photo_complete_observe
+        # 調查中此物品的敘述
+        self.description = "你與爺爺的合照，上頭寫著:\n\n" \
+                           "「寶藏就在我們一起做的櫃子後面\n        By 永遠愛你的爺爺」"
+
+        self.music = pick_up_items_sound
+
 
 # 彩蛋物件類 =====================================
 class CheatCode:

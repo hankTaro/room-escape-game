@@ -30,16 +30,20 @@ class LivingRoom:
         self.right_button = RightButton(WIN_WIDTH - 50,WIN_HEIGHT/2)
         self.left_button = LeftButton(20,WIN_HEIGHT/2)
 
+        self.book_shelf = BookShelf(GAME_X, GAME_Y)
+        self.globe_table = GlobeTable(GAME_X, GAME_Y)
+
+
         # 此房間在不同牆面有的物品/座標 (包括移動鍵)
         # 牆面1有這些東西
         self.__object_1 = [self.right_button,self.left_button,
                            DoorToExit(GAME_X, GAME_Y),LivingRoomWindow(GAME_X, GAME_Y)]
         # 牆面2有這些東西
         self.__object_2 = [self.right_button,self.left_button,
-                           DoorToBedRoom(GAME_X, GAME_Y),Clock(GAME_X, GAME_Y),BookShelf(GAME_X, GAME_Y)]
+                           DoorToBedRoom(GAME_X, GAME_Y),Clock(GAME_X, GAME_Y),self.book_shelf]
         # 牆面3有這些東西
         self.__object_3 = [self.right_button,self.left_button,DoorToKitchen(GAME_X, GAME_Y),
-                           Tv(GAME_X, GAME_Y,True),TvShelf(GAME_X, GAME_Y), Painting(GAME_X, GAME_Y),Globe(GAME_X, GAME_Y),GlobeTable(GAME_X, GAME_Y)]
+                           Tv(GAME_X, GAME_Y,True),TvShelf(GAME_X, GAME_Y), Painting(GAME_X, GAME_Y),Globe(GAME_X, GAME_Y),self.globe_table]
         self.__object_4 = [self.right_button, self.left_button,Desk(GAME_X, GAME_Y),Calendar(GAME_X, GAME_Y),TrashCan(GAME_X, GAME_Y)]
 
         # 當前牆面/建立此房間的牆面

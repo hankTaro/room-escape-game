@@ -73,6 +73,15 @@ class GameModel:
         # 暫存對話完要給予的物品
         self.give_item = None
 
+        # 存第一章的room
+        self.room_ch1 = {'living_room': LivingRoom(),
+                      'study': Study(),
+                      'bedroom': Bedroom()}
+        self.room_ch2 = {'living_room': LivingRoomCh2(),
+                     'study': Study(),
+                     'bedroom': Bedroom()}
+
+
         # BGM
         self.bgm = None
 
@@ -627,6 +636,10 @@ class GameModel:
             elif common == 'done':
                 if self.chapter == 2:
                     self.start_ch3()
+            elif common == 'find treasure':
+                # TODO : 播放最後動畫與結局
+                print("yo")
+                pass
 
             elif common == 'none':
                 pass
@@ -644,9 +657,8 @@ class GameModel:
 
     def start_ch1(self):
         # TODO :　建立房間/物品/可互動元素
-        self.room = {'living_room': LivingRoom(),
-                      'study': Study(),
-                      'bedroom': Bedroom()}
+        self.room = self.room_ch1
+
         self.cur_room = self.room['living_room']
 
         # 第一章的BMG
@@ -661,14 +673,11 @@ class GameModel:
 
         pass
     def start_ch2(self):
-        # TODO :　清除上一章的物件(可選)
-        # TODO :　建立房間/物品/可互動元素
+
         # 當前章節
         self.chapter = 2
         # 本章節會用到的所有房間
-        self.room = {'living_room': LivingRoomCh2(),
-                     'study': Study(),
-                     'bedroom': Bedroom()}
+        self.room = self.room_ch2
         # 當前房間
         self.cur_room = self.room['living_room']
         # 當前牆面
@@ -706,6 +715,37 @@ class GameModel:
         # 開場動畫
         self.show = Show(*CH2_END_SHOW)
         self.continue_show = [Show(*CH3_START_SHOW)]
+
+        # 當前章節
+        self.chapter = 3
+        # 本章節會用到的所有房間
+        self.room = self.room_ch1
+        # 當前房間
+        self.cur_room = self.room['living_room']
+        # 當前牆面
+        self.wall = 2
+        # 是否有在調查物件
+        self.investigation = True
+        # 在調查哪個物件
+        self.investigation_item = self.cur_room.book_shelf.photo_frame
+        # 是否在轉場
+        self.switch = False
+        # 下方對話框
+        self.dialog = Show(*CH3_END_SHOW)
+        # 是否在調查手中物品
+        self.observe = False
+        # 物品欄
+        self.bag = self.bag_ch1
+        # 將地球儀櫃子解鎖
+        self.cur_room.globe_table.unlock()
+
+        # 對話結束後獲得相片 以及 將相框移除
+        self.give_item = AssembledPhoto(GAME_X,GAME_Y)
+        self.continue_function = [self.cur_room.book_shelf.photo_frame.clear]
+
+
+        # self.show = Show(*CH3_START_SHOW)
+
         pass
     def start_ch4(self):
         # TODO :　清除上一章的物件(可選)

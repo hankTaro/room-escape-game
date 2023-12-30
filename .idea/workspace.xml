@@ -4,8 +4,15 @@
     <list default="true" id="3e0b4790-5d83-4476-a83f-f94379d1ad2c" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/game_model.py" beforeDir="false" afterPath="$PROJECT_DIR$/game_model.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/game_view.py" beforeDir="false" afterPath="$PROJECT_DIR$/game_view.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/show.py" beforeDir="false" afterPath="$PROJECT_DIR$/show.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/image/Object/Book shelf.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/image/Object/Newspaper/newspaper_0.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/image/Object/Wife/wife.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/image/Object/bookshelf.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/image/Object/door.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/image/Object/window.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/music/kid_haha.mp3" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/object.py" beforeDir="false" afterPath="$PROJECT_DIR$/object.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/room.py" beforeDir="false" afterPath="$PROJECT_DIR$/room.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/text.py" beforeDir="false" afterPath="$PROJECT_DIR$/text.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -150,13 +157,8 @@
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/object.py</url>
-          <line>1075</line>
-          <option name="timeStamp" value="5" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/game_model.py</url>
-          <line>393</line>
-          <option name="timeStamp" value="12" />
+          <line>1166</line>
+          <option name="timeStamp" value="13" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
@@ -165,7 +167,7 @@
     <SUITE FILE_PATH="coverage/room_escape_game$main.coverage" NAME="main Coverage Results" MODIFIED="1702864813713" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/room_escape_game$show.coverage" NAME="show Coverage Results" MODIFIED="1703593817202" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/room_escape_game$test.coverage" NAME="test Coverage Results" MODIFIED="1703586368711" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/room_escape_game$main_py.coverage" NAME="main.py Coverage Results" MODIFIED="1703916977092" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/room_escape_game$main_py.coverage" NAME="main.py Coverage Results" MODIFIED="1703925234287" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/room_escape_game$game_controller.coverage" NAME="game_controller Coverage Results" MODIFIED="1702876073459" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/room_escape_game$game_view.coverage" NAME="game_view Coverage Results" MODIFIED="1703317900740" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/room_escape_game$test2.coverage" NAME="test2 Coverage Results" MODIFIED="1703592174042" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
