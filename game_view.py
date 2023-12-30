@@ -229,6 +229,18 @@ class GameView:
             tip = self.font_tip.render("點擊滑鼠以繼續...", True, (255, 255, 255))  # 渲染文字
             self.win.blit(tip, (WIN_WIDTH - tip.get_width() - 30, WIN_HEIGHT - tip.get_height() - 30))
 
+    def draw_ending(self,video):
+        ret, frame = video.read() #ret判斷結束了沒
+        if not ret:
+            return 'over'
+
+        frame = cv2.resize(frame,(WIN_WIDTH,WIN_HEIGHT)) #設定大小
+        frame = cv2.flip(frame, 1) # 做左右向反
+        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB) # 換成彩色
+        frame = pygame.surfarray.make_surface((np.rot90(frame)))  # 轉90度 畫在畫面上
+        self.win.blit(frame, (0,0)) #設定化的位置
+        pygame.time.delay(int(200 / (video.get(cv2.CAP_PROP_FPS)))) # 延遲畫面更新
+
 
 
     def scale_image_to_rect(self, image, rect):
@@ -250,7 +262,7 @@ class GameView:
         else:
             return 0
 
-    def draw_opening(self,opening,value):
+    def draw_opening(self,opening):
         # 畫背景
         self.win.blit(opening.image, (0, 0))
         # black_surface = self.black_b

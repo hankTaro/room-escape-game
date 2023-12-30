@@ -88,75 +88,86 @@ class GameController:
             self.events["pause"] = False
 
     def update_view(self):
-        # render background
-        self.view.draw_bg()
+        # 如果沒有鎖定螢幕 才可以更新畫面
+        if not self.model.fix_scream_to_dark:
+            # render background
+            self.view.draw_bg()
 
-        if self.model.opening is not None:
-            self.view.draw_opening(self.model.opening,self.model.value)
-            return
+            if self.model.opening is not None:
+                self.view.draw_opening(self.model.opening)
+                return
 
-        # # 畫出選單按鈕
-        # self.view.draw_menu_button(self.model.btn)
+            # 播最後動畫
+            if self.model.ending_mp4 is not None:
+                common = self.view.draw_ending(self.model.ending_mp4)
+                if common == 'over':
+                    self.model.ending_mp4 = None
+                    # 關閉遊戲
+                    self.events["game quit"] = True
+                return
 
-        # 在播動畫
-        if self.model.show is not None:
-            # 動畫時暫停BGM
-            if not self.bgm_paused:
-                pygame.mixer.music.pause()
-                self.bgm_paused = True
-            self.view.draw_show(self.model.show)
+            # # 畫出選單按鈕
+            # self.view.draw_menu_button(self.model.btn)
+
+            # 在播動畫
+            if self.model.show is not None:
+                # 動畫時暫停BGM
+                if not self.bgm_paused:
+                    pygame.mixer.music.pause()
+                    self.bgm_paused = True
+                self.view.draw_show(self.model.show)
+                # 畫出選單按鈕
+                self.view.draw_menu_button(self.model.btn)
+                # 如果在播動畫 不執行下面
+                return
+
             # 畫出選單按鈕
             self.view.draw_menu_button(self.model.btn)
-            # 如果在播動畫 不執行下面
-            return
 
-        # 畫出選單按鈕
-        self.view.draw_menu_button(self.model.btn)
-
-        # TODO : 各房間的場景切換
-        if not self.model.investigation:
-            self.view.draw_room(self.model.cur_room, self.model.wall)
-        else:
-            if isinstance(self.model.investigation_item, Tv) or isinstance(self.model.investigation_item, TvCh2):
-                self.view.draw_tv_item(self.model.investigation_item)
+            # TODO : 各房間的場景切換
+            if not self.model.investigation:
+                self.view.draw_room(self.model.cur_room, self.model.wall)
             else:
-                self.view.draw_item(self.model.investigation_item)
-            pass
+                if isinstance(self.model.investigation_item, Tv) or isinstance(self.model.investigation_item, TvCh2):
+                    self.view.draw_tv_item(self.model.investigation_item)
+                else:
+                    self.view.draw_item(self.model.investigation_item)
+                pass
 
-        # 轉場檢測
-        if self.model.switch == True:
-            common = self.view.fade_out(self.fade_count)
-            if common == 'end':
-                self.model.switch = False
-                self.fade_count = 255
-            else:
-                self.fade_count -= 20
-        # 畫出物品欄
-        self.view.draw_bag(self.model.bag)
-        # 劃出物品頁面切換鍵
-        self.view.draw_bag_page(self.model.page_bnt)
+            # 轉場檢測
+            if self.model.switch == True:
+                common = self.view.fade_out(self.fade_count)
+                if common == 'end':
+                    self.model.switch = False
+                    self.fade_count = 255
+                else:
+                    self.fade_count -= 20
+            # 畫出物品欄
+            self.view.draw_bag(self.model.bag)
+            # 劃出物品頁面切換鍵
+            self.view.draw_bag_page(self.model.page_bnt)
 
-        # 劃出對話文字 (依照位置) 目前沒再用
-        # if self.model.text != "":
-        #     self.view.speak(self.model.text, self.model.text_pos)
+            # 劃出對話文字 (依照位置) 目前沒再用
+            # if self.model.text != "":
+            #     self.view.speak(self.model.text, self.model.text_pos)
 
-        # 劃出對話框(下方固定位置)
-        if self.model.dialog is not None:
-            # 對話時暫停BGM
-            if not self.bgm_paused:
-                pygame.mixer.music.pause()
-                self.bgm_paused = True
-            self.view.murmur(self.model.dialog)
+            # 劃出對話框(下方固定位置)
+            if self.model.dialog is not None:
+                # 對話時暫停BGM
+                if not self.bgm_paused:
+                    pygame.mixer.music.pause()
+                    self.bgm_paused = True
+                self.view.murmur(self.model.dialog)
 
-        # 畫出手中物品調查頁面
-        if self.model.observe:
-            self.view.draw_observe(self.model.bag.hold)
+            # 畫出手中物品調查頁面
+            if self.model.observe:
+                self.view.draw_observe(self.model.bag.hold)
 
-        #如果當前沒有對話 沒有動畫則繼續播放BGM
-        if  self.model.dialog is None and self.model.show is None:
-            if self.bgm_paused:
-                pygame.mixer.music.unpause()
-                self.bgm_paused = False
+            #如果當前沒有對話 沒有動畫則繼續播放BGM
+            if  self.model.dialog is None and self.model.show is None:
+                if self.bgm_paused:
+                    pygame.mixer.music.unpause()
+                    self.bgm_paused = False
         # 畫漸暗
         if self.model.to_dark:
             self.view.draw_dark(self.model.value)

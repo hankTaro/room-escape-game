@@ -85,6 +85,9 @@ class GameModel:
         # BGM
         self.bgm = None
 
+        # 片尾動畫
+        self.ending_mp4 = None
+
         #動畫結束後要執行的指令
         self.continue_function = None
 
@@ -96,6 +99,9 @@ class GameModel:
 
         # show 撥完後要執行的指令
         self.continue_show = None
+
+        # 固定畫面 在全黑前 不更新畫面
+        self.fix_scream_to_dark = False
 
 
 
@@ -187,6 +193,7 @@ class GameModel:
             self.value += 5
             if self.value >= 255:
                 self.to_dark = False
+                self.fix_scream_to_dark = False
                 self.value = 0
                 if self.continue_function_d is not None:
                     for func in self.continue_function_d:
@@ -238,6 +245,13 @@ class GameModel:
                         self.show = self.continue_show.pop()
                         if not self.continue_show:
                             self.continue_show = None
+                        # 確保所有動畫播完才執行function
+                        return
+                    # show 播完要連續執行的指令
+                    if self.continue_function is not None:
+                        for func in self.continue_function:
+                            func()
+                        self.continue_function = None
 
 
             return
@@ -637,8 +651,12 @@ class GameModel:
                 if self.chapter == 2:
                     self.start_ch3()
             elif common == 'find treasure':
-                # TODO : 播放最後動畫與結局
-                print("yo")
+                # 播放最後動畫與結局
+                self.show = Show(*CH3_2_END_SHOW)
+                # 鎖定畫面 漸暗
+                self.continue_function = [self.fix_scream_to_dark_set,self.start_darking]
+                # 漸暗完將播放影片
+                self.continue_function_d = [self.play_end_mp4]
                 pass
 
             elif common == 'none':
@@ -713,8 +731,8 @@ class GameModel:
 
     def start_ch3(self):
         # 開場動畫
-        self.show = Show(*CH2_END_SHOW)
-        self.continue_show = [Show(*CH3_START_SHOW)]
+        # self.show = Show(*CH2_END_SHOW)
+        # self.continue_show = [Show(*CH3_START_SHOW)]
 
         # 當前章節
         self.chapter = 3
@@ -774,6 +792,10 @@ class GameModel:
         self.show = show
     def set_dialog(self,show):
         self.dialog = show
+    def play_end_mp4(self):
+        self.ending_mp4 = cv2.VideoCapture("image/living_room/Tv/TV_show/tyler1 scream meme.mp4")
+    def fix_scream_to_dark_set(self):
+        self.fix_scream_to_dark = True
 
 
     @property

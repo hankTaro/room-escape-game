@@ -35,6 +35,7 @@ electrocardiogram_sound = pygame.mixer.Sound('music/electrocardiogram_long.mp3')
 time_travel_sound = pygame.mixer.Sound('music/time_travel.mp3')
 hey_sound = pygame.mixer.Sound('music/hey.mp3')
 cabinet_moving_sound = pygame.mixer.Sound('music/cabinet_moving.mp3')
+key_give_sound = pygame.mixer.Sound('music/key_give.mp3')
 key_unlock_sound = pygame.mixer.Sound('music/key_unlock.mp3')
 kid_crying_sound = pygame.mixer.Sound('music/kid_crying2.mp3')
 pencil_writing_sound = pygame.mixer.Sound('music/鉛筆寫字聲.mp3')
@@ -87,7 +88,7 @@ CH2_END_TEXT = ["等等","怎麼了","明天你生日記得過來爺爺這邊\n�
 
 CH2_END_SPEAKER = ["爺爺","小男孩","爺爺","小男孩","爺爺","爺爺",""]
 CH2_END_IMAGE = None
-CH2_END_SOUND = [(walking_fast_sound,0),(key_unlock_sound,5),(walking_sound,6)]
+CH2_END_SOUND = [(walking_fast_sound,0),(key_give_sound,5),(walking_sound,6)]
 CH2_END_BGM = None
 CH2_END_SOUND_WAIT = [0,6]
 
@@ -134,7 +135,7 @@ CH3_START_SPEAKER = ["小男孩","媽媽","小男孩","媽媽","小男孩","旁�
                      "年輕男人的聲音",# index = 20
                      "","年輕男人的聲音",# index = 22
                      "","廣播",
-                     "" #index = 25
+                     "" #index = 25 穿越 黑畫面
                      ]
 CH3_START_IMAGE = [(image_1,0)]
 CH3_START_SOUND = [(door_open_sound,0),(wind_blow_leaf_sound,5),(earthquake_sound,7),(announcement_sound,9),
@@ -151,30 +152,34 @@ CH3_END_TEXT = ["那真是如同煉獄般的一天...",
                 "我們...一起做的櫃子..."]
 CH3_END_SPEAKER = ["男子","旁白","男子"]
 CH3_END_IMAGE = None #[(image_1,0)]
-CH3_END_SOUND = [(cabinet_moving_sound,4),(key_unlock_sound,6),(kid_crying_sound,8)]
+CH3_END_SOUND = None #[(cabinet_moving_sound,4)]
 CH3_END_BGM = None
 CH3_END_SHOW = (CH3_END_TEXT,CH3_END_SPEAKER,CH3_END_IMAGE,CH3_END_SOUND,CH3_END_BGM)
 
 # 章節3結尾 - 2
-CH3_2_END_TEXT = ["你慢慢的走向地球儀下方的櫃子\n你將櫃子移開...",
-                "這櫃子後面竟然有個空間...", # index = 1
-                "你往裡頭探去\n"
-                "裡頭放了個上鎖的箱子\n"
-                "你將箱子拿出來後，將你帶來的鑰匙插進鎖孔，大小十分契合\n"
-                "你旋轉鑰匙....", # index = 2
-                "盒子裡頭放著整套木工工具、一個獅子木雕以及一張卡片，卡片上寫著:",
+CH3_2_END_TEXT = ["你靠近地球儀下方的櫃子，看著上方粗糙的手藝...\n你抵住櫃子的底部，施力將櫃子推開...",
+                " ",# index = 1
+                "這個櫃子被你推開後，你發現後面牆壁竟然有個空間..." 
+                "你往裡頭探去，發現了個金屬盒子\n"
+                "你將箱子取出，這是一個像是工具箱的金屬盒子，扣具上頭有個鎖孔\n"
+                "你將你帶來的鑰匙插進鎖孔...\n"
+                "鑰匙輕易地滑了進去，大小十分契合\n"
+                "你將鑰匙緩慢旋轉....", # index = 2
+                " ", # index = 3 開鎖
+                "扣具的鎖被你解開了\n"
+                "你將蓋子打開，看見盒子裡頭放著整套木工工具、一個獅子木雕以及一張卡片\n卡片上寫著:", # index = 4
                 "恭喜你破解了重重謎題，這套木工工具是送給你的生日禮物\n"
                 "這樣你以後就可以和我一同做工而不必搶工具了\n"
-                "另外這個木雕獅子，是作為保護和祈福的象徵，祝福你能平平安安的長大",
-                "在閱讀卡片的時候，你發覺你的視線逐漸模糊，卡片上的字也被滴落的水珠緩緩暈開...",
+                "另外這個木雕獅子，是作為保護和祈福的象徵，祝福你能平平安安的長大", # index = 5
+                "在閱讀卡片的時候，你發覺你的視線逐漸模糊，卡片上的字也被滴落的水珠緩緩暈開...", # index = 6
                 ".\n..\n...\n"
-                "謝謝你...爺爺\n我很喜歡...\n然後...\n雖然已經過了10年...\n但是...我來探望你了"
+                "謝謝你...爺爺\n我很喜歡...\n然後...\n雖然已經過了10年...\n但是...我來探望你了" # index = 7
                 ]
-CH3_2_END_SPEAKER = ["旁白","旁白","小男孩", # index = 1
-                   "旁白" # index = 2
-                   ,"卡片","旁白","小男孩"# index = 5
-                   ]
+CH3_2_END_SPEAKER = ["旁白","", # index = 1
+                     "旁白","", # index = 3
+                     "旁白","卡片", # index = 5
+                     "旁白","男子"]
 CH3_2_END_IMAGE = None #[(image_1,0)]
-CH3_2_END_SOUND = [(cabinet_moving_sound,4),(key_unlock_sound,6),(kid_crying_sound,8)]
+CH3_2_END_SOUND = [(cabinet_moving_sound,1),(key_unlock_sound,3)]
 CH3_2_END_BGM = None
 CH3_2_END_SHOW = (CH3_2_END_TEXT,CH3_2_END_SPEAKER,CH3_2_END_IMAGE,CH3_2_END_SOUND,CH3_2_END_BGM)
