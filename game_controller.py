@@ -88,6 +88,12 @@ class GameController:
             self.events["pause"] = False
 
     def update_view(self):
+        if self.model.no_scream_sec is not None:
+            self.model.no_scream_sec -=1
+            if self.model.no_scream_sec <= 0:
+                self.model.no_scream_sec = None
+            return
+
         # 如果沒有鎖定螢幕 才可以更新畫面
         if not self.model.fix_scream_to_dark:
             # render background
@@ -95,6 +101,9 @@ class GameController:
 
             if self.model.opening is not None:
                 self.view.draw_opening(self.model.opening)
+                # 畫漸暗
+                if self.model.to_dark:
+                    self.view.draw_dark(self.model.value)
                 return
 
             # 播最後動畫
@@ -155,7 +164,8 @@ class GameController:
             if self.model.dialog is not None:
                 # 對話時暫停BGM
                 if not self.bgm_paused:
-                    pygame.mixer.music.pause()
+                    # pygame.mixer.music.pause()
+                    pygame.mixer.music.set_volume(0.1)
                     self.bgm_paused = True
                 self.view.murmur(self.model.dialog)
 
@@ -166,7 +176,8 @@ class GameController:
             #如果當前沒有對話 沒有動畫則繼續播放BGM
             if  self.model.dialog is None and self.model.show is None:
                 if self.bgm_paused:
-                    pygame.mixer.music.unpause()
+                    # pygame.mixer.music.unpause()
+                    pygame.mixer.music.set_volume(0.3)
                     self.bgm_paused = False
         # 畫漸暗
         if self.model.to_dark:

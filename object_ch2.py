@@ -471,7 +471,7 @@ class TvSwitchCh2:
         self.index = 0
 
         self.speaker = ["小男孩"]
-        self.dialog = ["好耶，剛好趕上新世紀福音戰士\n我也好想駕駛初號機喔...\n..."]
+        self.dialog = ["好耶，剛好趕上新世紀福音戰士\n我也好想駕駛初號機喔..."]
 
         self.show = Show(self.dialog, self.speaker, None, None, None)
 

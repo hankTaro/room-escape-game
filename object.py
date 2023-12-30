@@ -818,7 +818,7 @@ class Desk:
         self.mask = pygame.mask.from_surface(self.image)
 
         self.speaker = ["旁白"]
-        self.dialog = ["許多部份都已經腐朽，變得破破爛爛的桌子\n上頭布滿了刮痕，還有鉛筆寫下的字跡\n但是都早已模糊不清了..."]
+        self.dialog = ["這個書桌許多部份都已經腐朽，看起來破破爛爛的\n上頭布滿了刮痕，還有鉛筆寫下的字跡\n但是內容都早已模糊不清了..."]
         self.music = None
 
         self.show = Show(self.dialog, self.speaker, None, self.music, None)
@@ -1293,7 +1293,8 @@ class ChestKey:
         self.observe = chest_key_observe
         # 調查中此物品的敘述
         self.description = "有著些許鏽斑的黃色鑰匙\n" \
-                           "不知道能打開哪道索"
+                           "由一個對你而言十分親密的人所贈\n" \
+                           "據說是尋找某個寶藏的關鍵..."
         self.x = x
         self.y = y
         self.rect = self.image.get_rect()

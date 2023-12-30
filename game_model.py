@@ -21,6 +21,7 @@ pick_up_items_sound = pygame.mixer.Sound('music/物品拾取聲.mp3')
 
 proof_of_hero = pygame.mixer.Sound('music/MH4　BGM　英雄の証.mp3')
 proof_of_hero.set_volume(0.5)
+time_travel_sound = pygame.mixer.Sound('music/time_travel.mp3')
 
 class GameModel:
     def __init__(self):
@@ -55,6 +56,8 @@ class GameModel:
         self.show = None
         # 是否在開場畫面
         self.opening = None
+        # 遊戲是否開始
+        self.start_game = False
         # 亮度
         self.value = 0
         # 開始變暗
@@ -91,6 +94,9 @@ class GameModel:
         #動畫結束後要執行的指令
         self.continue_function = None
 
+        # show結束後要執行的指令
+        self.continue_function_show = None
+
         # 等待結束後要執行的指令
         self.continue_function_wait = None
 
@@ -102,6 +108,9 @@ class GameModel:
 
         # 固定畫面 在全黑前 不更新畫面
         self.fix_scream_to_dark = False
+
+        # 黑畫面秒數
+        self.no_scream_sec = None
 
 
 
@@ -190,7 +199,7 @@ class GameModel:
 
         # 任何需要畫面變黑時
         if self.to_dark:
-            self.value += 5
+            self.value += 3
             if self.value >= 255:
                 self.to_dark = False
                 self.fix_scream_to_dark = False
@@ -203,16 +212,14 @@ class GameModel:
 
         # 在開場
         if self.opening is not None:
-            # 變暗過程結束
-            if not self.to_dark:
-                self.opening = None
-                self.start_ch1()
-
             if events["mouse position"] is not None:
                 x, y = events["mouse position"]
                 common = self.opening.clicked(x, y)
                 if common == 'start':
+                    self.start_game = True
                     self.start_darking()
+                    self.continue_function_d =[partial(self.start_ch1)]
+
             return
 
         # 檢查 menu btn
@@ -226,6 +233,9 @@ class GameModel:
         if self.switch:
             # 讓後面部分不執行
             return
+        if self.no_scream_sec is not None:
+            return
+
 
         if self.show is not None:
             # 在播動畫 後面不執行
@@ -241,6 +251,7 @@ class GameModel:
                 common = self.show.next()
                 if common == 'end':
                     self.show = None
+                    pygame.mixer.music.unpause()
                     if self.continue_show is not None:
                         self.show = self.continue_show.pop()
                         if not self.continue_show:
@@ -248,10 +259,10 @@ class GameModel:
                         # 確保所有動畫播完才執行function
                         return
                     # show 播完要連續執行的指令
-                    if self.continue_function is not None:
-                        for func in self.continue_function:
+                    if self.continue_function_show is not None:
+                        for func in self.continue_function_show:
                             func()
-                        self.continue_function = None
+                        self.continue_function_show = None
 
 
             return
@@ -269,6 +280,7 @@ class GameModel:
             if events["mouse position"] is not None:
                 common = self.dialog.next()
                 if common == 'end':
+                    self.dialog = None
                     if self.give_item is not None:
                         # 給玩家物品
                         pick_up_items_sound.play()
@@ -279,9 +291,6 @@ class GameModel:
                         for func in self.continue_function:
                             func()
                         self.continue_function = None
-
-                    self.dialog = None
-
             # 讓後面部分不執行
             return
 
@@ -354,11 +363,13 @@ class GameModel:
 
     def start_observe(self):
         self.observe = True
+        pygame.mixer.music.pause()
         # BGM 檢測
         if self.bag.hold.name == "天上天下天地無雙筆":
             proof_of_hero.play()
     def end_observe(self):
         self.observe = False
+        pygame.mixer.music.unpause()
         if self.bag.hold.name == "天上天下天地無雙筆":
             proof_of_hero.stop()
 
@@ -441,7 +452,7 @@ class GameModel:
                 # 將漸暗完後要執行的函式保存起來
                 self.continue_function_d = [partial(self.investigation_item.power_switch),
                                           partial(self.investigation_item.lock_on),
-                                          partial(self.stop_investigation),partial(self.set_dialog,self.cur_room.tv.show)]
+                                          partial(self.stop_investigation),partial(self.set_dialog,self.cur_room.tv.show),partial(pygame.mixer.music.unpause)]
                 # 解鎖大門
                 self.cur_room.exit_door.unlock()
                 # 改變和阿公的對話
@@ -449,6 +460,10 @@ class GameModel:
 
             elif common == 'shutdown':
                 self.investigation_item.power_switch()
+                if self.investigation_item.tvshow.ispower:
+                    pygame.mixer.music.pause()
+                else:
+                    pygame.mixer.music.unpause()
             elif common == 'dialog':
                 self.dialog = item.show
             elif common == 'take':
@@ -598,8 +613,11 @@ class GameModel:
                 if common == 'lock':
                     common = self.investigation_item.fix()
                     if common == 'done':
-                        print("拚好了 進CH2")
-                        self.start_ch2()
+                        self.waiting(0.2)
+                        # 將撥放章節1結束劇情的函式保存起來 等待完再漸暗
+                        self.continue_function_wait = [partial(self.set_dialog, Show(*CH1_END_SHOW))]
+                        self.continue_function = [partial(self.play_snd,time_travel_sound),partial(self.start_darking)]
+                        self.continue_function_d = [partial(self.start_ch2)]
             else:
                 item.move(events)
 
@@ -654,7 +672,7 @@ class GameModel:
                 # 播放最後動畫與結局
                 self.show = Show(*CH3_2_END_SHOW)
                 # 鎖定畫面 漸暗
-                self.continue_function = [self.fix_scream_to_dark_set,self.start_darking]
+                self.continue_function_show = [self.fix_scream_to_dark_set,self.start_darking]
                 # 漸暗完將播放影片
                 self.continue_function_d = [self.play_end_mp4]
                 pass
@@ -674,7 +692,7 @@ class GameModel:
         self.opening = OpenMenu(0,0)
 
     def start_ch1(self):
-        # TODO :　建立房間/物品/可互動元素
+        self.opening = None
         self.room = self.room_ch1
 
         self.cur_room = self.room['living_room']
@@ -691,6 +709,10 @@ class GameModel:
 
         pass
     def start_ch2(self):
+        # 第二章的BMG
+        pygame.mixer.music.load('music/望春風⧸詞：李臨秋⧸曲：鄧雨賢⧸演唱者：純純_小聲.mp3')
+        # pygame.mixer.music.set_volume(0.5)
+        pygame.mixer.music.play(-1)  # 無限播放
 
         # 當前章節
         self.chapter = 2
@@ -720,19 +742,20 @@ class GameModel:
         # 起始物品
         self.bag.save_item(Pencil(GAME_X, GAME_Y))
 
+        self.no_scream(2)
 
-        # 撥放章節1結束劇情
-        self.show = Show(*CH1_END_SHOW)
-        # 延遲一小段時間
-        for i in range(5000):
-            a = i
+        # 將撥放章節1結束劇情的函式保存起來 等待完再漸暗
+        # self.continue_function_wait = [partial(self.set_show,Show(*CH1_END_SHOW)),partial(self.start_ch2)]
+
         pass
 
 
     def start_ch3(self):
+        # 停止bgm
+        pygame.mixer.music.stop()
         # 開場動畫
-        # self.show = Show(*CH2_END_SHOW)
-        # self.continue_show = [Show(*CH3_START_SHOW)]
+        self.show = Show(*CH2_END_SHOW)
+        self.continue_show = [Show(*CH3_START_SHOW)]
 
         # 當前章節
         self.chapter = 3
@@ -796,6 +819,10 @@ class GameModel:
         self.ending_mp4 = cv2.VideoCapture("image/living_room/Tv/TV_show/tyler1 scream meme.mp4")
     def fix_scream_to_dark_set(self):
         self.fix_scream_to_dark = True
+    def play_snd(self,snd):
+        snd.play()
+    def no_scream(self,sec):
+        self.no_scream_sec = FPS*sec
 
 
     @property
