@@ -20,11 +20,16 @@ step_on_grass =  pygame.mixer.Sound('music/踏草地聲.mp3')
 door_open_sound = pygame.mixer.Sound('music/door_open.wav')
 wind_blow_leaf_sound = pygame.mixer.Sound('music/wind_blow_leaf.mp3')
 fall_down_sound = pygame.mixer.Sound('music/fall_down.mp3')
-screaming_sound = pygame.mixer.Sound('music/screaming.mp3')
-earthquake_sound = pygame.mixer.Sound('music/earthquake.mp3')
+fall_down_sound.set_volume(0.3)
+screaming_sound = pygame.mixer.Sound('music/Crowd panic sound effect.mp3')
+screaming_sound.set_volume(0.2)
+earthquake_sound = pygame.mixer.Sound('music/Earthquake Inside House Sound Effect (4K Subscribers Special).mp3')
+earthquake_sound.set_volume(1)
+earthquake_sound_mix = pygame.mixer.Sound('music/地震加尖叫.mp3')
 kid_breath_sound = pygame.mixer.Sound('music/kid_breath.mp3')
-announcement_sound = pygame.mixer.Sound('music/announcement.mp3')
+announcement_sound = pygame.mixer.Sound('music/announcement_long.mp3')
 electrocardiogram_sound = pygame.mixer.Sound('music/electrocardiogram.mp3')
+# electrocardiogram_sound.set_volume(0.1)
 time_travel_sound = pygame.mixer.Sound('music/time_travel.mp3')
 hey_sound = pygame.mixer.Sound('music/hey.mp3')
 kid_haha_sound = pygame.mixer.Sound('music/kid_haha.mp3')
@@ -81,7 +86,7 @@ CH2_END_SHOW = (CH2_END_TEXT,CH2_END_SPEAKER,CH2_END_IMAGE,CH2_END_SOUND,CH2_END
 CH3_START_TEXT = ["媽媽我回來了","阿你去爺爺家寫作業喔","對阿，我寫完了","阿你明天上學的東西準備好了嗎，不要明天又要我送東西過去",
                   "我準備好了啦，我好累喔，我要去睡覺了","外頭風吹動樹葉的沙沙聲和家中母親走動的腳步聲使你慢慢進入夢鄉",
                   ".\n..\n...", # index = 6
-                  "...","...","...", # index = 7 8 9 播放地震 尖叫 倒塌音效
+                  "(晃動聲)","(人群尖叫聲)","(倒塌聲)", # index = 7 8 9 播放地震 尖叫 倒塌音效
                   ".\n..\n...\n"
                   "胸口傳來強烈的壓迫感讓你呼吸變得困難\n"
                   "同時麻木的灼燒感也在手腳蔓延\n"
@@ -121,7 +126,7 @@ CH3_START_SPEAKER = ["小男孩","媽媽","小男孩","媽媽","小男孩","旁�
                      "" #index = 27
                      ]
 CH3_START_IMAGE = [(image_1,0)]
-CH3_START_SOUND = [(clicked_sound,0),(wind_blow_leaf_sound,6),(earthquake_sound,7),(screaming_sound,8),(fall_down_sound,9),(announcement_sound,11),
+CH3_START_SOUND = [(clicked_sound,0),(wind_blow_leaf_sound,6),(earthquake_sound_mix,7),(screaming_sound,8),(fall_down_sound,9),(announcement_sound,11),
                    (screaming_sound,19),(kid_haha_sound,21),(hey_sound,22),(electrocardiogram_sound,24),(announcement_sound,26),(time_travel_sound,27)]
 CH3_START_BGM = None
 

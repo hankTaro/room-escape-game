@@ -59,6 +59,8 @@ class GameModel:
         self.value = 0
         # 開始變暗
         self.to_dark = False
+        # 等待時間
+        self.wait_time = 0
 
         # 第一章的包包
         self.bag_ch1 = Bag()
@@ -76,6 +78,9 @@ class GameModel:
 
         #動畫結束後要執行的指令
         self.continue_function = None
+
+        # 等待結束後要執行的指令
+        self.continue_function_wait = None
 
         # 變黑完要執行的指令
         self.continue_function_d = None
@@ -155,6 +160,17 @@ class GameModel:
         if events["keyboard key"] == pygame.K_ESCAPE:
             # TODO : 叫出暫停選單
             pass
+            return
+
+        # 任何需要等待時
+        if self.wait_time > 0:
+            self.wait_time -= 1
+            if self.wait_time <= 0:
+                self.wait_time = 0
+                if self.continue_function_wait is not None:
+                    for func in self.continue_function_wait:
+                        func()
+                    self.continue_function_wait = None
             return
 
         # 任何需要畫面變黑時
@@ -382,12 +398,15 @@ class GameModel:
                 self.investigation_item.tvshow.switch()
                 #播放男孩的講話
                 self.dialog = item.show
-                # 將漸暗的函式保存起來 講完話再漸暗
-                self.continue_function = [partial(self.start_darking),partial(self.investigation_item.tvshow.music.fadeout,3000)]
+
+                # 將等待的保存起來 講完話再漸暗
+                self.continue_function = [partial(self.waiting,7)]
+                # 將漸暗的函式保存起來 等待完再漸暗
+                self.continue_function_wait = [partial(self.start_darking),partial(self.investigation_item.tvshow.music.fadeout,3000)]
                 # 將漸暗完後要執行的函式保存起來
                 self.continue_function_d = [partial(self.investigation_item.power_switch),
                                           partial(self.investigation_item.lock_on),
-                                          partial(self.stop_investigation)]
+                                          partial(self.stop_investigation),partial(self.set_dialog,self.cur_room.tv.show)]
                 # 解鎖大門
                 self.cur_room.exit_door.unlock()
                 # 改變和阿公的對話
@@ -697,6 +716,12 @@ class GameModel:
         if not self.investigation_item:
             self.investigation = False
         self.switch = True
+    def waiting(self,sec):
+        self.wait_time = sec*FPS
+    def set_show(self,show):
+        self.show = show
+    def set_dialog(self,show):
+        self.dialog = show
 
 
     @property

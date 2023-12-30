@@ -1239,7 +1239,7 @@ class Password_Hint_1:
         # 調查中此物品的敘述
         self.description = "一個皺巴巴的筆記\n" \
                            "已經放到泛黃了\n" \
-                           "上頭寫著:" \
+                           "上頭寫著:\n" \
                            "A + B = 6\n" \
                            "A + C = 11\n" \
                            "B + D = C\n" \

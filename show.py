@@ -1,5 +1,6 @@
 from setting import *
-
+# from text import *
+import time
 
 # 現在可以讓傳入的 images,sounds = None 以利物件敘述做使用
 class Show:
@@ -42,6 +43,8 @@ class Show:
         self.playing = None
         # 當前顯示的圖片
         self.display = None
+        # 存取音效開始播放的時間
+        self.time = 0
 
 
 
@@ -54,6 +57,8 @@ class Show:
             self.first_time = False
             # 如果一進入show就有音效要播放 則先播出來 然後  self.sound_check_index +=1
             if self.sounds_check[0] == 0:
+                # 存下撥音效的時間
+                self.time = time.time()
                 self.playing = self.sounds[self.sound_check_index]
                 self.playing.play()
                 self.sound_check_index += 1
@@ -71,9 +76,11 @@ class Show:
 
     def next(self):
         # 等待音效播完
-        # if self.playing is not None:
-        #     pygame.time.delay(int(self.playing.get_length() * 1000))
-        #     self.playing = None
+        if self.playing is not None:
+            if time.time() - self.time < self.playing.get_length():
+                return
+            else:
+                self.playing = None
 
         # 檢查一段台詞是否已經到了最後一句
 
@@ -109,7 +116,7 @@ class Show:
             if self.index == self.images_check[self.image_check_index]: # 確認是否要切到下個
                 self.display = self.images[self.image_check_index]
                 self.image_check_index += 1
-                # 檢查音樂是否要變動
+            # 檢查音樂是否要變動
             if self.index == self.sounds_check[self.sound_check_index]:  # 確認是否要切到下個
                 # 先停止先前沒播完的聲音
                 if self.playing is not None:
@@ -118,6 +125,7 @@ class Show:
                 self.playing = self.sounds[self.sound_check_index]
                 if self.playing is not None:
                     self.playing.play()
+                    self.time = time.time()
                 self.sound_check_index += 1
 
 

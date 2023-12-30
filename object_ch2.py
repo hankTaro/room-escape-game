@@ -46,7 +46,7 @@ tv_power_off_image = pygame.transform.scale(pygame.image.load(f"image/Ch2/Tv/pow
 tv_power_btn = pygame.transform.scale(pygame.image.load(f"image/Ch2/Tv/power.png"), (GAME_WIDTH, GAME_HEIGHT))
 tv_switch_btn = pygame.transform.scale(pygame.image.load(f"image/Ch2/Tv/switch.png"), (GAME_WIDTH, GAME_HEIGHT))
 tv_decipher_card_detail_image = pygame.transform.scale(pygame.image.load(f"image/Ch2/Tv/tv_decipher_card.png"), (GAME_WIDTH, GAME_HEIGHT))
-tv_channel_1 = cv2.VideoCapture("image/Ch2/Tv/TV_show/Sequence30.mp4")
+tv_channel_1 = cv2.VideoCapture("image/Ch2/Tv/TV_show/Sequence.mp4")
 tv_channel_2 = cv2.VideoCapture("image/Ch2/Tv/TV_show/tyler1 scream meme.mp4")
 tv_channel_3 = cv2.VideoCapture("image/Ch2/Tv/TV_show/Pornhub Video intro.mp4")
 tv_channel_4 = cv2.VideoCapture("image/Ch2/Tv/TV_show/KFC Chickendales Mother’s Day Performance.mp4")
@@ -82,6 +82,7 @@ pencil_observe = [pygame.image.load(f"image/Icon/penceil_{i}.png") for i in rang
 # 聲音
 mute = None
 tv_show_1_sound = pygame.mixer.Sound('music/Sequence.mp3')
+tv_show_1_sound.set_volume(0.6)
 tv_show_2_sound = pygame.mixer.Sound('music/tyler1 scream meme.wav')
 tv_show_3_sound = pygame.mixer.Sound('music/Pornhub Video intro.wav')
 tv_show_4_sound = pygame.mixer.Sound('music/KFC Chickendales Mother’s Day Performance.wav')
@@ -470,7 +471,7 @@ class TvSwitchCh2:
         self.index = 0
 
         self.speaker = ["小男孩"]
-        self.dialog = ["好耶，剛好趕上新世紀福音戰士\n我也好想駕駛初號機喔..."]
+        self.dialog = ["好耶，剛好趕上新世紀福音戰士\n我也好想駕駛初號機喔...\n..."]
 
         self.show = Show(self.dialog, self.speaker, None, None, None)
 
@@ -596,8 +597,8 @@ class TvCh2:
         # 此圖片中可互動的物件
         self.object = [ExitButton(500,550),self.switch_button,self.power_button,self.tvshow]
 
-        self.speaker = ["旁白", "小男孩"]
-        self.dialog = ["你把鉛筆削尖了", "這樣就行了，快回去把作業寫完吧"]
+        self.speaker = ["小男孩"]
+        self.dialog = ["阿，看完了\n9點了...媽媽應該已經回來了，該回家了..."]
         self.music = None  # [(clock_sound, 0)]
 
         self.show = Show(self.dialog, self.speaker, None, self.music, None)
@@ -807,7 +808,10 @@ class Homework:
         self.dialog_undone = ["鉛筆斷掉了沒辦法寫，要先去找削鉛筆機才行\n問問阿公鉛筆機在哪好了，阿公應該在臥室裡面"]
 
         self.speaker_doing = ["","小男孩"]
-        self.dialog_doing = [" ","總算寫完了，來去看電視摟~"]
+        self.dialog_doing = [" ","總算寫完了，來去看電視摟~\n現在新世紀福音戰士要開播了"]
+
+        self.speaker = ["小男孩"]
+        self.dialog = ["別再管功課了，來去看新世紀福音戰士摟~"]
 
         self.music = [(pencil_writing_sound,0),(mute,1)]
         self.show_image = [(black_image,0)]
@@ -815,12 +819,16 @@ class Homework:
         self.show_doing = Show(self.dialog_doing, self.speaker_doing, self.show_image, self.music, None)
         self.show_undone = Show(self.dialog_undone, self.speaker_undone, None, None, None)
 
+        self.show = Show(self.dialog, self.speaker, None, None, None)
+
         self.is_done = False
 
     def clicked(self, x: int, y: int):
         if self.rect.collidepoint(x, y) and self.mask.get_at((x -  self.rect.x, y -  self.rect.y)) != 0:
             if not self.is_done:
                 return 'homework'
+            else:
+                return 'dialog'
     def done(self):
         self.is_done = True
         self.image = homework_image[1]
