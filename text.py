@@ -128,9 +128,11 @@ CH3_START_SPEAKER = ["小男孩","媽媽","小男孩","媽媽","小男孩","旁�
 CH3_START_IMAGE = [(image_1,0)]
 CH3_START_SOUND = [(clicked_sound,0),(wind_blow_leaf_sound,6),(earthquake_sound_mix,7),(screaming_sound,8),(fall_down_sound,9),(announcement_sound,11),
                    (screaming_sound,19),(kid_haha_sound,21),(hey_sound,22),(electrocardiogram_sound,24),(announcement_sound,26),(time_travel_sound,27)]
+# 那些音效要播完
+CH3_START_SOUND_WAIT = [6]
 CH3_START_BGM = None
 
-CH3_START_SHOW = (CH3_START_TEXT,CH3_START_SPEAKER,CH3_START_IMAGE,CH3_START_SOUND,CH3_START_BGM)
+CH3_START_SHOW = (CH3_START_TEXT,CH3_START_SPEAKER,CH3_START_IMAGE,CH3_START_SOUND,CH3_START_BGM,CH3_START_SOUND_WAIT)
 
 # 章節3結尾
 CH3_END_TEXT = ["那真是如同煉獄般的一天...",

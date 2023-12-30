@@ -215,6 +215,12 @@ class GameModel:
             # 在播動畫 後面不執行
             # 檢測是否是動畫剛開始
             self.show.start()
+
+            # 等待音效播完
+            if self.show.lock:
+                if self.show.wait_sound():
+                    return
+
             if events["mouse position"] is not None:
                 common = self.show.next()
                 if common == 'end':
@@ -231,6 +237,12 @@ class GameModel:
         if self.dialog is not None:
             # 檢測是否是動畫剛開始
             self.dialog.start()
+
+            # 等待音效播完
+            if self.dialog.lock:
+                if self.dialog.wait_sound():
+                    return
+
             if events["mouse position"] is not None:
                 common = self.dialog.next()
                 if common == 'end':

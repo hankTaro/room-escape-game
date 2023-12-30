@@ -121,8 +121,9 @@ class GameView:
         self.win.blit(word, (self.dialog_x, self.dialog_y))
 
         # 操作說明
-        tip = self.font_tip.render("點擊滑鼠以繼續...", True, (255, 255, 255))  # 渲染文字
-        self.win.blit(tip, (GAME_X + GAME_WIDTH - tip.get_width() - 10, GAME_Y + GAME_HEIGHT - tip.get_height() - 10))
+        if not show.lock:
+            tip = self.font_tip.render("點擊滑鼠以繼續...", True, (255, 255, 255))  # 渲染文字
+            self.win.blit(tip, (GAME_X + GAME_WIDTH - tip.get_width() - 10, GAME_Y + GAME_HEIGHT - tip.get_height() - 10))
 
         # # 畫出對話框(灰色漸層)
         # self.win.blit(self.dialog_box_image, (GAME_X, GAME_Y))
@@ -224,8 +225,9 @@ class GameView:
         self.win.blit(word, (self.dialog_x, self.dialog_y))
 
         # 操作說明
-        tip = self.font_tip.render("點擊滑鼠以繼續...", True, (255, 255, 255))  # 渲染文字
-        self.win.blit(tip, (WIN_WIDTH - tip.get_width() - 30, WIN_HEIGHT - tip.get_height() - 30))
+        if not show.lock:
+            tip = self.font_tip.render("點擊滑鼠以繼續...", True, (255, 255, 255))  # 渲染文字
+            self.win.blit(tip, (WIN_WIDTH - tip.get_width() - 30, WIN_HEIGHT - tip.get_height() - 30))
 
 
 

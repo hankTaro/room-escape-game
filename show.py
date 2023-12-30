@@ -4,7 +4,7 @@ import time
 
 # 現在可以讓傳入的 images,sounds = None 以利物件敘述做使用
 class Show:
-    def __init__(self,text,speaker,images,sounds,bgm): # sounds = [(sound_1, 1), (sound_2, 2)]  images = [(BLACK, 0), (WHITE, 3)]
+    def __init__(self,text,speaker,images,sounds,bgm, must_wait = None): # sounds = [(sound_1, 1), (sound_2, 2)]  images = [(BLACK, 0), (WHITE, 3)]
         self.speaker = speaker  # ["Tom", "Tom2", "John", "John2"]
         self.images = []  # [BLACK, WHITE]
         self.sounds = []  # [sound_1,sound_2]
@@ -13,6 +13,8 @@ class Show:
         self.sounds_check = [] #[1,2]
         self.bgm = bgm
         self.first_time = True
+        # 紀錄此聲音是否強迫玩家聽完
+        self.must_wait = [False]*len(text)
         if images is not None:
             for a,b  in images:
                 self.images.append(a)
@@ -21,6 +23,10 @@ class Show:
             for a,b  in sounds:
                 self.sounds.append(a)
                 self.sounds_check.append(b)
+        if must_wait is not None:
+            for i in must_wait:
+                self.must_wait[i] = True
+
 
         # 永遠達不到的條件 防止存取錯誤
         self.images_check.append(99999999)
@@ -46,6 +52,9 @@ class Show:
         # 存取音效開始播放的時間
         self.time = 0
 
+        # 是否在強迫播放音效期間
+        self.lock = False
+
 
 
     def __del__(self):
@@ -59,9 +68,12 @@ class Show:
             if self.sounds_check[0] == 0:
                 # 存下撥音效的時間
                 self.time = time.time()
+                if self.must_wait[self.index]:
+                    self.lock = True
                 self.playing = self.sounds[self.sound_check_index]
                 self.playing.play()
                 self.sound_check_index += 1
+
 
 
             # 如果一進入show就有圖片要顯示 則先顯示出來 然後  self.image_check_index +=1
@@ -76,38 +88,15 @@ class Show:
 
     def next(self):
         # 等待音效播完
-        if self.playing is not None:
-            if time.time() - self.time < self.playing.get_length():
-                return
-            else:
-                self.playing = None
+        # if self.wait_sound():
+        #     return
 
         # 檢查一段台詞是否已經到了最後一句
-
         if self.dialog_index == len(self.text_lines) - 1:
             self.index += 1
             # 檢查self.index 是否超過現有台詞的數量 為Ture 就結束動畫
             if self.index == len(self.text):
-                if self.playing is not None:
-                    # 停止當前音效
-                    self.playing.stop()
-                if self.bgm is not None:
-                    # 停止BGM
-                    self.bgm.stop()
-                # 將內部數值初始化
-                self.index = 0
-                self.dialog_index = 0
-                self.image_check_index = 0
-                self.sound_check_index = 0
-                self.text_lines = self.text[self.index].splitlines()
-                # 目前人物說的話
-                self.cur_text = self.text_lines[self.dialog_index]
-                # 當前在播放的音效
-                self.playing = None
-                # 當前顯示的圖片
-                self.display = None
-                self.first_time = True
-                return 'end'
+                return self.end()
             # 初始化
             self.dialog_index = 0
             self.text_lines = self.text[self.index].splitlines()
@@ -126,6 +115,8 @@ class Show:
                 if self.playing is not None:
                     self.playing.play()
                     self.time = time.time()
+                    if self.must_wait[self.index]:
+                        self.lock = True
                 self.sound_check_index += 1
 
 
@@ -134,6 +125,39 @@ class Show:
             self.dialog_index += 1
             self.cur_text = self.text_lines[self.dialog_index]
             return 'continue'
+
+    def wait_sound(self):
+        # 等待音效播完
+        if self.lock:
+            if time.time() - self.time < self.playing.get_length():
+                # 還不行 還要等
+                return True
+            else:
+                self.lock = False
+                # 可以繼續了
+                return False
+
+    def end(self):
+        if self.playing is not None:
+            # 停止當前音效
+            self.playing.stop()
+        if self.bgm is not None:
+            # 停止BGM
+            self.bgm.stop()
+        # 將內部數值初始化
+        self.index = 0
+        self.dialog_index = 0
+        self.image_check_index = 0
+        self.sound_check_index = 0
+        self.text_lines = self.text[self.index].splitlines()
+        # 目前人物說的話
+        self.cur_text = self.text_lines[self.dialog_index]
+        # 當前在播放的音效
+        self.playing = None
+        # 當前顯示的圖片
+        self.display = None
+        self.first_time = True
+        return 'end'
 
 # class Dialog:
 #     def __init__(self,text,speaker,sounds):
