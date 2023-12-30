@@ -45,15 +45,15 @@ class LivingRoomCh2:
         # 此房間在不同牆面有的物品/座標 (包括移動鍵)
         # 牆面1有這些東西
         self.__object_1 = [self.right_button,self.left_button,
-                           self.exit_door,LivingRoomWindowCh2(GAME_X, GAME_Y)]
+                           self.exit_door,LivingRoomWindowCh2(GAME_X, GAME_Y),BoxCh2(GAME_X, GAME_Y)]
         # 牆面2有這些東西
         self.__object_2 = [self.right_button,self.left_button,
-                           self.bedroom_door,ClockCh2(GAME_X, GAME_Y),BookShelfCh2(GAME_X, GAME_Y),Books(GAME_X, GAME_Y)]
+                           self.bedroom_door,ClockCh2(GAME_X, GAME_Y),BookShelfCh2(GAME_X, GAME_Y),Books(GAME_X, GAME_Y),Beer(GAME_X,GAME_Y)]
         # 牆面3有這些東西
         self.__object_3 = [self.right_button,self.left_button,DoorToKitchenCh2(GAME_X, GAME_Y),
                            self.tv,TvShelfCh2(GAME_X, GAME_Y), PaintingCh2(GAME_X, GAME_Y),GlobeCh2(GAME_X, GAME_Y),GlobeTableCh2(GAME_X, GAME_Y)]
         self.__object_4 = [self.right_button, self.left_button,
-                           self.desk,TrashCanCh2(GAME_X, GAME_Y),CalendarCh2(GAME_X, GAME_Y)]
+                           self.desk,TrashCanCh2(GAME_X, GAME_Y),CalendarCh2(GAME_X, GAME_Y),Newspaper(GAME_X, GAME_Y)]
 
         # 當前牆面/建立此房間的牆面
         # 不同房間的牆面數會不一樣 要注意

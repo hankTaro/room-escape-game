@@ -70,15 +70,27 @@ book_image = pygame.transform.scale(pygame.image.load(f"image/Ch2/BookShelf/book
 
 # 書櫃鑰匙 ================================================================================================
 chest_key_image = pygame.transform.scale(pygame.image.load(f"image/Ch2/BookShelf/chest_key.png"), (GAME_WIDTH, GAME_HEIGHT))
+# 紙箱 ===================================================================================================
+box_image = pygame.transform.scale(pygame.image.load(f"image/Ch2/Box/boxs.png"), (GAME_WIDTH, GAME_HEIGHT))
+# 報紙
+newspaper_image = pygame.transform.scale(pygame.image.load(f"image/Ch2/Newspaper/newspaper.png"), (GAME_WIDTH, GAME_HEIGHT))
+# 可拾取物件 ==============================================================================================
+top_image = pygame.transform.scale(pygame.image.load(f"image/living_room/Clock/Handle.png"), (GAME_WIDTH, GAME_HEIGHT))
+beer_image = pygame.transform.scale(pygame.image.load(f"image/Ch2/Beer/beer.png"), (GAME_WIDTH, GAME_HEIGHT))
 # icon ===================================================================================================
 chest_key_icon = pygame.transform.scale(pygame.image.load(f"image/Icon/chest_key_icon.png"), (ICON_SIZE, ICON_SIZE))
 shit_icon = pygame.transform.scale(pygame.image.load(f"image/Icon/shit.png"), (ICON_SIZE, ICON_SIZE))
 pencil_icon = [pygame.transform.scale(pygame.image.load(f"image/Icon/penceil_{i}.png"), (ICON_SIZE, ICON_SIZE)) for i in range(3)]
+bamboo_hat_icon = pygame.transform.scale(pygame.image.load(f"image/Icon/shit.png"), (ICON_SIZE, ICON_SIZE))
+top_icon = pygame.transform.scale(pygame.image.load(f"image/Icon/shit.png"), (ICON_SIZE, ICON_SIZE))
+beer_icon = pygame.transform.scale(pygame.image.load(f"image/Icon/shit.png"), (ICON_SIZE, ICON_SIZE))
 # 調查畫面===============================================================
 chest_key_observe = pygame.image.load(f"image/Observe/chest_key_observe.png")
 shit_observe = pygame.image.load(f"image/Observe/shit.png")
 pencil_observe = [pygame.image.load(f"image/Icon/penceil_{i}.png") for i in range(3)]
-
+bamboo_hat_observe = pygame.image.load(f"image/Observe/shit.png")
+top_observe = pygame.image.load(f"image/Observe/shit.png")
+beer_observe = pygame.image.load(f"image/Observe/shit.png")
 # 聲音
 mute = None
 tv_show_1_sound = pygame.mixer.Sound('music/Sequence.mp3')
@@ -694,7 +706,7 @@ class TvShelfCh2:
         self.focus_l = tv_shelf_investigation_l
         self.object = None
         self.object_r = [ExitButton(500, 550), TvShelfRightDoorCh2(GAME_X, GAME_Y)]
-        self.object_l = [ExitButton(500, 550), PencilSharpener(GAME_X, GAME_Y),TvShelfLeftDoorCh2(GAME_X, GAME_Y)]
+        self.object_l = [ExitButton(500, 550), PencilSharpener(GAME_X, GAME_Y),Top(GAME_X, GAME_Y),TvShelfLeftDoorCh2(GAME_X, GAME_Y)]
 
 
     def clicked(self, x: int, y: int):
@@ -880,6 +892,67 @@ class GlobeCh2:
                 return 'dialog_sp'
             else:
                 return 'dialog'
+
+class BoxCh2:
+    def __init__(self,x,y):
+        self.image = box_image
+        self.x = x
+        self.y = y
+        self.rect = self.image.get_rect()
+        self.rect.topleft = (x, y)
+        self.mask = pygame.mask.from_surface(self.image)
+
+        self.speaker = ["旁白","","旁白"]
+        self.speaker_2 = ["旁白"]
+        self.dialog = ["你翻找著這些紙箱堆..."," ","裡面好像藏了些甚麼\n有了\n是一頂斗笠"]
+        self.dialog_2 = ["紙箱已經被你翻得亂七八糟了\n別再翻了"]
+        # 是否互動過(獲得斗笠
+        self.lock = False
+        self.give = BambooHat(GAME_X, GAME_Y)
+
+        self.show = Show(self.dialog, self.speaker, None, None, None)
+        self.show_2 = Show(self.dialog_2, self.speaker_2, None, None, None)
+
+    def clicked(self, x: int, y: int):
+        if self.rect.collidepoint(x, y) and self.mask.get_at((x - self.rect.x, y - self.rect.y)) != 0:
+            if not self.lock:
+                self.lock = True
+                return 'dialog_sp'
+            else:
+                return 'dialog'
+            
+class Newspaper:
+    def __init__(self, x, y):
+        self.image = newspaper_image
+        self.x = x
+        self.y = y
+        self.rect = self.image.get_rect()
+        self.rect.topleft = (x, y)
+        self.mask = pygame.mask.from_surface(self.image)
+
+        self.speaker = ["1999年9月份的報紙"]
+        self.index = 0
+        self.dialogs = [
+                        ["一名陳姓男子因小孩驗血驗出來是B型而非A+型，而對小孩失望透頂進而氣到昏迷"],
+                        ["英國研究指出，十次車禍七次快\n一次飛碟\n一次阿北\n一次英文報告"],
+                        ["廣告版面出租"],
+                        ["今早一名男性青年，在過馬路時被大卡車撞飛\n目擊民眾表示，當時聽見有人大喊「麥可!!」\n隨後就看到車禍男子被撞飛了5層樓高、100米遠有"]
+                        ]
+        self.dialog = self.dialogs[self.index]
+        self.music = None
+
+        self.show = Show(self.dialog, self.speaker, None, self.music, None)
+
+    def clicked(self, x: int, y: int):
+        if self.rect.collidepoint(x, y) and self.mask.get_at((x - self.rect.x, y - self.rect.y)) != 0:
+            self.index += 1
+            if self.index == len(self.dialogs):
+                self.index = 0
+            self.dialog = self.dialogs[self.index]
+            self.show.text = self.dialog
+            return 'dialog'
+        else:
+            return 0
             
 class GlobeTableCh2:
     def __init__(self, x, y):
@@ -955,8 +1028,72 @@ class Pencil:
                                    "他擁有最高的白色斬味\n可以輕易刺穿世界上的一切物質\n" \
                                    "將魔物斷尾、破角、大卸八塊更是不在話下\n" \
                                    "當然也包括你的作業本...\n\n\n\n\n\n\n\n\n                      BGM:英雄之証"
+                
+class BambooHat:
+    def __init__(self, x, y):
+        self.name = "斗笠"
+        self.icon = bamboo_hat_icon
+        # 調查中此物品的樣貌
+        self.observe = bamboo_hat_observe
+        # 調查中此物品的敘述
+        self.description = "以深色的竹子編織而成，經歷了風吹日曬雨\n淋，如今已退色，但卻充滿了某位成熟男人\n的賀爾蒙體香"
 
+        self.x = x
+        self.y = y
+        self.music = pick_up_items_sound
 
+    def clicked(self, x: int, y: int):
+        if self.rect.collidepoint(x, y) and self.mask.get_at((x - self.rect.x, y - self.rect.y)) != 0:
+            # 被撿起放入物品欄
+            return 'take'
+
+class Top:
+    def __init__(self, x, y):
+        self.name = "陀螺"
+        self.image = top_image
+        # 放入物品欄後顯示的圖示
+        self.icon = top_icon
+        # 調查中此物品的樣貌
+        self.observe = top_observe
+        # 調查中此物品的敘述
+        self.description = "老舊的陀螺，陪伴了我許多的時光，曾經隔壁\n" \
+                           "班阿明最喜歡的玩具，如今被我偷走了" 
+        self.x = x
+        self.y = y
+        self.rect = self.image.get_rect()
+        self.rect.topleft = (x, y)
+        self.mask = pygame.mask.from_surface(self.image)
+        self.music = pick_up_items_sound
+    # TODO : 一些交互用函式
+    def clicked(self, x: int, y: int):
+        if self.rect.collidepoint(x, y) and self.mask.get_at((x -  self.rect.x, y -  self.rect.y)) != 0:
+            self.music.play()
+            # 被撿起放入物品欄
+            return 'take'
+        
+class Beer:
+    def __init__(self, x, y):
+        self.name = "酒瓶"
+        self.image = beer_image
+        # 放入物品欄後顯示的圖示
+        self.icon = beer_icon
+        # 調查中此物品的樣貌
+        self.observe = beer_observe
+        # 調查中此物品的敘述
+        self.description = "和艾斯、薩波的交杯酒，對了，頂上戰爭好像\n要開打了，得趕進去馬林福特救艾斯才行" 
+
+        self.x = x
+        self.y = y
+        self.rect = self.image.get_rect()
+        self.rect.topleft = (x, y)
+        self.mask = pygame.mask.from_surface(self.image)
+        self.music = pick_up_items_sound
+    # TODO : 一些交互用函式
+    def clicked(self, x: int, y: int):
+        if self.rect.collidepoint(x, y) and self.mask.get_at((x -  self.rect.x, y -  self.rect.y)) != 0:
+            self.music.play()
+            # 被撿起放入物品欄
+            return 'take'
 
 # 彩蛋物件類 =====================================
 class AbandonedProject:
