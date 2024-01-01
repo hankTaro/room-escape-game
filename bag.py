@@ -42,10 +42,15 @@ class Bag:
         self.rect.topleft = (self.x, self.y)
         self.mask = pygame.mask.from_surface(self.image)
 
-        self.blank = [Blank(885, 70),Blank(885, 150),Blank(885, 230),
-                      Blank(885, 310),Blank(885, 390),Blank(885, 470),
-                      Blank(885, 70),Blank(885, 150),Blank(885, 230),
-                      Blank(885, 310),Blank(885, 390),Blank(885, 470)]
+        self.blank_x = 910 #885
+        self.blank_y = 50 #70
+        self.blank_tolerance = 80  # 885
+
+
+        self.blank = [Blank(self.blank_x, self.blank_y),Blank(self.blank_x, self.blank_y + self.blank_tolerance),Blank(self.blank_x, self.blank_y + self.blank_tolerance * 2),
+                      Blank(self.blank_x, self.blank_y + self.blank_tolerance * 3),Blank(self.blank_x, self.blank_y + self.blank_tolerance * 4),Blank(self.blank_x, self.blank_y + self.blank_tolerance * 5),
+                      Blank(self.blank_x, self.blank_y),Blank(self.blank_x, self.blank_y + self.blank_tolerance),Blank(self.blank_x, self.blank_y + self.blank_tolerance * 2),
+                      Blank(self.blank_x, self.blank_y + self.blank_tolerance * 3),Blank(self.blank_x, self.blank_y + self.blank_tolerance * 4),Blank(self.blank_x, self.blank_y + self.blank_tolerance * 5)]
 
         # 手持的物品(最多只能手持一個東西)
         self.hold = None
@@ -53,6 +58,9 @@ class Bag:
 
         # 當前頁數(包包數量等於 頁數*6)
         self.page = 1
+
+        # 最大包包頁數
+        self.max_page = 2
 
     def save_item(self, item):
         for i in self.blank:

@@ -27,7 +27,7 @@ class LivingRoom:
         self.wall_size = 4
 
         # 切換畫面鍵
-        self.right_button = RightButton(WIN_WIDTH - 50,WIN_HEIGHT/2)
+        self.right_button = RightButton(GAME_X + GAME_WIDTH + 20,WIN_HEIGHT/2) #RightButton(WIN_WIDTH - 50,WIN_HEIGHT/2)
         self.left_button = LeftButton(20,WIN_HEIGHT/2)
 
         self.book_shelf = BookShelf(GAME_X, GAME_Y)

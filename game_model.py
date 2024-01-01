@@ -316,13 +316,15 @@ class GameModel:
         if not self.observe:
             if events["mouse position"] is not None:
                 x, y = events["mouse position"]
+                # 檢驗點擊位置(測試用
+                # print(x,"and",y)
                 # 重製對話
                 self.text = ""
                 # 檢查物品欄
                 self.bag.clicked(x, y)
                 # 物品欄切換
                 page = self.page_bnt.clicked(x, y)
-                if page == 'right' and self.bag.page < 2:
+                if page == 'right' and self.bag.page < self.bag.max_page:
                     self.bag.page += 1
                 elif page == 'left' and self.bag.page > 1:
                     self.bag.page -= 1
@@ -744,6 +746,9 @@ class GameModel:
 
         # 起始物品
         self.bag.save_item(Pencil(GAME_X, GAME_Y))
+
+        # 將包包切到第一頁
+        self.bag.page = 1
 
         self.no_scream(2)
 
