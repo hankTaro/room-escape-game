@@ -115,9 +115,6 @@ class GameController:
                     self.events["game quit"] = True
                 return
 
-            # # 畫出選單按鈕
-            # self.view.draw_menu_button(self.model.btn)
-
             # 在播動畫
             if self.model.show is not None:
                 # 動畫時暫停BGM

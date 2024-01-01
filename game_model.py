@@ -486,8 +486,7 @@ class GameModel:
                     item.add_handle()
                     self.bag.remove_hold_item()
                 else:
-                    self.dialog = Show(["沒有把手轉不動"],[""],None,None,None)
-                    # self.text = "沒有把手轉不動"
+                    self.dialog = Show(["沒有把手轉不動"],["男子"],None,None,None)
                 break
             elif common == 'check':
                 if self.investigation_item.unlock:
@@ -495,7 +494,7 @@ class GameModel:
                     item.unlock()
                     self.investigation_item.remove_knob()
                 else:
-                    self.dialog = Show(["咬的緊緊的...轉不開"],[""],None,None,None)
+                    self.dialog = Show(["咬的緊緊的...轉不開"],["男子"],None,None,None)
                     # self.text = "咬的緊緊的...轉不開"
                 break
             elif common == 'take':
@@ -788,17 +787,7 @@ class GameModel:
         # self.show = Show(*CH3_START_SHOW)
 
         pass
-    def start_ch4(self):
-        # TODO :　清除上一章的物件(可選)
-        # TODO :　建立房間/物品/可互動元素
-        pass
-    def test_init(self):
-        self.room = {'living_room': LivingRoom(),
-                     'study': Study(),
-                     'bedroom': Bedroom()}
-        self.cur_room = self.room['living_room']
-        self.investigation = True
-        self.investigation_item = PhotoFrame(GAME_X, GAME_Y)
+
 
     def start_switching(self):
         self.switch = True
@@ -816,7 +805,7 @@ class GameModel:
     def set_dialog(self,show):
         self.dialog = show
     def play_end_mp4(self):
-        self.ending_mp4 = cv2.VideoCapture("image/living_room/Tv/TV_show/tyler1 scream meme.mp4")
+        self.ending_mp4 = cv2.VideoCapture("image/片尾/片尾.mp4")
     def fix_scream_to_dark_set(self):
         self.fix_scream_to_dark = True
     def play_snd(self,snd):

@@ -44,6 +44,8 @@ class GameView:
         self.speaker_show_y = GAME_Y + GAME_HEIGHT - 70 - self.font_dialog.get_linesize()
 
         self.play_bgm = False
+        # 是否在播最終bgm
+        self.play_end_music = False
 
         # 文字置中
         # WIN_WIDTH // 2 - word.get_width() // 2
@@ -52,7 +54,8 @@ class GameView:
         self.win.blit(BACKGROUND_IMAGE, (0, 0))
 
     def draw_menu_button(self, btn):
-        self.win.blit(btn.image, btn.rect)
+        pass
+        # self.win.blit(btn.image, btn.rect)
 
     # TODO : 畫出不同房間與牆面的布局 裏頭要有個判別式 以便選擇背景
     # 依照 room 中的 layout data 將物品畫出
@@ -230,6 +233,9 @@ class GameView:
             self.win.blit(tip, (WIN_WIDTH - tip.get_width() - 30, WIN_HEIGHT - tip.get_height() - 30))
 
     def draw_ending(self,video):
+        if not self.play_end_music:
+            pygame.mixer.Sound('image/片尾/片尾.mp3').play()
+            self.play_end_music = True
         ret, frame = video.read() #ret判斷結束了沒
         if not ret:
             return 'over'

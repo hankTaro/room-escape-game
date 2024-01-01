@@ -129,7 +129,7 @@ class Show:
     def wait_sound(self):
         # 等待音效播完
         if self.lock:
-            if time.time() - self.time < self.playing.get_length():
+            if time.time() - self.time < self.playing.get_length() and time.time() - self.time < 13:
                 # 還不行 還要等
                 return True
             else:

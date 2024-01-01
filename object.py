@@ -280,7 +280,6 @@ class DoorToBedRoom:
                 # self.locked_music.play()
                 return 'dialog'
             else:
-                self.music.play()
                 return 'bedroom'
         else:
             return 0
@@ -542,7 +541,7 @@ class TvPower:
         self.mask = pygame.mask.from_surface(self.image)
         self.music = tv_power_sound
 
-        self.speaker = [""]
+        self.speaker = ["男子"]
         self.dialog = ["打不開...\n也是，就算電視沒壞，這裡也早就沒電、沒訊號了\n電視下面的這串指令...\n還真是懷念..."]
         # 是否壞掉(第一章不可互動)
         self.lock = lock
@@ -627,6 +626,8 @@ class Tv:
         self.current_sequence = []
         # 玩家是否找到彩蛋
         self.easter_eggs = False
+        # 彩蛋
+        self.card = CheatCode(GAME_X, GAME_Y)
 
         # 入口 也就是上一層 離開調查時要回到的地方 None 代表離開調查
         self.enter = None
@@ -644,11 +645,12 @@ class Tv:
             return 'investigation'
     def input(self, input):
         self.current_sequence.append(input)
-        if self.current_sequence[-len(self.target_command):] == self.target_command:
+        if self.current_sequence[-len(self.target_command):] == self.target_command and not self.easter_eggs:
+            self.easter_eggs = True
             self.cheat_code()
     def cheat_code(self):
         cheat_code_sound.play()
-        self.object.append(CheatCode(GAME_X, GAME_Y))
+        self.object.append(self.card)
 
 
 

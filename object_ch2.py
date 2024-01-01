@@ -75,22 +75,24 @@ box_image = pygame.transform.scale(pygame.image.load(f"image/Ch2/Box/boxs.png"),
 # 報紙
 newspaper_image = pygame.transform.scale(pygame.image.load(f"image/Ch2/Newspaper/newspaper.png"), (GAME_WIDTH, GAME_HEIGHT))
 # 可拾取物件 ==============================================================================================
-top_image = pygame.transform.scale(pygame.image.load(f"image/living_room/Clock/Handle.png"), (GAME_WIDTH, GAME_HEIGHT))
+top_image = pygame.transform.scale(pygame.image.load(f"image/Ch2/TvShelf/陀螺.png"), (GAME_WIDTH, GAME_HEIGHT))
 beer_image = pygame.transform.scale(pygame.image.load(f"image/Ch2/Beer/beer.png"), (GAME_WIDTH, GAME_HEIGHT))
 # icon ===================================================================================================
 chest_key_icon = pygame.transform.scale(pygame.image.load(f"image/Icon/chest_key_icon.png"), (ICON_SIZE, ICON_SIZE))
 shit_icon = pygame.transform.scale(pygame.image.load(f"image/Icon/shit.png"), (ICON_SIZE, ICON_SIZE))
 pencil_icon = [pygame.transform.scale(pygame.image.load(f"image/Icon/penceil_{i}.png"), (ICON_SIZE, ICON_SIZE)) for i in range(3)]
 bamboo_hat_icon = pygame.transform.scale(pygame.image.load(f"image/Icon/shit.png"), (ICON_SIZE, ICON_SIZE))
-top_icon = pygame.transform.scale(pygame.image.load(f"image/Icon/shit.png"), (ICON_SIZE, ICON_SIZE))
-beer_icon = pygame.transform.scale(pygame.image.load(f"image/Icon/shit.png"), (ICON_SIZE, ICON_SIZE))
+top_icon = pygame.transform.scale(pygame.image.load(f"image/Icon/top_icon.png"), (ICON_SIZE, ICON_SIZE))
+beer_icon = pygame.transform.scale(pygame.image.load(f"image/Icon/beer_icon.png"), (ICON_SIZE, ICON_SIZE))
+kmt_icon = pygame.transform.scale(pygame.image.load(f"image/Icon/kmt_icon.png"), (ICON_SIZE, ICON_SIZE))
 # 調查畫面===============================================================
 chest_key_observe = pygame.image.load(f"image/Observe/chest_key_observe.png")
 shit_observe = pygame.image.load(f"image/Observe/shit.png")
 pencil_observe = [pygame.image.load(f"image/Icon/penceil_{i}.png") for i in range(3)]
 bamboo_hat_observe = pygame.image.load(f"image/Observe/shit.png")
-top_observe = pygame.image.load(f"image/Observe/shit.png")
-beer_observe = pygame.image.load(f"image/Observe/shit.png")
+top_observe = pygame.image.load(f"image/Icon/top_icon.png")
+beer_observe = pygame.image.load(f"image/Icon/beer_icon.png")
+kmt_observe = pygame.image.load(f"image/Icon/kmt_icon.png")
 # 聲音
 mute = None
 tv_show_1_sound = pygame.mixer.Sound('music/Sequence.mp3')
@@ -755,29 +757,6 @@ class PencilSharpener:
 
 
 
-class NewPaperCh2:
-    def __init__(self, x, y):
-        self.image = tv_image[0]
-        self.x = x
-        self.y = y
-        self.rect = self.image.get_rect()
-        self.rect.center = (x, y)
-
-
-        # 下方要有儲存解謎進度的data
-        # TODO : 點擊放大後的圖片
-        self.focus = pygame.transform.scale(pygame.image.load(f"image/living_room/Tv/tv_investigation.png"), (GAME_WIDTH, GAME_HEIGHT))
-        # TODO : 此圖片中可互動的物件
-        self.object = [ExitButton(500,550)]
-
-    def clicked(self, x: int, y: int):
-        if self.rect.collidepoint(x, y):
-            return 'investigation'
-
-    # TODO : 用於改變在解謎中改動到的資料
-    def puzzle(self):
-        pass
-
 
 
 
@@ -873,25 +852,14 @@ class GlobeCh2:
         self.rect.topleft = (x, y)
         self.mask = pygame.mask.from_surface(self.image)
 
-        self.speaker = ["旁白","","旁白"]
-        self.speaker_2 = ["旁白"]
-        self.dialog = ["你轉動這個生鏽的地球儀..."," ","鏽化的輪軸發出刺耳的摩擦聲\n在你因刺耳的聲音想抵住耳朵時 看見地球儀的轉軸上纏繞著一塊碎片"]
-        self.dialog_2 = ["你不想在製造出那種恐怖的聲音"]
-        # 是否互動過(獲得相片碎片
-        self.lock = False
-        self.give = None
-        self.music = [(rust_sound,1)]
+        self.speaker = ["旁白"]
+        self.dialog = ["你轉動這個地球儀...\n你看到了台灣，中國，日本，美國在你眼前轉過"]
 
-        self.show = Show(self.dialog, self.speaker, None, self.music, None)
-        self.show_2 = Show(self.dialog_2, self.speaker_2, None, None, None)
+        self.show = Show(self.dialog, self.speaker, None, None, None)
 
     def clicked(self, x: int, y: int):
         if self.rect.collidepoint(x, y) and self.mask.get_at((x - self.rect.x, y - self.rect.y)) != 0:
-            if not self.lock:
-                self.lock = True
-                return 'dialog_sp'
-            else:
-                return 'dialog'
+            return 'dialog'
 
 class BoxCh2:
     def __init__(self,x,y):
@@ -904,11 +872,11 @@ class BoxCh2:
 
         self.speaker = ["旁白","","旁白"]
         self.speaker_2 = ["旁白"]
-        self.dialog = ["你翻找著這些紙箱堆..."," ","裡面好像藏了些甚麼\n有了\n是一頂斗笠"]
-        self.dialog_2 = ["紙箱已經被你翻得亂七八糟了\n別再翻了"]
-        # 是否互動過(獲得斗笠
+        self.dialog = ["你翻找著這些紙箱堆..."," ","裡面好像藏了些甚麼\n有了\n是一個黨徽"]
+        self.dialog_2 = ["紙箱已經被你翻得亂七八糟了\n裡頭好多無辜陶器都被你用碎了\n紙箱裡面都被碎片染成白色，有夠恐怖\n別再翻了"]
+        # 是否互動過(獲得黨徽
         self.lock = False
-        self.give = BambooHat(GAME_X, GAME_Y)
+        self.give = Kmt(GAME_X, GAME_Y)
 
         self.show = Show(self.dialog, self.speaker, None, None, None)
         self.show_2 = Show(self.dialog_2, self.speaker_2, None, None, None)
@@ -933,10 +901,12 @@ class Newspaper:
         self.speaker = ["1999年9月份的報紙"]
         self.index = 0
         self.dialogs = [
-                        ["一名陳姓男子因小孩驗血驗出來是B型而非A+型，而對小孩失望透頂進而氣到昏迷"],
+                        ["一名陳姓中國男子，因小孩驗血驗出B型而非A+型\n因而對小孩失望透頂進而腦中風"],
                         ["英國研究指出，十次車禍七次快\n一次飛碟\n一次阿北\n一次英文報告"],
                         ["廣告版面出租"],
-                        ["今早一名男性青年，在過馬路時被大卡車撞飛\n目擊民眾表示，當時聽見有人大喊「麥可!!」\n隨後就看到車禍男子被撞飛了5層樓高、100米遠有"]
+                        ["今早一名男性青年，在過馬路時被大卡車撞飛\n目擊民眾表示，當時聽見有人大喊「麥可!!」\n隨後就看到車禍男子被撞飛了5層樓高、100米遠"],
+                        ["\"破壞之王\"上映後票房大受好評，其中的經典台詞更是受到許多人的喜愛\n*以下是劇照的截圖\n「不是...不要誤會，我不是針對你」\n「我是說在座的各位...」\n「都是垃圾」"],
+                        ["一名南部大學學生，因對其他組別的作品說出\"破壞之王\"經典台詞，因而引發各組圍毆\n最終造成4人輕傷"]
                         ]
         self.dialog = self.dialogs[self.index]
         self.music = None
@@ -1036,16 +1006,14 @@ class BambooHat:
         # 調查中此物品的樣貌
         self.observe = bamboo_hat_observe
         # 調查中此物品的敘述
-        self.description = "以深色的竹子編織而成，經歷了風吹日曬雨\n淋，如今已退色，但卻充滿了某位成熟男人\n的賀爾蒙體香"
+        self.description = "以深色的竹子編織而成，經歷了風吹日曬雨淋\n" \
+                           "如今已退色，剩下殘留在上頭的汗味"
 
         self.x = x
         self.y = y
         self.music = pick_up_items_sound
 
-    def clicked(self, x: int, y: int):
-        if self.rect.collidepoint(x, y) and self.mask.get_at((x - self.rect.x, y - self.rect.y)) != 0:
-            # 被撿起放入物品欄
-            return 'take'
+
 
 class Top:
     def __init__(self, x, y):
@@ -1056,8 +1024,8 @@ class Top:
         # 調查中此物品的樣貌
         self.observe = top_observe
         # 調查中此物品的敘述
-        self.description = "老舊的陀螺，陪伴了我許多的時光，曾經隔壁\n" \
-                           "班阿明最喜歡的玩具，如今被我偷走了" 
+        self.description = "老舊的陀螺，有一定的重量\n" \
+                           "在抓到訣竅前很難將其轉動"
         self.x = x
         self.y = y
         self.rect = self.image.get_rect()
@@ -1073,14 +1041,18 @@ class Top:
         
 class Beer:
     def __init__(self, x, y):
-        self.name = "酒瓶"
+        self.name = "空啤酒瓶"
         self.image = beer_image
         # 放入物品欄後顯示的圖示
         self.icon = beer_icon
         # 調查中此物品的樣貌
         self.observe = beer_observe
         # 調查中此物品的敘述
-        self.description = "和艾斯、薩波的交杯酒，對了，頂上戰爭好像\n要開打了，得趕進去馬林福特救艾斯才行" 
+        self.description = "台灣啤酒的空瓶\n" \
+                           "沁涼的啤酒適合搭配著熱炒一起享用" \
+                           "在炎熱的夏天，阿公晚上偶爾會開一瓶來喝\n" \
+                           "\n" \
+                           "(歡迎台灣啤酒冠名贊助 :) )"
 
         self.x = x
         self.y = y
@@ -1094,6 +1066,21 @@ class Beer:
             self.music.play()
             # 被撿起放入物品欄
             return 'take'
+
+class Kmt:
+    def __init__(self, x, y):
+        self.name = "國民黨黨徽"
+        self.image = beer_image
+        # 放入物品欄後顯示的圖示
+        self.icon = kmt_icon
+        # 調查中此物品的樣貌
+        self.observe = kmt_observe
+        # 調查中此物品的敘述
+        self.description = "這個黨徽有一天不小心被紅色油漆潑到\n" \
+                           "所以變成紅色的了\n" \
+                           "我有嘗試把油漆清掉，但怎麼清也清不乾淨\n" \
+                           "反而把沒沾到油漆的部分刮花，讓他繡成全紅"
+        self.music = pick_up_items_sound
 
 # 彩蛋物件類 =====================================
 class AbandonedProject:
