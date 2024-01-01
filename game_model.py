@@ -186,6 +186,10 @@ class GameModel:
             pass
             return
 
+        # 在播最終動畫時 終止判定
+        if self.ending_mp4 is not None:
+            return
+
         # 任何需要等待時
         if self.wait_time > 0:
             self.wait_time -= 1
