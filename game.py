@@ -20,7 +20,7 @@ class Game:
         # pygame.mixer.init()
         # pygame.mixer.music.set_volume(0.2)
 
-        game_model.start_ch1()
+        game_model.start_ch0()
 
 
         while not quit_game:
